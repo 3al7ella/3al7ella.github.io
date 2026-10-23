@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ع الحلة — أكل بيتي في إسكندرية: محاشي، خضار متنضف، وجبات وفراخ متبلة. اطلب على واتساب 01275165496.">
+<link rel="icon" href="logo.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>ع الحلة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Lalezar&display=swap">
+<style>
+/* Layout: phone-first ordering page — brand hero, sticky section strip, menu rows with steppers, floating basket bar → checkout sheet that builds a WhatsApp order */
+:root{
+  --bg:#FFF8EF; --paper:#FFFFFF; --ink:#2A1A12; --muted:#7A6152; --line:#EEDFCC;
+  --brand:#E4521B; --brand-ink:#FFFFFF; --brand-soft:#FDE6D8; --leaf:#2F7A3E; --leaf-soft:#E2F1E4;
+  --pot:#B83A12; --shadow:0 10px 30px rgba(120,50,10,.12);
+  --display:"Lalezar","Cairo",system-ui,sans-serif; --body:"Cairo",system-ui,"Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1C130E; --paper:#271B14; --ink:#F8EBDD; --muted:#C2A691; --line:#3D2B20;
+  --brand:#FF6A33; --brand-ink:#1C130E; --brand-soft:#3E2216; --leaf:#7FCB8C; --leaf-soft:#1E3324; --pot:#FF8A5C; --shadow:0 10px 30px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C130E; --paper:#271B14; --ink:#F8EBDD; --muted:#C2A691; --line:#3D2B20;
+  --brand:#FF6A33; --brand-ink:#1C130E; --brand-soft:#3E2216; --leaf:#7FCB8C; --leaf-soft:#1E3324; --pot:#FF8A5C; --shadow:0 10px 30px rgba(0,0,0,.35); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;direction:rtl;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{padding-block:18px 8px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:56px;height:56px;border-radius:50%;background:#fff;box-shadow:var(--shadow)}
+.brand b{font-family:var(--display);font-size:28px;font-weight:400;line-height:1;color:var(--brand)}
+.brand small{display:block;color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.02em}
+.wa-chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.wa-chip svg{width:18px;height:18px;fill:var(--leaf)}
+.banner{margin-top:16px;display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:center}
+.banner h1{font-family:var(--display);font-weight:400;font-size:clamp(38px,7vw,64px);line-height:1.05;margin:0;text-wrap:balance}
+.banner h1 em{font-style:normal;color:var(--brand)}
+.banner p{margin:10px 0 0;color:var(--muted);font-weight:600;max-width:42ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.fact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px 10px;font-size:13px;font-weight:800}
+.fact span{color:var(--brand)}
+.shop{border-radius:22px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:1100/662;max-width:100%;background:var(--brand-soft)}
+.shop img{width:100%;height:100%;object-fit:cover;display:block}
+.go{margin-top:16px;display:inline-flex;gap:8px;align-items:center;background:var(--brand);color:var(--brand-ink);border:0;border-radius:14px;padding:12px 20px;font-weight:900;font-size:17px;text-decoration:none;cursor:pointer}
+@media (max-width:720px){.banner{grid-template-columns:1fr}.shop{order:-1}}
+
+/* steps */
+.gal{display:flex;gap:10px;overflow-x:auto;margin-top:18px;padding-bottom:4px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.gal figure{margin:0;flex:0 0 150px;scroll-snap-align:start}
+.gal img{width:150px;height:150px;object-fit:cover;border-radius:18px;display:block;box-shadow:var(--shadow);max-width:100%}
+.gal figcaption{font-weight:800;font-size:13px;margin-top:4px;text-align:center}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-block:22px 6px}
+.how div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px}
+.how b{display:block;font-size:15px}
+.how i{font-style:normal;font-family:var(--display);color:var(--brand);font-size:26px;line-height:1}
+.how span{color:var(--muted);font-size:13px;font-weight:600}
+@media (max-width:560px){.how{grid-template-columns:1fr}.how div{display:flex;gap:12px;align-items:center}}
+
+/* section strip */
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin-top:14px}
+.strip .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.strip .wrap::-webkit-scrollbar{display:none}
+.strip a{flex:0 0 auto;text-decoration:none;color:var(--ink);font-weight:800;font-size:14px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper)}
+.strip a[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{margin-top:14px;display:flex}
+.search input{width:100%;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:11px 14px;font-weight:700}
+
+/* menu */
+.sec{padding-block:22px 4px;scroll-margin-top:70px}
+.sec h2{font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 4px;line-height:1.1}
+.sec .hint{color:var(--muted);font-size:13px;font-weight:700;margin:0 0 10px}
+.feature{display:grid;grid-template-columns:200px 1fr;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow)}
+.feature img{width:100%;height:100%;object-fit:cover;aspect-ratio:1;max-width:100%}
+.feature .fb{padding:14px 0 14px 14px;display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0}
+.feature .tag{align-self:flex-start;background:var(--leaf-soft);color:var(--leaf);font-weight:900;font-size:12px;border-radius:999px;padding:2px 10px}
+@media (max-width:520px){.feature{grid-template-columns:1fr}.feature img{aspect-ratio:16/10}.feature .fb{padding:0 14px 14px}}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.list{grid-template-columns:1fr}}
+.row{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:10px 12px;min-width:0}
+.row.on{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset}
+.dot{flex:0 0 56px;height:56px;border-radius:14px;overflow:hidden;background:var(--brand-soft);box-shadow:0 0 0 1px var(--line)}
+.dot img{width:100%;height:100%;object-fit:cover;display:block}
+.sh{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sh img{width:72px;height:72px;border-radius:18px;object-fit:cover;box-shadow:var(--shadow);flex:0 0 72px}
+.sh div{min-width:0}
+.sh .hint{margin:0}
+.info{flex:1;min-width:0}
+.info b{display:block;font-size:15px;line-height:1.35}
+.info small{color:var(--muted);font-weight:700;font-size:13px}
+.price{font-weight:900;color:var(--ink);white-space:nowrap}
+.price span{color:var(--muted);font-weight:700;font-size:12px}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:900;font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.step button.add{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.step output{min-width:30px;text-align:center;font-weight:900}
+.empty{color:var(--muted);font-weight:700;padding:30px 0;text-align:center}
+
+/* basket bar */
+.bar{position:fixed;inset:auto 0 0;z-index:25;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-top:10px;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.bar .wrap{display:flex}
+.bar button{flex:1;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--brand);color:var(--brand-ink);border:0;border-radius:16px;padding:14px 18px;font-weight:900;font-size:17px;cursor:pointer;box-shadow:var(--shadow)}
+.bar .cnt{background:var(--brand-ink);color:var(--brand);border-radius:999px;padding:0 10px;font-size:14px}
+main{padding-bottom:110px}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(20,10,5,.5);display:flex;align-items:flex-end;justify-content:center}
+.panel{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.panel h3{font-family:var(--display);font-weight:400;font-size:28px;margin:0}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.x{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:6px 12px;font-weight:800;cursor:pointer}
+.cl{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-weight:700}
+.cl span:first-child{min-width:0}
+.tot{display:flex;justify-content:space-between;padding:6px 0;font-weight:800}
+.tot.big{font-size:20px;font-weight:900;color:var(--brand)}
+form{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:14px}
+input,select,textarea{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font-weight:600;width:100%}
+textarea{min-height:64px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:440px){.two{grid-template-columns:1fr}}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pay input{position:absolute;opacity:0;width:1px;height:1px}
+.pay label{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;font-size:13px}
+.pay input:checked+span{color:var(--brand)}
+.pay label:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.note{background:var(--leaf-soft);color:var(--leaf);border-radius:12px;padding:10px 12px;font-weight:800;font-size:14px}
+.note .copy{margin-inline-start:6px;border:0;background:var(--leaf);color:var(--bg);border-radius:8px;padding:2px 10px;font-weight:900;cursor:pointer}
+.send{background:var(--leaf);color:#fff;border:0;border-radius:14px;padding:14px;font-weight:900;font-size:17px;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.err{color:var(--pot);font-weight:800;font-size:14px}
+.done{text-align:center;padding:10px 0}
+.done pre{white-space:pre-wrap;text-align:right;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--body);font-size:14px;max-height:240px;overflow:auto}
+footer{border-top:1px solid var(--line);margin-top:30px;padding-block:20px;color:var(--muted);font-weight:700;font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-weight:800;z-index:50}
+
+/* promo ribbon */
+.ribbon{background:var(--ink);color:var(--bg);font-weight:800;font-size:14px;text-align:center}
+.ribbon .wrap{padding-block:8px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.ribbon b{color:var(--gold-on-ink,#FFC56B)}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.ctas .go{margin-top:0}
+.go.alt{background:var(--paper);color:var(--ink);border:1.5px solid var(--line)}
+
+/* offers hub */
+.offers{padding-block:26px 6px;scroll-margin-top:70px}
+.ohead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.ohead h2{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1;margin:0}
+.ohead h2 em{font-style:normal;color:var(--brand)}
+.ohead p{margin:6px 0 0;color:var(--muted);font-weight:700}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.chips button{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.ogroup{margin-top:18px}
+.ogroup>h3{font-size:18px;margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ogroup>h3 .free{background:var(--leaf-soft);color:var(--leaf);border-radius:999px;padding:2px 10px;font-size:13px}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.oc{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);min-width:0}
+.oc.big{grid-column:1/-1}
+@media (min-width:720px){.oc.big{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}.oc.big .pic{aspect-ratio:auto;height:100%;min-height:320px}}
+.oc .pic{position:relative;aspect-ratio:16/10;max-width:100%;background:var(--brand-soft)}
+.oc .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.oc .badges{position:absolute;top:10px;right:10px;display:flex;gap:6px;flex-wrap:wrap}
+.bdg{background:var(--ink);color:var(--bg);font-weight:900;font-size:12px;border-radius:999px;padding:3px 10px}
+.bdg.hot{background:var(--brand);color:var(--brand-ink)}
+.bdg.green{background:var(--leaf);color:#fff}
+.oc .ob{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.oc .ot{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.oc .ot small{color:var(--muted);font-weight:800;font-size:13px}
+.oc .ot b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1;color:var(--pot)}
+.oc .tl{color:var(--muted);font-weight:700;font-size:14px;margin-top:-6px}
+.inc{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.inc li{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.inc i{font-style:normal;flex:0 0 auto;min-width:54px;text-align:center;background:var(--brand-soft);color:var(--pot);border-radius:8px;font-size:12px;padding:1px 6px}
+.oc.big .inc{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:560px){.oc.big .inc{grid-template-columns:1fr}}
+.pricebox{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:12px}
+.pv{display:flex;flex-direction:column;line-height:1.15}
+.pv strong{font-size:28px;font-weight:900}
+.pv strong span{font-size:14px;font-weight:800;color:var(--muted)}
+.pv s{color:var(--muted);font-weight:700;font-size:13px}
+.save{background:var(--leaf-soft);color:var(--leaf);font-weight:900;font-size:13px;border-radius:999px;padding:2px 10px;align-self:flex-start}
+.addo{background:var(--brand);color:var(--brand-ink);border:0;border-radius:14px;padding:11px 16px;font-weight:900;font-size:15px;cursor:pointer}
+.addo.added{background:var(--leaf);color:#fff}
+.ostep{display:flex;align-items:center;gap:4px}
+.ostep button{width:38px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);font-weight:900;font-size:18px;cursor:pointer}
+.ostep output{min-width:30px;text-align:center;font-weight:900}
+.fz{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.fzt{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:10px 12px;min-width:0}
+.fzt.on{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset}
+.fzt .info b{font-size:15px}
+.fzt .info small{display:block}
+.fzhead{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;background:var(--brand-soft);border-radius:20px;padding:12px;margin-bottom:10px}
+.fzhead img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;max-width:100%}
+.fzhead b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;display:block}
+.fzhead p{margin:4px 0 0;font-weight:700;color:var(--muted)}
+.fzhead .big100{font-weight:900;font-size:20px;color:var(--pot)}
+@media (max-width:460px){.fzhead{grid-template-columns:96px 1fr}}
+
+/* picker */
+.pk{display:flex;flex-direction:column;gap:12px}
+.pk h4{margin:0;font-size:16px}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pgrid button{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px;font-weight:800;cursor:pointer;text-align:center}
+.pgrid button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);color:var(--pot)}
+.pcount{font-weight:900;color:var(--pot)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px;font-weight:800;cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);color:var(--pot)}
+.cl .rm{border:0;background:none;color:var(--pot);font-weight:800;cursor:pointer;padding:0 4px;font-size:13px}
+.tot .fr{color:var(--leaf)}
+</style>
+</head>
+<body>
+
+
+<div class="ribbon"><div class="wrap"><span>🚚 <b>توصيل مجاني</b> مع أي عرض من عروض الفراخ</span><span>· الطلب قبلها بيوم</span></div></div>
+
+<header class="hero wrap">
+  <div class="top">
+    <div class="brand"><img src="logo.png" alt="لوجو ع الحلة"><div><b>ع الحلة</b><small>3al7ella · مطبخ بيتي في إسكندرية</small></div></div>
+    <a class="wa-chip num" href="https://wa.me/201275165496" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1a17 17 0 0 1-1.7-.6 13.4 13.4 0 0 1-5.1-4.5c-.4-.5-1.2-1.7-1.2-3.2s.8-2.3 1.1-2.6c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.4Z"/></svg>01275165496</a>
+  </div>
+  <div class="banner">
+    <div>
+      <h1>أكل بيت <em>بجد</em>،<br>من حلّتنا لسفرتك</h1>
+      <p>محاشي على التسوية أو مستوية، خضار متنضف جاهز للطبخ، وجبات وفراخ متبلة. اختار اللي نفسك فيه، والأوردر يوصلنا على واتساب.</p>
+      <div class="facts"><div class="fact">توصيل <span>كل إسكندرية</span></div><div class="fact">التوصيل <span class="num">60</span> جنيه</div><div class="fact">كاش · إنستاباي · محفظة</div></div>
+      <div class="ctas"><a class="go" href="#offers">شوف العروض ↓</a><a class="go alt" href="#menu">المنيو كامل</a></div>
+    </div>
+    <div class="shop"><img src="shop.jpg" alt="واجهة محل ع الحلة"></div>
+  </div>
+  <div class="gal" id="gal" aria-label="من شغلنا"></div>
+  <div class="how">
+    <div><i>١</i><span><b>اختار أصنافك أو عرض</b>دوس + أو «أضف للأوردر»</span></div>
+    <div><i>٢</i><span><b>اكتب عنوانك والمعاد</b>واختار تدفع إزاي</span></div>
+    <div><i>٣</i><span><b>ابعت على واتساب</b>ونأكد معاك الأوردر</span></div>
+  </div>
+</header>
+
+<nav class="strip" aria-label="أقسام المنيو"><div class="wrap" id="strip"></div></nav>
+
+<main class="wrap">
+  <section class="offers" id="offers" aria-labelledby="offTitle">
+    <div class="ohead"><div><h2 id="offTitle">عروض <em>ع الحلة</em></h2><p>اختار العرض اللي يناسب بيتك، وكله بيوصل لحد الباب.</p></div></div>
+    <div class="chips" id="ofilter" role="group" aria-label="نوع العرض">
+      <button type="button" data-g="all" aria-pressed="true">كل العروض</button>
+      <button type="button" data-g="chicken" aria-pressed="false">عروض الفراخ</button>
+      <button type="button" data-g="mahshi" aria-pressed="false">عروض المحاشي</button>
+      <button type="button" data-g="freezer" aria-pressed="false">توفير الفريزر</button>
+      <button type="button" data-g="events" aria-pressed="false">المناسبات</button>
+    </div>
+    <div id="offersBody"></div>
+  </section>
+  <div id="menu" style="scroll-margin-top:70px">
+    <div class="search"><label for="q" style="flex:1"><span style="position:absolute;width:1px;height:1px;overflow:hidden">دوّر في المنيو</span><input id="q" type="search" placeholder="دوّر على صنف… محشي، بانيه، ملوخية"></label></div>
+    <div id="sections"></div>
+  </div>
+</main>
+
+<footer><div class="wrap"><span>ع الحلة · محاشي · خضار · وجبات · فراخ متبلة</span><span class="num">واتساب 01275165496</span></div></footer>
+
+<div class="bar" id="bar" hidden><div class="wrap"><button type="button" id="openCart"><span>شوف الأوردر <span class="cnt num" id="cnt">0</span></span><span class="num" id="barTotal">0 ج</span></button></div></div>
+
+<div class="sheet" id="pick" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+    <div class="ph"><h3 id="pickTitle">اختار</h3><button type="button" class="x" id="closePick">رجوع</button></div>
+    <div class="pk" id="pickBody"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="ph"><h3 id="sheetTitle">أوردرك</h3><button type="button" class="x" id="closeCart">رجوع للمنيو</button></div>
+    <div id="lines"></div>
+    <div id="totals"></div>
+    <form id="orderForm" novalidate>
+      <div class="two">
+        <label for="fName">الاسم<input id="fName" autocomplete="name" placeholder="مثلًا: منى أحمد"></label>
+        <label for="fPhone">رقم الموبايل<input id="fPhone" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" class="num"></label>
+      </div>
+      <div class="two">
+        <label for="fArea">المنطقة<input id="fArea" list="areas" placeholder="سموحة، سيدي جابر، العجمي…"></label>
+        <label for="fWhen">معاد التوصيل<select id="fWhen"></select></label>
+      </div>
+      <datalist id="areas"></datalist>
+      <label for="fAddr">العنوان بالتفصيل<textarea id="fAddr" placeholder="الشارع، رقم العمارة، الدور والشقة، وعلامة مميزة"></textarea></label>
+      <label style="gap:6px">طريقة الدفع
+        <div class="pay" role="radiogroup">
+          <label><input type="radio" name="pay" value="كاش عند الاستلام" id="pCash" checked><span>كاش عند الاستلام</span></label>
+          <label><input type="radio" name="pay" value="إنستاباي" id="pInsta"><span>إنستاباي</span></label>
+          <label><input type="radio" name="pay" value="محفظة" id="pWallet"><span>محفظة</span></label>
+        </div>
+      </label>
+      <div class="note" id="payNote" hidden>حوّل على <span class="num">01275165496</span><button type="button" class="copy" id="copyNum">انسخ الرقم</button><br>وابعت صورة التحويل في نفس شات الواتساب.</div>
+      <label for="fNote">ملاحظات (اختياري)<textarea id="fNote" placeholder="مستوي ولا على التسوية، معاد معيّن، أي طلب خاص"></textarea></label>
+      <div class="err" id="err" hidden></div>
+      <button type="submit" class="send" id="sendBtn">ابعت الأوردر على واتساب</button>
+    </form>
+    <div class="done" id="done" hidden>
+      <p style="font-weight:900;font-size:18px;margin:0 0 6px">الأوردر جاهز</p>
+      <p style="margin:0 0 10px;color:var(--muted);font-weight:700">لو واتساب ما اتفتحش، انسخ الأوردر وابعته على <span class="num">01275165496</span></p>
+      <a class="send" id="waLink" href="#" target="_blank" rel="noopener">افتح واتساب</a>
+      <div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="x" id="copyOrder" style="flex:1">انسخ الأوردر</button><button type="button" class="x" id="newOrder" style="flex:1">أوردر جديد</button></div>
+      <pre id="orderText"></pre>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* Menu data: the live Google Sheet (SHEET_CSV) wins; ROWS is the built-in copy used until it loads or if it fails. */
+const SHEET_CSV='';
+const ROWS=[["p141", "عرض", "عروض الفراخ", "ع الحلة", "عرض", 1595, "نعم", "pane", "العرض الكبير .. فيه من كل حاجة", "فرخة شرقي وسط + 1 كيلو أوراك تندوري + 1 كيلو شيش طاووق + 1 كيلو بانيه بتتبيلة ع الحلة + ½ كيلو كوردن بلو + ½ كيلو شاورما فراخ + ½ كيلو كفتة مشوية + ½ كيلو كرسبي", 1685, "نعم", "أكبر عرض"], ["p137", "عرض", "عروض الفراخ", "لمّة الحلة", "عرض", 840, "نعم", "wholech", "سفرة كاملة للعيلة كلها", "فرخة شرقي كبيرة + 1 كيلو أوراك روستو + 1 كيلو بانيه بتتبيلة ع الحلة", "", "نعم", "للعيلة"], ["p139", "عرض", "عروض الفراخ", "العزومة", "عرض", 860, "نعم", "thighs", "بيّض وشّك قدام ضيوفك", "فرخة تندوري كبيرة + 1 كيلو أوراك تندوري + 1 كيلو كوردن بلو", 910, "نعم", ""], ["p138", "عرض", "عروض الفراخ", "التشكيلة", "عرض", 885, "نعم", "crispy2", "6 أصناف .. نص كيلو من كل صنف", "½ كيلو شاورما فراخ + ½ كيلو كفتة بانيه + ½ كيلو برجر مقلي + ½ كيلو برجر مشوي + ½ كيلو استربس + ½ كيلو كرسبي", 905, "نعم", "6 أصناف"], ["p140", "عرض", "عروض الفراخ", "الشوي", "عرض", 1135, "نعم", "chkofta", "أكل خفيف وصحي .. كله مشوي", "1 كيلو شيش طاووق + 1 كيلو بانيه بتتبيلة ع الحلة + ½ كيلو برجر مشوي + ½ كيلو كفتة مشوية + ½ كيلو شاورما فراخ + ½ كيلو أوراك تندوري + ½ كيلو دبابيس تندوري", 1225, "نعم", "مشوي"], ["p166", "عرض", "عروض المحاشي", "محشي 5 كيلو", "عرض", 590, "نعم", "grape", "اختاري 5 أصناف محشي مختلفة", "5 كيلو .. 5 أصناف من اختيارك + على التسوية أو مستوي", "", "", "أوفر"], ["p165", "عرض", "عروض المحاشي", "محشي 3 كيلو", "عرض", 390, "نعم", "mix", "اختاري 3 أصناف محشي مختلفة", "3 كيلو .. 3 أصناف من اختيارك + على التسوية أو مستوي", "", "", ""], ["p162", "عرض", "عروض المحاشي", "دلع الدلع", "عرض", 760, "نعم", "cabbagest", "عزومة بيتي متكاملة", "نص فرخة + حمام + كفتة + محاشي", "", "", "عزومة"], ["p142", "عرض", "المناسبات", "بوكس المناسبات", "بوكس", 1900, "نعم", "samosa", "سبوع · خطوبة · كتب كتاب · عيد ميلاد", "20 ميني بيتزا + 20 ميني ساندوتش (نص فراخ ونص لحمة) + 20 سمبوسك + 20 طبق كسكسي + 20 V-Cola + اطلبيه قبلها بيوم", "", "", "يكفي 20 فرد"], ["p143", "عرض", "توفير الفريزر", "فاصوليا خضرا", "عرض", 100, "نعم", "veg", "4 أكياس · الكيس ½ كيلو", "", "", "", ""], ["p144", "عرض", "توفير الفريزر", "قلقاس", "عرض", 100, "نعم", "veg", "4 أكياس · ½ كيلو من غير سلق", "", "", "", ""], ["p145", "عرض", "توفير الفريزر", "سبانخ", "عرض", 100, "نعم", "spinach", "4 أكياس · الكيس ½ كيلو", "", "", "", ""], ["p146", "عرض", "توفير الفريزر", "طماطم (صلصة)", "عرض", 100, "نعم", "veg", "5 أكياس · الكيس 400 جرام", "", "", "", ""], ["p147", "عرض", "توفير الفريزر", "بصل مفروم", "عرض", 100, "نعم", "veg", "4 أكياس · الكيس 400 جرام", "", "", "", ""], ["p148", "عرض", "توفير الفريزر", "ملوخية", "عرض", 100, "نعم", "spinach", "4 أكياس · الكيس 1 كيلو قبل التقطيع", "", "", "", ""], ["p149", "عرض", "توفير الفريزر", "كرنب صافي 3 كيلو", "عرض", 180, "نعم", "cabbagebags", "مسلوق ومتقطع", "", "", "", ""], ["p150", "عرض", "توفير الفريزر", "كرنب صافي 4 كيلو", "عرض", 200, "نعم", "cabbagebags", "مسلوق ومتقطع", "", "", "", ""], ["p043", "صنف", "المحاشي", "ورق عنب ع التسوية", "كيلو", 130, "نعم", "grape", "", "", "", "", ""], ["p044", "صنف", "المحاشي", "ورق عنب مستوي", "كيلو", 140, "نعم", "grape", "", "", "", "", ""], ["p045", "صنف", "المحاشي", "كرنب محشي ع التسوية", "كيلو", 120, "نعم", "cabbagest", "", "", "", "", ""], ["p046", "صنف", "المحاشي", "كرنب محشي مستوي", "كيلو", 130, "نعم", "cabbagest", "", "", "", "", ""], ["p047", "صنف", "المحاشي", "محشي مشكل ع التسوية", "كيلو", 125, "نعم", "mix", "", "", "", "", ""], ["p048", "صنف", "المحاشي", "محشي مشكل مستوي", "كيلو", 135, "نعم", "mix", "", "", "", "", ""], ["p049", "صنف", "المحاشي", "فلفل ألوان ع التسوية", "كيلو", 130, "نعم", "mix", "", "", "", "", ""], ["p050", "صنف", "المحاشي", "فلفل ألوان مستوي", "كيلو", 140, "نعم", "mix", "", "", "", "", ""], ["p051", "صنف", "المحاشي", "طماطم محشية ع التسوية", "كيلو", 130, "نعم", "mix", "", "", "", "", ""], ["p052", "صنف", "المحاشي", "طماطم محشية مستوي", "كيلو", 140, "نعم", "mix", "", "", "", "", ""], ["p053", "صنف", "المحاشي", "بصل محشي ع التسوية", "كيلو", 130, "نعم", "onionst", "", "", "", "", ""], ["p054", "صنف", "المحاشي", "بصل محشي مستوي", "كيلو", 140, "نعم", "onionst", "", "", "", "", ""], ["p055", "صنف", "المحاشي", "ممبار محشي ع التسوية", "كيلو", 260, "نعم", "mombar", "", "", "", "", ""], ["p056", "صنف", "المحاشي", "ممبار مسلوق جاهز ع التحمير", "كيلو", 330, "نعم", "mombar", "", "", "", "", ""], ["p057", "صنف", "جاهز على الحشو", "باذنجان مقور", "كيلو", 50, "نعم", "eggplantcore", "", "", "", "", ""], ["p058", "صنف", "جاهز على الحشو", "كوسة مقورة", "كيلو", 50, "نعم", "potatocore", "", "", "", "", ""], ["p059", "صنف", "جاهز على الحشو", "بطاطس مقورة", "كيلو", 50, "نعم", "potatocore", "", "", "", "", ""], ["p060", "صنف", "جاهز على الحشو", "فلفل مقور", "كيلو", 60, "نعم", "peppercore", "", "", "", "", ""], ["p061", "صنف", "جاهز على الحشو", "كرنب مسلوق ومتقطع", "كيلو", 60, "نعم", "cabbagebags", "", "", "", "", ""], ["p062", "صنف", "جاهز على الحشو", "ورق عنب مسلوق", "ربع كيلو", 60, "نعم", "grape", "", "", "", "", ""], ["p063", "صنف", "جاهز على الحشو", "خلطة محشي بالرز", "نص كيلو", 50, "نعم", "mix", "", "", "", "", ""], ["p064", "صنف", "جاهز على الحشو", "خلطة متسبكة من غير رز", "نص كيلو", 35, "نعم", "mix", "", "", "", "", ""], ["p065", "صنف", "جاهز على الحشو", "طبق خضرة محشي", "طبق", 20, "نعم", "mix", "", "", "", "", ""], ["p066", "صنف", "الخضار المتنضف", "بامية متقمعة زيرو", "كيلو", 110, "نعم", "veg", "", "", "", "", ""], ["p067", "صنف", "الخضار المتنضف", "بامية متقمعة وسط", "كيلو", 80, "نعم", "veg", "", "", "", "", ""], ["p068", "صنف", "الخضار المتنضف", "قلقاس متقطع", "كيلو", 50, "نعم", "veg", "", "", "", "", ""], ["p069", "صنف", "الخضار المتنضف", "سبانخ متقطعة", "كيلو", 50, "نعم", "spinach", "", "", "", "", ""], ["p070", "صنف", "الخضار المتنضف", "فاصوليا خضرا", "كيلو", 50, "نعم", "veg", "", "", "", "", ""], ["p071", "صنف", "الخضار المتنضف", "خضار مشكل تورلي", "كيلو", 60, "نعم", "veg", "", "", "", "", ""], ["p072", "صنف", "الخضار المتنضف", "جزر متقطع", "كيلو", 50, "نعم", "veg", "", "", "", "", ""], ["p073", "صنف", "الخضار المتنضف", "شوربة خضار", "كيلو", 60, "نعم", "veg", "", "", "", "", ""], ["p074", "صنف", "الخضار المتنضف", "بصل مفروم", "كيلو", 60, "نعم", "veg", "", "", "", "", ""], ["p075", "صنف", "الخضار المتنضف", "ثوم مفروم صافي", "كيلو", 150, "نعم", "veg", "", "", "", "", ""], ["p076", "صنف", "الخضار المتنضف", "فلفل ألوان متقطع", "كيلو", 90, "نعم", "veg", "", "", "", "", ""], ["p077", "صنف", "الخضار المتنضف", "صلصة متسبكة 500 جم", "عبوة", 25, "نعم", "veg", "", "", "", "", ""], ["p078", "صنف", "الخضار المتنضف", "ملوخية مخرطة طازة", "نص كيلو", 30, "نعم", "spinach", "", "", "", "", ""], ["p079", "صنف", "الخضار المتنضف", "طبق سلق جاهز", "طبق", 20, "نعم", "spinach", "", "", "", "", ""], ["p080", "صنف", "الخضار المتنضف", "شنطة طبيخ الأسبوع", "شنطة", 190, "نعم", "veg", "", "", "", "", ""], ["p001", "صنف", "الفراخ المتبلة", "بانيه بتتبيلة ع الحلة", "كيلو", 300, "نعم", "pane", "", "", "", "", ""], ["p002", "صنف", "الفراخ المتبلة", "كرسبي", "كيلو", 285, "نعم", "crispy2", "", "", "", "", ""], ["p003", "صنف", "الفراخ المتبلة", "كوردن بلو", "كيلو", 370, "نعم", "pane", "", "", "", "", ""], ["p004", "صنف", "الفراخ المتبلة", "استربس", "كيلو", 330, "نعم", "crispy2", "", "", "", "", ""], ["p005", "صنف", "الفراخ المتبلة", "شيش طاووق", "كيلو", 290, "نعم", "thighs", "", "", "", "", ""], ["p006", "صنف", "الفراخ المتبلة", "زنجر", "كيلو", 290, "نعم", "crispy2", "", "", "", "", ""], ["p007", "صنف", "الفراخ المتبلة", "ناجتس", "كيلو", 300, "نعم", "crispy2", "", "", "", "", ""], ["p008", "صنف", "الفراخ المتبلة", "شاورما فراخ", "كيلو", 300, "نعم", "thighs", "", "", "", "", ""], ["p009", "صنف", "الفراخ المتبلة", "مسحب", "كيلو", 285, "نعم", "crispy2", "", "", "", "", ""], ["p010", "صنف", "الفراخ المتبلة", "كفتة بانيه", "كيلو", 300, "نعم", "chkofta", "", "", "", "", ""], ["p011", "صنف", "الفراخ المتبلة", "كفتة مشوية", "كيلو", 295, "نعم", "chkofta", "", "", "", "", ""], ["p012", "صنف", "الفراخ المتبلة", "كفتة فراخ", "كيلو", 300, "نعم", "chkofta", "", "", "", "", ""], ["p013", "صنف", "الفراخ المتبلة", "برجر فراخ مشوي", "كيلو", 295, "نعم", "chburger", "", "", "", "", ""], ["p014", "صنف", "الفراخ المتبلة", "برجر فراخ مقلي", "كيلو", 300, "نعم", "chburger", "", "", "", "", ""], ["p015", "صنف", "الفراخ المتبلة", "أوراك", "كيلو", 190, "نعم", "thighs", "", "", "", "", ""], ["p016", "صنف", "الفراخ المتبلة", "دبابيس", "كيلو", 190, "نعم", "thighs", "", "", "", "", ""], ["p017", "صنف", "فراخ كاملة متبلة", "فرخة إيطالي كبيرة", "فرخة", 345, "نعم", "wholech", "", "", "", "", ""], ["p018", "صنف", "فراخ كاملة متبلة", "فرخة إيطالي وسط", "فرخة", 290, "نعم", "wholech", "", "", "", "", ""], ["p019", "صنف", "فراخ كاملة متبلة", "فرخة تندوري كبيرة", "فرخة", 350, "نعم", "wholech", "", "", "", "", ""], ["p020", "صنف", "فراخ كاملة متبلة", "فرخة تندوري وسط", "فرخة", 280, "نعم", "wholech", "", "", "", "", ""], ["p021", "صنف", "فراخ كاملة متبلة", "فرخة شرقي كبيرة", "فرخة", 350, "نعم", "wholech", "", "", "", "", ""], ["p022", "صنف", "فراخ كاملة متبلة", "فرخة شرقي وسط", "فرخة", 280, "نعم", "wholech", "", "", "", "", ""], ["p023", "صنف", "فراخ كاملة متبلة", "فرخة مكسيكي كبيرة", "فرخة", 345, "نعم", "wholech", "", "", "", "", ""], ["p024", "صنف", "فراخ كاملة متبلة", "فرخة مكسيكي وسط", "فرخة", 280, "نعم", "wholech", "", "", "", "", ""], ["p030", "صنف", "اللحمة المتبلة", "كفتة حاتي", "كيلو", 390, "نعم", "beefburger", "", "", "", "", ""], ["p031", "صنف", "اللحمة المتبلة", "كفتة رز", "كيلو", 300, "نعم", "beefburger", "", "", "", "", ""], ["p032", "صنف", "اللحمة المتبلة", "داوود باشا", "كيلو", 380, "نعم", "beefburger", "", "", "", "", ""], ["p033", "صنف", "اللحمة المتبلة", "برجر لحم", "كيلو", 410, "نعم", "beefburger", "", "", "", "", ""], ["p034", "صنف", "اللحمة المتبلة", "لحمة مفرومة متعصجة", "كيلو", 380, "نعم", "beefburger", "", "", "", "", ""], ["p035", "صنف", "اللحمة المتبلة", "سجق إسكندراني", "كيلو", 350, "نعم", "beefburger", "", "", "", "", ""], ["p036", "صنف", "اللحمة المتبلة", "كبدة إسكندراني", "كيلو", 350, "نعم", "beefburger", "", "", "", "", ""], ["p037", "صنف", "اللحمة المتبلة", "كباب حلة مكعبات", "كيلو", 390, "نعم", "beefburger", "", "", "", "", ""], ["p038", "صنف", "اللحمة المتبلة", "بفتيك متبل استيك", "كيلو", 500, "نعم", "beefburger", "", "", "", "", ""], ["p039", "صنف", "اللحمة المتبلة", "شاورما لحم", "كيلو", 380, "نعم", "beefburger", "", "", "", "", ""], ["p040", "صنف", "اللحمة المتبلة", "خلطة حواوشي", "كيلو", 370, "نعم", "beefburger", "", "", "", "", ""], ["p041", "صنف", "اللحمة المتبلة", "كبيبة شامي", "كيلو", 390, "نعم", "kobeba", "", "", "", "", ""], ["p042", "صنف", "اللحمة المتبلة", "طرب", "نص كيلو", 350, "نعم", "beefburger", "", "", "", "", ""], ["p025", "صنف", "الحمام والبط", "جوز حمام جامبو", "جوز", 500, "نعم", "pot", "", "", "", "", ""], ["p026", "صنف", "الحمام والبط", "جوز حمام وسط", "جوز", 400, "نعم", "pot", "", "", "", "", ""], ["p027", "صنف", "الحمام والبط", "جوز حمام كداب", "جوز", 240, "نعم", "pot", "", "", "", "", ""], ["p028", "صنف", "الحمام والبط", "بطة متبلة للفرن", "بطة", 890, "نعم", "wholech", "", "", "", "", ""], ["p029", "صنف", "الحمام والبط", "بطة محشية", "بطة", 890, "نعم", "wholech", "", "", "", "", ""], ["p081", "صنف", "صواني الفرن", "مكرونة بشاميل وسط", "صينية", 320, "نعم", "tray", "", "", "", "", ""], ["p082", "صنف", "صواني الفرن", "مكرونة بشاميل كبير", "صينية", 390, "نعم", "tray", "", "", "", "", ""], ["p083", "صنف", "صواني الفرن", "نجرسكو فراخ وسط", "صينية", 320, "نعم", "tray", "", "", "", "", ""], ["p084", "صنف", "صواني الفرن", "نجرسكو فراخ كبير", "صينية", 390, "نعم", "tray", "", "", "", "", ""], ["p085", "صنف", "صواني الفرن", "رقاق باللحمة وسط", "صينية", 280, "نعم", "tray", "", "", "", "", ""], ["p086", "صنف", "صواني الفرن", "رقاق باللحمة كبير", "صينية", 380, "نعم", "tray", "", "", "", "", ""], ["p087", "صنف", "صواني الفرن", "جلاش مورق وسط", "صينية", 260, "نعم", "tray", "", "", "", "", ""], ["p088", "صنف", "صواني الفرن", "جلاش مورق كبير", "صينية", 350, "نعم", "tray", "", "", "", "", ""], ["p089", "صنف", "صواني الفرن", "جلاش ميكس جبن وبسطرمة وسط", "صينية", 270, "نعم", "tray", "", "", "", "", ""], ["p090", "صنف", "صواني الفرن", "جلاش ميكس جبن وبسطرمة كبير", "صينية", 360, "نعم", "tray", "", "", "", "", ""], ["p091", "صنف", "طواجن وبولات", "مسقعة باللحمة والبشاميل", "طاجن", 330, "نعم", "tagine", "", "", "", "", ""], ["p092", "صنف", "طواجن وبولات", "كوسة بالبشاميل", "طاجن", 300, "نعم", "tagine", "", "", "", "", ""], ["p093", "صنف", "طواجن وبولات", "صينية بطاطس محشية لحمة", "طاجن", 320, "نعم", "tagine", "", "", "", "", ""], ["p094", "صنف", "طواجن وبولات", "طاجن خضار باللحمة", "طاجن", 340, "نعم", "tagine", "", "", "", "", ""], ["p095", "صنف", "طواجن وبولات", "بولة ملوخية", "بولة", 60, "نعم", "tagine", "", "", "", "", ""], ["p096", "صنف", "طواجن وبولات", "بولة قلقاس", "بولة", 70, "نعم", "tagine", "", "", "", "", ""], ["p097", "صنف", "طواجن وبولات", "بولة بصارة", "بولة", 70, "نعم", "tagine", "", "", "", "", ""], ["p098", "صنف", "طواجن وبولات", "بولة عدس أصفر", "بولة", 70, "نعم", "tagine", "", "", "", "", ""], ["p167", "صنف", "طواجن وبولات", "بولة شوربة لسان عصفور", "بولة", 60, "نعم", "tagine", "", "", "", "", ""], ["p099", "صنف", "الرز المعمر", "رز معمر سادة فرد", "فرد", 85, "نعم", "rice", "", "", "", "", ""], ["p100", "صنف", "الرز المعمر", "رز معمر سادة لمة", "نص كيلو", 150, "نعم", "rice", "", "", "", "", ""], ["p101", "صنف", "الرز المعمر", "رز معمر سادة عيلة", "كيلو", 260, "نعم", "rice", "", "", "", "", ""], ["p102", "صنف", "الرز المعمر", "رز معمر بالفراخ فرد", "فرد", 125, "نعم", "rice", "", "", "", "", ""], ["p103", "صنف", "الرز المعمر", "رز معمر بالفراخ لمة", "نص كيلو", 210, "نعم", "rice", "", "", "", "", ""], ["p104", "صنف", "الرز المعمر", "رز معمر بالفراخ عيلة", "كيلو", 350, "نعم", "rice", "", "", "", "", ""], ["p105", "صنف", "الرز المعمر", "رز معمر باللحمة فرد", "فرد", 145, "نعم", "rice", "", "", "", "", ""], ["p106", "صنف", "الرز المعمر", "رز معمر باللحمة لمة", "نص كيلو", 240, "نعم", "rice", "", "", "", "", ""], ["p107", "صنف", "الرز المعمر", "رز معمر باللحمة عيلة", "كيلو", 400, "نعم", "rice", "", "", "", "", ""], ["p108", "صنف", "الرز المعمر", "رز معمر بالكبد والقوانص فرد", "فرد", 120, "نعم", "rice", "", "", "", "", ""], ["p109", "صنف", "الرز المعمر", "رز معمر بالكبد والقوانص لمة", "نص كيلو", 220, "نعم", "rice", "", "", "", "", ""], ["p110", "صنف", "الرز المعمر", "رز معمر بالكبد والقوانص عيلة", "كيلو", 370, "نعم", "rice", "", "", "", "", ""], ["p111", "صنف", "الرز المعمر", "برام فخار (إضافة)", "برام", 20, "نعم", "rice", "", "", "", "", ""], ["p112", "صنف", "سمبوسك للتحمير", "سمبوسك لحمة مفرومة", "نص كيلو", 155, "نعم", "samosa", "", "", "", "", ""], ["p113", "صنف", "سمبوسك للتحمير", "سمبوسك سجق إسكندراني", "نص كيلو", 155, "نعم", "samosa", "", "", "", "", ""], ["p114", "صنف", "سمبوسك للتحمير", "سمبوسك بسطرمة وميكس جبن", "نص كيلو", 160, "نعم", "samosa", "", "", "", "", ""], ["p115", "صنف", "سمبوسك للتحمير", "سمبوسك ميكس جبن", "نص كيلو", 140, "نعم", "samosa", "", "", "", "", ""], ["p116", "صنف", "سمبوسك للتحمير", "سمبوسك جبنة بيضاء ونعناع", "نص كيلو", 105, "نعم", "samosa", "", "", "", "", ""], ["p117", "صنف", "الوجبات", "وجبة 1 (2 كفتة)", "وجبة", 170, "نعم", "meal1", "", "", "", "", ""], ["p118", "صنف", "الوجبات", "وجبة 2 (2 كفتة + 3 سمبوسك)", "وجبة", 220, "نعم", "meal2", "", "", "", "", ""], ["p119", "صنف", "الوجبات", "وجبة 3 (3 كفتة + 3 سمبوسك + 3 محشي)", "وجبة", 250, "نعم", "meal3", "", "", "", "", ""], ["p120", "صنف", "الوجبات", "وجبة 4 (2 كفتة + مكرونة بشاميل)", "وجبة", 270, "نعم", "meal5", "", "", "", "", ""], ["p121", "صنف", "الوجبات", "نص فرخة مشوية + ملوخية", "وجبة", 260, "نعم", "meal1", "", "", "", "", ""], ["p122", "صنف", "الوجبات", "نص فرخة مشوية + أرز بالخلطة", "وجبة", 260, "نعم", "meal1", "", "", "", "", ""], ["p123", "صنف", "الوجبات", "ربع فرخة مشوية + أرز + ملوخية", "وجبة", 180, "نعم", "meal1", "", "", "", "", ""], ["p124", "صنف", "الوجبات", "كبسة فراخ نص فرخة", "وجبة", 300, "نعم", "meal1", "", "", "", "", ""], ["p125", "صنف", "الوجبات", "كبسة فراخ فرخة كاملة", "وجبة", 450, "نعم", "meal1", "", "", "", "", ""], ["p126", "صنف", "الوجبات", "صينية بطاطس + نص فرخة + أرز", "وجبة", 249, "نعم", "meal1", "", "", "", "", ""], ["p127", "صنف", "الوجبات", "صينية بطاطس + فرخة كاملة + أرز", "وجبة", 450, "نعم", "meal1", "", "", "", "", ""], ["p128", "صنف", "الوجبات", "فرخة محشية", "وجبة", 350, "نعم", "meal1", "", "", "", "", ""], ["p129", "صنف", "الوجبات", "فتة لحمة", "وجبة", 150, "نعم", "meal1", "", "", "", "", ""], ["p130", "صنف", "الوجبات", "شاورما فراخ مع أرز", "وجبة", 190, "نعم", "meal1", "", "", "", "", ""], ["p131", "صنف", "الوجبات", "بانيه مشوي + خضار سوتيه", "وجبة", 160, "نعم", "meal4", "", "", "", "", ""], ["p132", "صنف", "الوجبات", "ربع فرخة مشوية + ورق عنب", "وجبة", 190, "نعم", "meal1", "", "", "", "", ""], ["p133", "صنف", "الوجبات", "فرد حمام + محشي كرنب", "وجبة", 289, "نعم", "meal1", "", "", "", "", ""], ["p134", "صنف", "الوجبات", "أرز + كفتة + سلطة", "وجبة", 120, "نعم", "meal1", "", "", "", "", ""], ["p135", "صنف", "الوجبات", "أرز + ربع فرخة + ملوخية", "وجبة", 140, "نعم", "meal1", "", "", "", "", ""], ["p136", "صنف", "الوجبات", "أرز + داوود باشا + سلطة", "وجبة", 150, "نعم", "meal1", "", "", "", "", ""], ["p168", "صنف", "الوجبات", "وجبة بانيه + 2 كفتة + 2 جلاش + تبولة", "وجبة", 170, "نعم", "meal", "جديد", "", "", "", ""], ["p154", "صنف", "أصناف تانية", "علبة بصل", "علبة", 60, "نعم", "veg", "", "", "", "", ""], ["p155", "صنف", "أصناف تانية", "فرخة نضيفة متبلة 1.25 كيلو", "فرخة", 270, "نعم", "wholech", "", "", "", "", ""], ["p156", "صنف", "أصناف تانية", "قرنبيط مستوي", "كيلو", 130, "نعم", "veg", "", "", "", "", ""], ["p157", "صنف", "أصناف تانية", "كرنب صافي (كل كيلو في طبق)", "كيلو", 50, "نعم", "cabbagebags", "", "", "", "", ""], ["p158", "صنف", "أصناف تانية", "فرد حمام جامبو + رز متحمر", "فرد", 250, "نعم", "meal1", "", "", "", "", ""], ["p159", "صنف", "أصناف تانية", "كوسة حلقات", "كيلو", 60, "نعم", "potatocore", "", "", "", "", ""], ["p160", "صنف", "أصناف تانية", "ممبار متنضف من غير حشو", "كيلو", 300, "نعم", "mombar", "", "", "", "", ""], ["p161", "صنف", "أصناف تانية", "هريسة شطة", "كيلو", 150, "نعم", "veg", "", "", "", "", ""], ["p163", "صنف", "أصناف تانية", "ورق عنب مسلوق (سعر صاروخ)", "ربع كيلو", 50, "نعم", "grape", "", "", "", "", ""], ["p164", "صنف", "أصناف تانية", "بتنجان مخلل", "نص كيلو", 40, "نعم", "eggplantst", "", "", "", "", ""], ["p152", "صنف", "إضافات على الأوردر", "مستوي جاهز (إضافة)", "مرة", 30, "نعم", "pot", "", "", "", "", ""]];
+const MEAL_IMG="meal.jpg";const TH={},OI={},GAL={};const GALK=["grape","mix","pane","cabbagest","wholech","peppercore","beefburger","spinach"];
+const SPR=[["thumbs.jpg",200,200,6,["beefburger", "cabbagebags", "cabbagest", "chburger", "chkofta", "crispy2", "eggplantcore", "eggplantst", "grape", "kobeba", "meal", "meal1", "meal2", "meal3", "meal4", "meal5", "meat", "mince", "mix", "mombar", "onionst", "pane", "peppercore", "pot", "potatocore", "rice", "samosa", "spinach", "tagine", "thighs", "tray", "veg", "wholech", "zucchinist"],TH],["offers.jpg",560,350,3,["wholech", "crispy2", "thighs", "chkofta", "pane", "mix", "grape", "cabbagest", "samosa", "cabbagebags", "onionst"],OI]];
+function loadSprite([src,w,h,cols,ks,out]){return new Promise(res=>{const im=new Image();im.onload=()=>{try{const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");ks.forEach((k,i)=>{x.clearRect(0,0,w,h);x.drawImage(im,(i%cols)*w,Math.floor(i/cols)*h,w,h,0,0,w,h);out[k]=c.toDataURL("image/jpeg",.85)})}catch(_){}res()};im.onerror=()=>res();im.src=src})}
+
+const PHONE='201275165496',DELIVERY=60;
+const $=id=>document.getElementById(id);
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('ar-EG');
+const fmtE=n=>String(Math.round(n*100)/100);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=v=>{const n=parseFloat(String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d.]/g,''));return isFinite(n)?n:0};
+const yes=v=>/^(نعم|ايوه|أيوه|yes|y|1|true)$/i.test(String(v||'').trim());
+const HINT={'المحاشي':'على التسوية تطبخها في البيت، ومستوي جاهز للأكل','جاهز على الحشو':'مقور ومتنضف، عليكي الحشو بس','الخضار المتنضف':'متقطع ومغسول، من الكيس للحلة','الفراخ المتبلة':'متبلة وجاهزة للطاسة أو الفرن','الرز المعمر':'في برام فخار، بالقشطة والسمنة','صواني الفرن':'وسط تكفي 3–4 أفراد، كبير تكفي 5–6','الوجبات':'جاهز على التسوية أو مستوي حسب اختيارك'};
+const GROUPS={'عروض الفراخ':'chicken','عروض المحاشي':'mahshi','توفير الفريزر':'freezer','المناسبات':'events'};
+const HALF=u=>/كيلو/.test(u)&&!/نص|ربع/.test(u);
+const MAHSHI_KINDS=['ورق عنب','كرنب','كوسة','باذنجان','فلفل','فلفل ألوان','بصل','طماطم'];
+const BOX_CH=['بانيه','استربس','شاورما فراخ','شيش طاووق','زنجر','كفتة فراخ'];
+const BOX_MEAT=['كفتة حاتي','سجق إسكندراني','كبدة إسكندراني','برجر لحم','شاورما لحم'];
+const img=k=>/^https?:\/\//.test(k||'')?k:(TH[k]||TH.pot);
+const wide=k=>/^https?:\/\//.test(k||'')?k:(OI[k]||TH[k]||TH.pot);
+
+/* ---------- build model from rows ---------- */
+let byId={},items=[],secs=[],secImg={},OFFERS=[],FREEZER=[],FREE_DEL=new Set(),OGROUPS=[];
+function splitInc(t){return String(t||'').split('+').map(x=>x.trim()).filter(Boolean).map(x=>{const m=x.match(/^((?:\d+(?:\.\d+)?|½|نص|ربع)\s*(?:كيلو|ك)?|فرخة|فرخه)\s+(.+)$/);return m?[m[1],m[2]]:['',x]})}
+function build(rows){byId={};items=[];secs=[];secImg={};OFFERS=[];FREEZER=[];FREE_DEL=new Set();OGROUPS=[];
+  rows.forEach(r=>{const id=String(r[0]||'').trim();const type=String(r[1]||'').trim();const name=String(r[3]||'').trim();const price=num(r[5]);
+    if(!id||!name||!(price>0)||!yes(r[6]))return;
+    const sec=String(r[2]||'أخرى').trim()||'أخرى';const p={id,name,price,section:sec,unit:String(r[4]||'').trim()||'وحدة',img:String(r[7]||'').trim(),desc:String(r[8]||'').trim()};byId[id]=p;
+    if(type==='عرض'){const g=GROUPS[sec]||sec;if(!OGROUPS.find(x=>x[0]===g))OGROUPS.push([g,sec]);
+      if(g==='freezer'){FREEZER.push(p);return}
+      const pick=(id==='p165'||id==='p166'||/^محشي\s*\d/.test(name))?(num(name)||3):0;const box=id==='p142'||/بوكس المناسبات/.test(name);
+      const badge=String(r[12]||'').trim();const o={id,g,title:name.replace(/^عرض\s+/,''),tl:p.desc,inc:splitInc(r[9]),before:num(r[10]),free:yes(r[11]),badges:badge?[[/أكبر|أوفر|يكفي/.test(badge)?'hot':'',badge]]:[],pick,box,big:box||/أكبر/.test(badge),img:p.img};
+      if(o.free)FREE_DEL.add(id);OFFERS.push(o)}
+    else{items.push(p);if(!secs.includes(sec)){secs.push(sec);secImg[sec]=p.img}}});
+  if(!secImg['الوجبات']&&byId.p168)secImg['الوجبات']='meal1'}
+const offerOf=id=>OFFERS.find(o=>o.id===id);
+
+/* ---------- CSV ---------- */
+function parseCSV(t){const out=[];let row=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);out.push(row);row=[];f=''}else f+=c}if(f!==''||row.length){row.push(f);out.push(row)}return out}
+
+/* ---------- cart: key = id or id::options ---------- */
+let cart={};try{cart=JSON.parse(localStorage.getItem('alhella-cart')||'{}')||{}}catch(_){cart={}}
+const save=()=>{try{localStorage.setItem('alhella-cart',JSON.stringify(cart))}catch(_){}};
+const pidOf=k=>k.split('::')[0];const optOf=k=>k.split('::')[1]||'';
+const clean=()=>Object.keys(cart).forEach(k=>{if(!byId[pidOf(k)]||!(cart[k]>0))delete cart[k]});
+const qtyOf=id=>Object.entries(cart).filter(([k])=>pidOf(k)===id).reduce((a,[,q])=>a+q,0);
+const sub=()=>Object.entries(cart).reduce((a,[k,q])=>a+(byId[pidOf(k)]?byId[pidOf(k)].price*q:0),0);
+const freeDel=()=>Object.keys(cart).some(k=>FREE_DEL.has(pidOf(k)));
+const delivery=()=>Object.keys(cart).length?(freeDel()?0:DELIVERY):0;
+function setQty(k,v){v=Math.max(0,Math.round(v*100)/100);if(v)cart[k]=v;else delete cart[k];save();refresh()}
+
+/* ---------- offers render ---------- */
+let OG='all';
+function offerCard(o){const p=byId[o.id];const q=qtyOf(o.id);const saveAmt=o.before>p.price?o.before-p.price:0;
+  const bd=[...o.badges,...(o.free?[['green','توصيل مجاني']]:[])].map(([c,t])=>`<span class="bdg ${c}">${esc(t)}</span>`).join('');
+  const btn=o.pick||o.box?`<button type="button" class="addo${q?' added':''}" data-pick="${o.id}">${q?'اتضاف · ضيف تاني':(o.box?'اختار الحشوات':'اختار الأصناف')}</button>`
+    :(q?`<div class="ostep"><button type="button" data-ok="${o.id}" data-d="-1" aria-label="قلّل">−</button><output class="num">${fmt(q)}</output><button type="button" data-ok="${o.id}" data-d="1" aria-label="زوّد">+</button></div>`:`<button type="button" class="addo" data-ok="${o.id}" data-d="1">أضف للأوردر</button>`);
+  return `<article class="oc${o.big?' big':''}"><div class="pic"><img src="${wide(o.img)}" alt="عرض ${esc(o.title)}" loading="lazy"><div class="badges">${bd}</div></div>
+  <div class="ob"><div class="ot"><small>عرض</small><b>${esc(o.title)}</b></div>${o.tl?`<div class="tl">${esc(o.tl)}</div>`:''}
+  ${o.inc.length?`<ul class="inc">${o.inc.map(x=>`<li>${x[0]?`<i class="num">${esc(x[0])}</i>`:'<i>✓</i>'}<span>${esc(x[1])}</span></li>`).join('')}</ul>`:''}
+  <div class="pricebox"><div class="pv">${saveAmt?`<s class="num">لوحدهم ${fmt(o.before)} ج</s>`:''}<strong class="num">${fmt(p.price)} <span>جنيه</span></strong>${saveAmt||o.free?`<span class="save">${saveAmt?'وفّر '+fmt(saveAmt+(o.free?DELIVERY:0))+' ج':'التوصيل عليه مجاني'}</span>`:''}</div>${btn}</div></div></article>`}
+function freezerHTML(){const prices=[...new Set(FREEZER.map(p=>p.price))];return `<div class="fzhead"><img src="${TH.cabbagebags}" alt="خضار مجهز في أكياس"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
+  <div class="fz">${FREEZER.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}"><div class="dot"><img src="${img(p.img)}" alt="" loading="lazy"></div><div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
+const GTITLE={chicken:['عروض الفراخ','<span class="free">🚚 التوصيل مجاني</span>'],mahshi:['عروض المحاشي',''],freezer:['توفير الفريزر',''],events:['المناسبات','']};
+function renderChips(){$('ofilter').innerHTML=`<button type="button" data-g="all" aria-pressed="${OG==='all'}">كل العروض</button>`+OGROUPS.map(([g,s])=>`<button type="button" data-g="${esc(g)}" aria-pressed="${OG===g}">${esc(s)}</button>`).join('')}
+function renderOffers(){$('offers').hidden=!OGROUPS.length||!!$('q').value.trim();
+  $('offersBody').innerHTML=OGROUPS.filter(([g])=>OG==='all'||OG===g).map(([g,s])=>{const [t,x]=GTITLE[g]||[s,''];const hasFree=OFFERS.some(o=>o.g===g&&o.free);
+    return `<div class="ogroup"><h3>${esc(t)} ${g==='chicken'||hasFree?'<span class="free">🚚 التوصيل مجاني</span>':x}</h3>${g==='freezer'?freezerHTML():`<div class="ogrid">${OFFERS.filter(o=>o.g===g).map(offerCard).join('')}</div>`}</div>`}).join('')}
+$('ofilter').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;OG=b.dataset.g;renderChips();renderOffers()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ok]');if(!b)return;const id=b.dataset.ok;setQty(id,(cart[id]||0)+(+b.dataset.d));if(+b.dataset.d>0)toast('اتضاف للأوردر')});
+
+/* ---------- picker ---------- */
+let PK=null;
+function openPick(id){const o=offerOf(id);if(!o)return;PK={o,sel:[],style:'ع التسوية',ch:'',meat:''};$('pickTitle').textContent='عرض '+o.title;drawPick();$('pick').hidden=false;document.body.style.overflow='hidden'}
+function drawPick(){const {o}=PK;let h='';const pr=byId[o.id].price;
+  if(o.pick){h=`<h4>اختاري ${fmt(o.pick)} أصناف <span class="pcount num">(${fmt(PK.sel.length)}/${fmt(o.pick)})</span></h4><div class="pgrid">${MAHSHI_KINDS.map(k=>`<button type="button" data-kind="${k}" aria-pressed="${PK.sel.includes(k)}">${k}</button>`).join('')}</div>
+    <h4>الطريقة</h4><div class="seg">${['ع التسوية','مستوي'].map(s=>`<button type="button" data-style="${s}" aria-pressed="${PK.style===s}">${s}</button>`).join('')}</div>
+    <p style="margin:0;color:var(--muted);font-weight:700">كيلو من كل صنف، بسعر العرض ${fmt(pr)} جنيه.</p>`}
+  else{h=`<h4>حشوة الفراخ (10 ساندوتش)</h4><div class="pgrid">${BOX_CH.map(k=>`<button type="button" data-ch="${k}" aria-pressed="${PK.ch===k}">${k}</button>`).join('')}</div>
+    <h4>حشوة اللحمة (10 ساندوتش)</h4><div class="pgrid">${BOX_MEAT.map(k=>`<button type="button" data-meat="${k}" aria-pressed="${PK.meat===k}">${k}</button>`).join('')}</div>
+    <div class="note" style="background:var(--brand-soft);color:var(--pot)">البوكس محتاج يتطلب قبلها بيوم على الأقل.</div>`}
+  const ok=o.pick?PK.sel.length===o.pick:(PK.ch&&PK.meat);
+  h+=`<button type="button" class="send" id="pickAdd" ${ok?'':'disabled style="opacity:.5;cursor:not-allowed"'}>${ok?'أضف للأوردر · '+fmt(pr)+' ج':(o.pick?'اختاري '+fmt(o.pick-PK.sel.length)+' كمان':'اختاري الحشوتين')}</button>`;
+  $('pickBody').innerHTML=h}
+$('pickBody').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!PK)return;const o=PK.o;
+  if(b.dataset.kind){const k=b.dataset.kind;if(PK.sel.includes(k))PK.sel=PK.sel.filter(x=>x!==k);else if(PK.sel.length<o.pick)PK.sel.push(k);else{toast('العرض '+fmt(o.pick)+' أصناف بس');return}}
+  else if(b.dataset.style)PK.style=b.dataset.style;else if(b.dataset.ch)PK.ch=b.dataset.ch;else if(b.dataset.meat)PK.meat=b.dataset.meat;
+  else if(b.id==='pickAdd'){const opt=o.pick?PK.sel.join('، ')+' — '+PK.style:'فراخ: '+PK.ch+' · لحمة: '+PK.meat;const k=o.id+'::'+opt;setQty(k,(cart[k]||0)+1);closePick();toast('اتضاف للأوردر');return}
+  drawPick()});
+function closePick(){$('pick').hidden=true;document.body.style.overflow=$('sheet').hidden?'':'hidden';PK=null}
+$('closePick').addEventListener('click',closePick);$('pick').addEventListener('click',e=>{if(e.target===$('pick'))closePick()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b)openPick(b.dataset.pick)});
+
+/* ---------- menu render ---------- */
+function rowHTML(p){const q=cart[p.id]||0;const half=HALF(p.unit);
+  return `<div class="row${q?' on':''}" data-id="${p.id}"><div class="dot" aria-hidden="true"><img src="${img(p.img)}" alt="" loading="lazy"></div>
+  <div class="info"><b>${esc(p.name)}</b><span class="price num">${fmt(p.price)} ج <span>/ ${esc(p.unit)}</span></span></div>
+  <div class="step">${q?`<button type="button" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num" aria-live="polite">${fmt(q)}</output>`:''}<button type="button" class="add" data-d="1" aria-label="زوّد ${esc(p.name)}${half?' نص كيلو':''}">+</button></div></div>`}
+function renderMenu(){const q=$('q').value.trim();const norm=s=>s.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');const nq=norm(q);
+  let html='';secs.forEach((s,i)=>{const list=items.filter(p=>p.section===s&&(!q||norm(p.name).includes(nq)));if(!list.length)return;
+    const featP=!q?list.find(p=>p.desc==='جديد'||p.desc==='مميز'):null;
+    const feat=featP?`<div class="feature"><img src="${featP.id==='p168'?MEAL_IMG:wide(featP.img)}" alt="${esc(featP.name)}"><div class="fb"><span class="tag">${esc(featP.desc)}</span><b style="font-size:19px">${esc(featP.name)}</b><span class="price num" style="font-size:18px">${fmt(featP.price)} ج <span>/ ${esc(featP.unit)}</span></span>${rowHTML(featP).replace('class="row','class="row" style="border:0;padding:0;background:none" data-x="')}</div></div>`:'';
+    html+=`<section class="sec" id="s${i}"><div class="sh"><img src="${img(secImg[s])}" alt=""><div><h2>${esc(s)}</h2>${HINT[s]?`<p class="hint">${esc(HINT[s])}</p>`:''}</div></div>${feat}<div class="list">${list.filter(p=>p!==featP).map(rowHTML).join('')}</div></section>`});
+  $('sections').innerHTML=html||'<div class="empty">مفيش صنف بالاسم ده. جرّب كلمة تانية.</div>';
+  renderOffers();
+  $('strip').innerHTML=(q||!OGROUPS.length?'':'<a href="#offers" data-s="offers">🔥 العروض</a>')+secs.map((s,i)=>`<a href="#s${i}" data-s="s${i}">${esc(s)}</a>`).join('');spy()}
+document.addEventListener('click',e=>{const b=e.target.closest('.row .step button');if(!b)return;const id=b.closest('[data-id]').dataset.id;const p=byId[id];const st=HALF(p.unit)?0.5:1;setQty(id,(cart[id]||0)+(+b.dataset.d)*st)});
+$('q').addEventListener('input',renderMenu);
+function refresh(){document.querySelectorAll('.row[data-id]').forEach(r=>{const p=byId[r.dataset.id];if(!p)return;const tmp=document.createElement('div');tmp.innerHTML=rowHTML(p);const nr=tmp.firstElementChild;if(r.dataset.x!==undefined){nr.setAttribute('style',r.getAttribute('style'));nr.dataset.x=''}if(nr.outerHTML!==r.outerHTML)r.replaceWith(nr)});
+  renderOffers();bar();if(!$('sheet').hidden)renderCart()}
+function bar(){const n=Object.keys(cart).length;$('bar').hidden=!n;$('cnt').textContent=fmt(n);$('barTotal').textContent=fmt(sub()+delivery())+' ج'}
+
+let spyObs;function spy(){if(spyObs)spyObs.disconnect();if(!('IntersectionObserver' in window))return;spyObs=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){document.querySelectorAll('#strip a').forEach(a=>{const on=a.dataset.s===en.target.id;a.setAttribute('aria-current',on);if(on)a.scrollIntoView({block:'nearest',inline:'center'})})}})},{rootMargin:'-80px 0px -70% 0px'});document.querySelectorAll('.sec,#offers').forEach(s=>spyObs.observe(s))}
+
+const DAYS=['الأحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'];
+function whenOpts(){const now=new Date();const o=[];for(let i=0;i<7;i++){const d=new Date(now);d.setDate(now.getDate()+i);const lbl=i===0?'النهارده':i===1?'بكره':DAYS[d.getDay()];o.push(`<option value="${lbl} ${d.getDate()}/${d.getMonth()+1}">${lbl} ${d.getDate()}/${d.getMonth()+1}${i>1?'':' · '+DAYS[d.getDay()]}</option>`)}$('fWhen').innerHTML=o.join('');$('fWhen').selectedIndex=1}
+$('areas').innerHTML=['سموحة','سيدي جابر','الإبراهيمية','كليوباترا','رشدي','ستانلي','لوران','سان ستيفانو','جليم','سابا باشا','زيزينيا','ميامي','العصافرة','المندرة','المنتزه','سيدي بشر','فيكتوريا','العوايد','محرم بك','كرموز','الورديان','بحري','الأنفوشي','العطارين','المنشية','الشاطبي','كامب شيزار','الحضرة','سبورتنج','أبو يوسف','العجمي','البيطاش','الهانوفيل','الدخيلة','المكس','القباري','باكوس','غبريال'].map(a=>`<option value="${a}">`).join('');
+
+/* ---------- cart sheet ---------- */
+function lineName(k){const p=byId[pidOf(k)];const o=offerOf(p.id);const base=o?'عرض '+o.title:p.name;return optOf(k)?base+' ('+optOf(k)+')':base}
+function renderCart(){const ent=Object.entries(cart);
+  $('lines').innerHTML=ent.length?ent.map(([k,q])=>{const p=byId[pidOf(k)];return `<div class="cl"><span>${esc(lineName(k))}<br><small class="num" style="color:var(--muted)">${fmt(q)} ${esc(p.unit)} × ${fmt(p.price)}</small> <button type="button" class="rm" data-rm="${esc(k)}">شيل</button></span><span class="num">${fmt(p.price*q)} ج</span></div>`}).join(''):'<div class="empty">لسه ما اخترتش أصناف</div>';
+  const s=sub(),d=delivery();$('totals').innerHTML=ent.length?`<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num ${d?'':'fr'}">${d?fmt(d)+' ج':'مجاني مع العرض'}</span></div><div class="tot big"><span>الحساب بالتوصيل</span><span class="num">${fmt(s+d)} ج</span></div>`:''}
+$('lines').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b)setQty(b.dataset.rm,0)});
+function openSheet(){renderCart();$('sheet').hidden=false;$('orderForm').hidden=false;$('done').hidden=true;document.body.style.overflow='hidden';setTimeout(()=>$('closeCart').focus(),50)}
+function closeSheet(){$('sheet').hidden=true;document.body.style.overflow='';$('openCart').focus()}
+$('openCart').addEventListener('click',openSheet);$('closeCart').addEventListener('click',closeSheet);
+$('sheet').addEventListener('click',e=>{if(e.target===$('sheet'))closeSheet()});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('pick').hidden)closePick();else if(!$('sheet').hidden)closeSheet()});
+document.querySelectorAll('input[name=pay]').forEach(r=>r.addEventListener('change',()=>{$('payNote').hidden=$('pCash').checked}));
+function toast(t){const x=$('toast');x.textContent=t;x.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>x.hidden=true,1800)}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('اتنسخ')}catch(_){toast('انسخ يدوي من فوق')}}
+$('copyNum').addEventListener('click',()=>copy('01275165496'));
+['fName','fPhone','fArea','fAddr'].forEach(id=>{try{const v=localStorage.getItem('alhella-'+id);if(v)$(id).value=v}catch(_){}$(id).addEventListener('change',()=>{try{localStorage.setItem('alhella-'+id,$(id).value)}catch(_){}})});
+let lastText='';
+$('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object.entries(cart);const err=$('err');
+  const name=$('fName').value.trim(),phone=$('fPhone').value.replace(/\s/g,''),area=$('fArea').value.trim(),addr=$('fAddr').value.trim();
+  const miss=[];if(!ent.length)miss.push('اختار صنف واحد على الأقل');if(!name)miss.push('اكتب اسمك');if(!/^0?1[0125]\d{8}$/.test(phone))miss.push('اكتب رقم موبايل صحيح من 11 رقم');if(!addr)miss.push('اكتب العنوان');
+  if(ent.some(([k])=>{const o=offerOf(pidOf(k));return o&&o.box})&&$('fWhen').selectedIndex<1)miss.push('بوكس المناسبات محتاج يتطلب قبلها بيوم، اختار معاد من بكره');
+  if(miss.length){err.hidden=false;err.textContent=miss.join(' · ');return}err.hidden=true;
+  const s=sub(),d=delivery();const pay=document.querySelector('input[name=pay]:checked').value;
+  const t=['أوردر جديد من موقع ع الحلة 🍲','','الاسم: '+name,'الموبايل: '+phone,'العنوان: '+(area?area+' — ':'')+addr,'المعاد: '+$('fWhen').value,'','الأصناف:',...ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return `• ${lineName(k)} — ${fmtE(q)}${u} = ${fmtE(p.price*q)} ج`}),'','الأصناف: '+fmtE(s)+' ج','التوصيل: '+(d?d+' ج':'مجاني (مع العرض)'),'الحساب بالتوصيل: '+fmtE(s+d)+' ج','الدفع: '+pay,$('fNote').value.trim()?'ملاحظات: '+$('fNote').value.trim():''].filter((l,i,a)=>!(l===''&&a[i-1]==='')).join('\n').trim();
+  lastText=t;const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(t);$('waLink').href=url;$('orderText').textContent=t;$('orderForm').hidden=true;$('done').hidden=false;
+  const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()});
+$('copyOrder').addEventListener('click',()=>copy(lastText));
+$('newOrder').addEventListener('click',()=>{cart={};save();refresh();closeSheet()});
+const GALN={grape:'ورق عنب',mix:'محاشي مشكلة',pane:'بانيه',cabbagest:'كرنب محشي',wholech:'فراخ متبلة',peppercore:'فلفل مقور',beefburger:'برجر لحم',spinach:'خضار متنضف'};
+function drawGal(){$('gal').innerHTML=GALK.filter(k=>TH[k]).map(k=>[k,TH[k]]).map(([k,v])=>`<figure><img src="${v}" alt="${GALN[k]}" loading="lazy"><figcaption>${GALN[k]}</figcaption></figure>`).join('')}
+
+function start(rows){build(rows);clean();renderChips();renderMenu();bar()}
+whenOpts();Promise.all(SPR.map(loadSprite)).then(()=>{drawGal();start(window.__LIVE||ROWS)});
+if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes('?')?'&':'?')+'t='+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(t=>{const rows=parseCSV(t);if(rows.length>1&&/الكود/.test(rows[0][0]||'')){window.__LIVE=rows.slice(1);if(Object.keys(TH).length)start(window.__LIVE)}}).catch(()=>{})}
+</script>
+
+</body>
+</html>
