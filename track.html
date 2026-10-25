@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تابع أوردرك — ع الحلة</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#E4521B">
+<link rel="icon" href="icon-512.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap">
+<style>
+:root{--bg:#FFF8EF;--paper:#fff;--ink:#2A1A12;--muted:#7A6152;--line:#EEDFCC;--brand:#E4521B;--soft:#FDE6D8;--leaf:#2F7A3E;--leafsoft:#E2F1E4}
+@media (prefers-color-scheme:dark){:root{--bg:#1C130E;--paper:#271B14;--ink:#F8EBDD;--muted:#C2A691;--line:#3D2B20;--brand:#FF6A33;--soft:#3E2216;--leaf:#7FCB8C;--leafsoft:#1E3324}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Cairo,system-ui,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px}header img{width:54px;height:54px;border-radius:50%}
+header b{font-size:20px;font-weight:900;display:block}header small{color:var(--muted);font-weight:700}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.big{font-size:22px;font-weight:900;margin:0 0 4px}.muted{color:var(--muted);font-weight:700}
+.steps{list-style:none;margin:12px 0 0;padding:0}
+.steps li{display:flex;align-items:center;gap:12px;padding:10px 0;position:relative;color:var(--muted);font-weight:800}
+.steps li .d{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:18px;flex:none;z-index:1}
+.steps li:not(:last-child)::after{content:"";position:absolute;right:18px;top:44px;height:calc(100% - 34px);width:3px;background:var(--line)}
+.steps li.ok{color:var(--ink)}.steps li.ok .d{background:var(--leafsoft)}.steps li.ok:not(:last-child)::after{background:var(--leaf)}
+.steps li.now{color:var(--brand)}.steps li.now .d{background:var(--brand);box-shadow:0 0 0 6px var(--soft)}
+.x{background:#FDE3DB;color:#B83A12;border-radius:14px;padding:12px;font-weight:900;text-align:center}
+.it{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-weight:700}
+.it:last-child{border:0}.tot{display:flex;justify-content:space-between;font-weight:900;font-size:18px;margin-top:8px}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:14px;padding:13px;font-weight:900;margin-top:10px}
+.wa{background:var(--leaf);color:#fff}.back{border:2px solid var(--brand);color:var(--brand)}
+.num{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="icon-512.png" alt="ع الحلة"><div><b>تابع أوردرك</b><small>ع الحلة · أكل بيتي في إسكندرية</small></div></header>
+  <div id="box"><div class="card"><p class="muted">بنجيب أوردرك…</p></div></div>
+  <a class="btn wa" href="https://wa.me/201275165496" target="_blank" rel="noopener">💬 كلمنا واتساب 01275165496</a>
+  <a class="btn back" href="./">🍲 ارجع للمنيو</a>
+</div>
+<script type="module">
+import {db,doc,onSnapshot,STATUS,STATUS_X} from './fb.js';
+const box=document.getElementById('box');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString('en-US');
+const id=new URLSearchParams(location.search).get('id')||'';
+if(!/^[A-Za-z0-9]{10,40}$/.test(id)){box.innerHTML='<div class="card"><p class="big">الرابط ناقص</p><p class="muted">افتح رابط المتابعة اللي جالك مع الأوردر، أو كلمنا واتساب.</p></div>'}
+else onSnapshot(doc(db,'orders',id),s=>{
+  if(!s.exists()){box.innerHTML='<div class="card"><p class="big">مش لاقيين الأوردر ده</p><p class="muted">ممكن يكون لسه بيتسجل، استنى دقيقة. ولو المشكلة فضلت كلمنا واتساب.</p></div>';return}
+  const o=s.data();const idx=STATUS.findIndex(x=>x[0]===o.status);const cancelled=o.status===STATUS_X[0];
+  const first=(o.name||'').split(' ')[0];
+  const steps=STATUS.map((x,i)=>`<li class="${i<idx?'ok':i===idx?'now':''}"><span class="d">${x[2]}</span>${x[1]}</li>`).join('');
+  const items=(o.items||[]).map(x=>`<div class="it"><span>${esc(x.name)} ${x.qty!=1||x.unit?'— '+fmt(x.qty)+' '+esc(x.unit||''):''}</span><span class="num">${fmt(x.total)} ج</span></div>`).join('');
+  box.innerHTML=`<div class="card"><p class="big">${first?'أهلاً '+esc(first)+' 👋':'أوردرك'}</p>
+    <p class="muted">رقم الأوردر <b class="num">${esc(id.slice(0,6).toUpperCase())}</b>${o.when?' · المعاد: '+esc(o.when):''}</p>
+    ${cancelled?`<div class="x">✖️ الأوردر ده اتلغى. لو ده غلط كلمنا واتساب.</div>`:`<ul class="steps">${steps}</ul>`}</div>
+    <div class="card"><b>الأصناف</b>${items}
+    <div class="it"><span>التوصيل</span><span class="num">${o.delivery==null?'هيتحدد لما نأكد الأوردر':o.delivery?fmt(o.delivery)+' ج':'مجاني'}</span></div>
+    <div class="tot"><span>الإجمالي</span><span class="num">${fmt(o.total)} ج${o.delivery==null?' + التوصيل':''}</span></div>
+    <p class="muted" style="margin:6px 0 0">الدفع: ${esc(o.pay||'')}</p></div>`;
+},()=>{box.innerHTML='<div class="card"><p class="big">في مشكلة في الاتصال</p><p class="muted">جرّب تاني بعد شوية، أو كلمنا واتساب.</p></div>'});
+</script>
+</body>
+</html>
