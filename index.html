@@ -382,7 +382,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
   <section class="revs" id="revs" hidden aria-labelledby="revTitle">
     <div class="ohead"><div><h2 id="revTitle">قالوا عن <em>ع الحلة</em></h2><p>كلام عملائنا بعد ما الأكل وصلهم.</p></div></div>
     <div class="rlist" id="rlist"></div>
-    <div class="revcta"><span>جربت أكلنا؟ يهمنا نسمع رأيك</span><a class="go alt revlink" href="#" target="_blank" rel="noopener">ابعتلنا رأيك</a></div>
+    <div class="revcta"><span>جربت أكلنا؟ يهمنا نسمع رأيك</span><a class="go alt revlink" href="#" target="_blank" rel="noopener">قيّمنا على جوجل ⭐</a></div>
   </section>
   <div id="menu" style="scroll-margin-top:70px">
     <div id="sections"></div>
@@ -437,7 +437,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
       <div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="x" id="copyOrder" style="flex:1">انسخ الأوردر</button><button type="button" class="x" id="newOrder" style="flex:1">أوردر جديد</button></div>
       <div class="ptsline" id="donePts" hidden></div>
       <a class="donefb" href="https://www.facebook.com/share/1EgNztqKUU" target="_blank" rel="noopener">👍 تابعنا على فيسبوك علشان توصلك عروض الأسبوع</a>
-      <a class="go alt revlink" href="#" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-top:8px">بعد ما الأكل يوصلك ابعتلنا رأيك ⭐</a>
+      <a class="go alt revlink" href="#" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-top:8px">بعد ما الأكل يوصلك قيّمنا على جوجل ⭐</a>
       <pre id="orderText"></pre>
     </div>
   </div>
@@ -635,7 +635,7 @@ function drawGal(){$('gal').innerHTML=GALK.filter(k=>TH[k]).map(k=>[k,TH[k]]).ma
 /* ---------- reviews ---------- */
 let REVS=[];
 const REVTXT='رأيي في ع الحلة ⭐\nالصنف: \nرأيي: \nالاسم والمنطقة: ';
-document.querySelectorAll('.revlink').forEach(a=>a.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(REVTXT));
+document.querySelectorAll('.revlink').forEach(a=>a.href='https://g.page/r/CT-4UMLtgxyFEBM/review');
 function renderRevs(){const r=(REVS||[]).filter(x=>x&&x.text);if(!r.length)return;
   $('rlist').innerHTML=r.map(x=>`<article class="rv">${x.item?`<span class="tag">${esc(x.item)}</span>`:''}<p>${esc(x.text)}</p>${x.img?`<img src="${esc(x.img)}" alt="رأي ${esc(x.name||'عميل')}" loading="lazy">`:''}<footer><span class="av">${esc((x.name||'ع').trim()[0])}</span><span><b>${esc(x.name||'عميل ع الحلة')}</b><small>${esc(x.area||'')}</small></span></footer></article>`).join('');
   $('revs').hidden=false}
