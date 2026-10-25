@@ -120,7 +120,7 @@ label.f{display:block;font-weight:800;margin:10px 0 4px}
 
 <script type="module">
 import {app,db,ADMINS,STATUS,STATUS_X,doc,collection,setDoc,getDoc,onSnapshot,query,orderBy,limit,updateDoc,deleteDoc} from './fb.js';
-import {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString('en-US');
@@ -130,7 +130,11 @@ const ALL=[...STATUS,STATUS_X];const SN=Object.fromEntries(ALL.map(x=>[x[0],x]))
 const auth=getAuth(app);let unsub=null,started=false;
 
 $('in').onclick=async()=>{const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
-  try{await signInWithPopup(auth,p)}catch(e){if(/popup/.test(e.code||''))signInWithRedirect(auth,p);else $('loginMsg').textContent='حصلت مشكلة: '+(e.code||e.message)}};
+  $('loginMsg').textContent='هتفتحلك صفحة جوجل… اختار إيميل المطبخ';
+  try{await signInWithPopup(auth,p)}catch(e){const c=e.code||'';
+    $('loginMsg').textContent=c.includes('popup-blocked')?'كروم منع صفحة الدخول. من ⋮ ← الإعدادات ← إعدادات المواقع ← النوافذ المنبثقة، اسمح لـ 3al7ella.github.io وجرب تاني.'
+      :c.includes('closed-by-user')||c.includes('cancelled')?'صفحة جوجل اتقفلت قبل ما تختار الإيميل. دوس «ادخل بجوجل» تاني واختار Hamdyuwk1@gmail.com.'
+      :'حصلت مشكلة ('+c+'). افتح الصفحة من كروم العادي (مش من أيقونة على الشاشة) وجرب تاني.'}};
 $('out').onclick=()=>signOut(auth);
 onAuthStateChanged(auth,u=>{
   const ok=u&&ADMINS.includes((u.email||'').toLowerCase());
