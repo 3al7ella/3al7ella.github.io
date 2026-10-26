@@ -57,7 +57,7 @@ else onSnapshot(doc(db,'orders',id),s=>{
     <div class="card"><b>الأصناف</b>${items}
     <div class="it"><span>التوصيل</span><span class="num">${o.delivery==null?'هيتحدد لما نأكد الأوردر':o.delivery?fmt(o.delivery)+' ج':'مجاني'}</span></div>
     <div class="tot"><span>الإجمالي</span><span class="num">${fmt(o.total)} ج${o.delivery==null?' + التوصيل':''}</span></div>
-    <p class="muted" style="margin:6px 0 0">الدفع: ${esc(o.pay||'')}</p></div>`;
+    <p class="muted" style="margin:6px 0 0">الدفع: ${esc(o.pay||'')}</p></div>${o.status==='delivered'?`<div class="card"><p class="big" style="font-size:19px">بالهنا والشفا 😋</p><p class="muted">الأكل عجبك؟ رأيك بكلامك بيفرق معانا جدًا.</p><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('رأيي في أوردر ع الحلة ⭐\nالصنف: \nرأيي: \nأوافق إن رأيي يظهر على الموقع باسم: ')}">💬 ابعت رأيك واتساب</a><a class="btn back" target="_blank" rel="noopener" href="https://g.page/r/CT-4UMLtgxyFEBM/review">⭐ قيّمنا على جوجل</a></div>`:''}`;
 },()=>{box.innerHTML='<div class="card"><p class="big">في مشكلة في الاتصال</p><p class="muted">جرّب تاني بعد شوية، أو كلمنا واتساب.</p></div>'});
 </script>
 </body>
