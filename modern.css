@@ -112,3 +112,50 @@ body:not([data-view=home]) header.hero>:not(.top){display:none!important}
  .ctile img,.ctile .cemo{width:38px;height:38px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Stronger layout pass: visibly reorganize the storefront, not just recolor it */
+body{font-size:15px!important}
+body[data-view=home] .ribbon .wrap{justify-content:center;text-align:center}
+body[data-view=home] header.hero{display:grid!important;grid-template-columns:1fr;gap:10px;padding-top:10px!important;padding-bottom:6px!important}
+body[data-view=home] header.hero .top{grid-row:1;display:flex;justify-content:space-between}
+body[data-view=home] header.hero .herosearch{grid-row:2;width:100%;margin:0!important}
+body[data-view=home] header.hero .banner,
+body[data-view=home] header.hero .notice,
+body[data-view=home] header.hero .lasttrack,
+body[data-view=home] header.hero .again,
+body[data-view=home] header.hero .gal,
+body[data-view=home] header.hero .how{display:none!important}
+body[data-view=home] main{padding-top:0!important}
+body[data-view=home] #catgrid{display:block!important;padding:8px 0 24px!important}
+body[data-view=home] #catgrid .cgh{font-size:24px!important;margin:10px 0 16px!important}
+body[data-view=home] #catgrid .cfam{font-size:17px!important;margin:22px 0 10px!important}
+body[data-view=home] #catgrid .cgrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+body[data-view=home] #catgrid .ctile{position:relative;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;gap:10px!important;min-height:150px!important;padding:14px!important;border:1px solid #e5e9ef!important;border-radius:17px!important;background:#fff!important;color:#202833!important;text-align:right!important;box-shadow:0 3px 12px rgba(20,35,55,.045)!important;overflow:hidden}
+body[data-view=home] #catgrid .ctile img,
+body[data-view=home] #catgrid .ctile .cemo{width:100%!important;height:84px!important;object-fit:cover!important;border-radius:11px!important;background:#f1f3f6!important;display:grid;place-items:center;font-size:30px}
+body[data-view=home] #catgrid .ctile .ct{display:flex;flex-direction:column;gap:4px;min-width:0}
+body[data-view=home] #catgrid .ctile b{font-size:15px!important;font-weight:800!important;line-height:1.5}
+body[data-view=home] #catgrid .ctile small{font-size:11px!important;color:#667085!important;line-height:1.5}
+body[data-view=home] #catgrid .ctile>i{position:absolute;left:10px;bottom:12px;font-style:normal;color:#98a2b3}
+body[data-view=home] #catgrid .ctile.hot{background:#fff!important;color:#202833!important;border-color:#f0c6b5!important}
+body[data-view=home] #catgrid .ctile.hot b{color:#c84518!important}
+body[data-view=home] #catgrid .ctile.hot img{width:100%!important;height:84px!important}
+body[data-view=home] #catgrid .sharebtn{border-radius:13px!important}
+body[data-view=cat] #catgrid,body[data-view=search] #catgrid{display:none!important}
+body[data-view=cat] #sections .sec{margin-top:8px}
+body[data-view=cat] #catbar{padding-block:8px}
+body[data-view=cat] #backCats{border-radius:10px;background:#fff;border:1px solid #e5e9ef;padding:9px 12px}
+body[data-view=cat] #catTitle{font-weight:800;font-size:17px}
+body[data-view=cat] .strip{padding-bottom:4px}
+@media(min-width:700px){
+ body[data-view=home] #catgrid .cgrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ body[data-view=home] #catgrid .ctile{min-height:175px!important}
+ body[data-view=home] #catgrid .ctile img,body[data-view=home] #catgrid .ctile .cemo{height:100px!important}
+}
+@media(max-width:380px){
+ body[data-view=home] #catgrid .cgrid{gap:8px!important}
+ body[data-view=home] #catgrid .ctile{min-height:136px!important;padding:10px!important}
+ body[data-view=home] #catgrid .ctile img,body[data-view=home] #catgrid .ctile .cemo{height:68px!important}
+ body[data-view=home] #catgrid .ctile b{font-size:13px!important}
+}
