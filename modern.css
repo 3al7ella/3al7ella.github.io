@@ -1,0 +1,114 @@
+/* #ع_الحلة — Modern UI refresh. Presentation-only overrides; existing ordering logic stays intact. */
+:root{
+  --bg:#f7f8fa;--paper:#fff;--ink:#202833;--muted:#667085;--line:#e5e9ef;
+  --brand:#e4511b;--brand-ink:#fff;--brand-soft:#fff0e9;--pot:#bf3d12;
+  --leaf:#277747;--leaf-soft:#e8f5ed;--shadow:0 8px 24px rgba(20,35,55,.07);
+  --display:"Cairo",system-ui,sans-serif;--body:"Cairo",system-ui,sans-serif;
+}
+body{background:var(--bg);background-image:none;color:var(--ink);font-family:var(--body)}
+.wrap{width:min(100% - 28px,1040px)}
+.ribbon{background:#202833;color:#fff}
+.ribbon .wrap{padding-block:8px;font-size:12px}
+.hero{padding-top:14px;padding-bottom:12px}
+.top{align-items:center;gap:12px}
+.brand{gap:10px}
+.brand img{width:48px;height:48px;border:0;border-radius:13px;box-shadow:none}
+.brand b{font:800 24px/1.2 var(--body);letter-spacing:0}
+.brand small{color:var(--muted);font-size:11px}
+.wa-chip{background:#fff;border:1px solid #cfe8d8;color:#217346;border-radius:12px;box-shadow:none;padding:9px 11px}
+.herosearch{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:none;color:var(--muted);min-height:46px}
+.banner{margin-top:12px;gap:14px}
+.banner h1{font:800 clamp(27px,5vw,40px)/1.35 var(--body);letter-spacing:0;color:var(--ink)}
+.banner h1 em{font-style:normal;color:var(--brand)}
+.banner p{font-size:14px;line-height:1.85;color:var(--muted)}
+.facts{gap:6px}
+.fact{border:1px solid var(--line);border-radius:10px;background:#fff;padding:6px 9px;font-size:11px}
+.go{border-radius:12px;box-shadow:none;padding:11px 16px;font-weight:800}
+.go.alt{background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:none}
+.fbcard{border:1px solid var(--line);border-radius:18px;box-shadow:none;background:#fff;padding-bottom:12px}
+.fbcover{aspect-ratio:1200/360}
+.fblogo{box-shadow:none;border:3px solid #fff}
+.fbfollow{border-radius:10px}
+.fblinks a{border-radius:10px}
+.gal{gap:10px}
+.gal figure{flex-basis:116px}
+.gal img{width:116px;height:116px;border-radius:14px}
+.how{gap:8px;margin-block:16px 4px}
+.how div{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:none;padding:11px}
+.how i{background:var(--brand-soft);color:var(--brand);border-radius:10px;font-size:17px}
+.strip{background:rgba(247,248,250,.96);border-bottom:1px solid var(--line);box-shadow:none}
+.search input{border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:none;min-height:46px}
+main{padding-top:8px}
+.cgh{font:800 23px/1.4 var(--body);color:var(--ink);margin:10px 0 14px}
+.cfam{font:800 16px/1.4 var(--body);color:var(--ink);margin:22px 0 10px}
+.cgrid{gap:10px}
+.ctile{min-height:86px;padding:10px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:none;gap:10px}
+.ctile:hover{border-color:#efb49c;box-shadow:0 5px 15px rgba(32,40,51,.06)}
+.ctile img,.ctile .cemo{width:52px;height:52px;border-radius:12px;object-fit:cover}
+.ctile b{font:800 14px/1.4 var(--body);color:var(--ink)}
+.ctile small{font-size:11px;color:var(--muted);line-height:1.5}
+.ctile.hot{background:var(--brand);color:#fff;box-shadow:none}
+.ctile.hot b,.ctile.hot small{color:#fff}
+.ctile.hot img{width:58px;height:58px;border-radius:12px}
+.bfbanner{border:1px solid #f2d0c1;border-radius:14px;background:#fff7f3;color:var(--ink)}
+.offers{padding-top:22px}
+.ohead h2{font:800 24px/1.4 var(--body)}
+.ohead p{font-size:13px;color:var(--muted)}
+.chips button{border-radius:10px}
+.folder,.oc,.row,.pair,.fzt,.party,.feature,.loyal,.rv{border:1px solid var(--line);border-radius:16px;box-shadow:none;background:#fff}
+.fhead{padding:13px}
+.oc .pic{background:#f1f3f6}
+.oc .ob{padding:13px}
+.oc .ot b{font-size:28px}
+.addo{border-radius:11px;box-shadow:none}
+.row{padding:10px;min-height:unset}
+.dot{border-radius:12px}
+.step button,.ostep button{border-radius:10px}
+.step button.add{box-shadow:none}
+.party{background:#fff}
+.bar{background:linear-gradient(to top,rgba(247,248,250,.99) 72%,transparent);backdrop-filter:blur(10px)}
+.bar button{border-radius:13px;box-shadow:none}
+.cartfab{background:var(--brand);box-shadow:0 6px 18px rgba(228,81,27,.22)}
+.fabtot{border:1px solid var(--line);box-shadow:none}
+.panel{border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(20,30,45,.14)}
+.panel h3{font:800 25px/1.4 var(--body)}
+input,select,textarea{border-radius:11px}
+.send{border-radius:12px;box-shadow:none}
+footer{margin-top:28px;padding-block:22px;background:#fff;border-top:1px solid var(--line)}
+footer .wrap{gap:12px}
+.notice,.again,.lasttrack{border-radius:13px}
+body[data-view=home] .hero{padding-bottom:4px}
+body[data-view=home] .banner{display:none!important}
+body[data-view=home] .hero .gal,body[data-view=home] .hero .how{display:none!important}
+body[data-view=home] .hero .herosearch{margin-top:10px}
+body[data-view=home] #catgrid{padding-top:0}
+body[data-view=home] .cgh{margin-top:8px}
+body:not([data-view=home]) header.hero>:not(.top){display:none!important}
+@media(max-width:720px){
+ .wrap{width:min(100% - 22px,1040px)}
+ .hero{padding-top:10px}
+ .brand img{width:44px;height:44px}
+ .brand b{font-size:21px}
+ .brand small{font-size:10px}
+ .wa-chip{font-size:11px;padding:8px 9px}
+ .cgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .ctile{min-height:78px;padding:8px;gap:8px}
+ .ctile img,.ctile .cemo{width:44px;height:44px}
+ .ctile.hot img{width:48px;height:48px}
+ .ctile b{font-size:12px}
+ .ctile small{font-size:10px}
+ .cgh{font-size:21px}
+ .cfam{font-size:15px}
+ .fbcard{max-width:100%;width:100%}
+ .how{grid-template-columns:1fr}
+ footer .wrap{align-items:flex-start}
+}
+@media(max-width:360px){
+ .wrap{width:calc(100% - 18px)}
+ .brand{gap:6px}
+ .brand b{font-size:19px}
+ .wa-chip{font-size:10px;padding:7px}
+ .ctile{gap:6px;padding:7px}
+ .ctile img,.ctile .cemo{width:38px;height:38px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
