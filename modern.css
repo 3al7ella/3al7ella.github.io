@@ -82,3 +82,13 @@ body[data-view="cat"] #backCats{padding:9px 12px}
   body[data-view="home"] #catgrid .ctile .cemo{height:90px!important}
   body[data-view="home"] #catgrid .ctile b{font-size:13px!important}
 }
+/* Performance + mobile usability pass */
+#sections .sec,
+#offers{content-visibility:auto;contain-intrinsic-size:auto 680px}
+img{height:auto}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+input,select,textarea{font-size:16px}
+.cartfab{bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:calc(100vw - 24px)}
+.sheet .panel{max-height:calc(100dvh - env(safe-area-inset-top,0px));overflow-y:auto;overscroll-behavior:contain}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
