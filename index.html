@@ -929,7 +929,8 @@ function renderMenu(){const q=$('q').value.trim();const norm=s=>s.replace(/[أإ
   $('sres').hidden=!q;$('sres').textContent=q?(nItems+nOff?`لقينا ${nItems?fmt(nItems)+' صنف':''}${nItems&&nOff?' و':''}${nOff?fmt(nOff)+' عرض':''}`:'مفيش نتايج'):'';
   $('strip').innerHTML=(q||!OGROUPS.length?'':'<a href="#c-offers" data-s="offers">🔥 العروض</a>')+secs.map((s,i)=>`<a href="#c-s${i}" data-s="s${i}">${esc(s)}</a>`).join('');renderGrid();applyView()}
 document.addEventListener('click',e=>{const b=e.target.closest('.row .step button, .vrow .step button');if(!b)return;const id=b.closest('[data-id]').dataset.id;const p=byId[id];const st=HALF(p.unit)?0.5:1;setQty(id,(cart[id]||0)+(+b.dataset.d)*st)});
-$('q').addEventListener('input',()=>{const had=renderMenu.lastQ;renderMenu();const q=$('q').value.trim();renderMenu.lastQ=q;if(q&&!had){const t=$('offers').hidden?$('menu'):$('offers');const y=t.getBoundingClientRect().top+scrollY-($('q').closest('nav').offsetHeight)-8;if(Math.abs(y-scrollY)>40)scrollTo({top:y,behavior:'instant'})}});
+let menuRenderTimer;
+$('q').addEventListener('input',()=>{clearTimeout(menuRenderTimer);menuRenderTimer=setTimeout(()=>{const had=renderMenu.lastQ;renderMenu();const q=$('q').value.trim();renderMenu.lastQ=q;if(q&&!had){const t=$('offers').hidden?$('menu'):$('offers');const y=t.getBoundingClientRect().top+scrollY-($('q').closest('nav').offsetHeight)-8;if(Math.abs(y-scrollY)>40)scrollTo({top:y,behavior:'instant'})}},90));
 $('heroQ').addEventListener('click',()=>{const q=$('q');q.focus({preventScroll:true});const n=q.closest('nav');scrollTo({top:n.getBoundingClientRect().top+scrollY+1,behavior:'instant'});setTimeout(()=>q.focus(),60)});
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
 $('q').addEventListener('input',()=>{clearTimeout(window.__qt);window.__qt=setTimeout(()=>{const q=$('q').value.trim();if(q.length>1)T('search',{search_term:q})},1500)});
@@ -987,6 +988,12 @@ function addonHTML(){const ids=Object.keys(cart).map(pidOf).filter(k=>byId[k]);c
   ADDON_RULES.forEach(([f,list])=>{if(ids.some(f))c.push(...list)});c.push(...BEST);
   const out=[...new Set(c)].filter(k=>byId[k]&&!inC.has(k)&&!byId[k].off&&!offerOf(k)).slice(0,3);if(!out.length)return '';
   return `<div class="addon"><h4>ضيف معاه 👌</h4><div class="list">${out.map(k=>rowHTML(byId[k])).join('')}</div></div>`}
+/* حفظ بيانات العميل على نفس الجهاز لتسهيل الطلب التالي؛ لا تُرسل إلا مع الطلب الذي يختاره العميل. */
+const CUSTOMER_KEY='alhella-customer-v1';
+function restoreCustomer(){try{const d=JSON.parse(localStorage.getItem(CUSTOMER_KEY)||'{}');[['fName','name'],['fPhone','phone'],['fArea','area'],['fAddr','addr']].forEach(([id,k])=>{if(d[k]&&!$(id).value)$(id).value=d[k]})}catch(_){}}
+function saveCustomer(){try{localStorage.setItem(CUSTOMER_KEY,JSON.stringify({name:$('fName').value.trim(),phone:$('fPhone').value.trim(),area:$('fArea').value.trim(),addr:$('fAddr').value.trim()}))}catch(_){}}
+['fName','fPhone','fArea','fAddr'].forEach(id=>$(id).addEventListener('change',saveCustomer));
+restoreCustomer();
 $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object.entries(cart);const err=$('err');
   const name=$('fName').value.trim(),phone=$('fPhone').value.replace(/\s/g,''),area=$('fArea').value.trim(),addr=$('fAddr').value.trim();
   const miss=[];if(!ent.length)miss.push('اختار صنف واحد على الأقل');if(!name)miss.push('اكتب اسمك');if(!/^0?1[0125]\d{8}$/.test(phone))miss.push('اكتب رقم موبايل صحيح من 11 رقم');if(!addr)miss.push('اكتب العنوان');
