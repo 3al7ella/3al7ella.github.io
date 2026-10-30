@@ -1378,9 +1378,9 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
 (function(){const P=$('subPop');if(!P)return;const K='alh_sub',now=Date.now();
   const get=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(_){return {}}};const put=o=>{try{localStorage.setItem(K,JSON.stringify(Object.assign(get(),o)))}catch(_){}};
   const iOS=/iP(hone|ad|od)/.test(navigator.userAgent),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-  const pushOk=!!window.ALH_VAPID&&'serviceWorker' in navigator&&'Notification' in window&&!(iOS&&!standalone);
-  $('spPush').hidden=!pushOk||(window.Notification&&Notification.permission==='granted');$('spIos').hidden=!(iOS&&!standalone&&window.ALH_VAPID);
-  const open=src=>{P.hidden=false;document.body.classList.add('spopen');T('sub_popup_open',{src})};const close=()=>{P.hidden=true;document.body.classList.remove('spopen')};
+  const syncPush=()=>{const pushOk=!!window.ALH_VAPID&&'serviceWorker' in navigator&&'Notification' in window&&!(iOS&&!standalone);const perm=window.Notification?Notification.permission:'';
+    $('spPush').hidden=!pushOk||perm==='granted'||perm==='denied';$('spIos').hidden=!(iOS&&!standalone&&window.ALH_VAPID)};
+  const open=src=>{syncPush();P.hidden=false;document.body.classList.add('spopen');T('sub_popup_open',{src})};const close=()=>{P.hidden=true;document.body.classList.remove('spopen')};
   P.addEventListener('click',e=>{if(e.target===P||e.target.closest('[data-spclose]')){put({later:now});T('sub_popup_later',{});close()}});
   $('spWa').addEventListener('click',()=>{put({wa:now});T('sub_whatsapp',{});setTimeout(close,300)});
   $('spPush').addEventListener('click',async()=>{const b=$('spPush');b.disabled=true;b.textContent='لحظة…';let r='fail';try{r=await window.alhPush()}catch(_){}
@@ -1392,7 +1392,7 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
   if(due)setTimeout(()=>{if(document.body.dataset.view==='home'&&$('sheet').hidden&&!document.body.classList.contains('qopen'))open('auto')},2500)})();
 </script>
 
-<script>window.ALH_VAPID="";</script>
+<script>window.ALH_VAPID="BNhzYkLtPKG6tPvGfk-IDhd5Jg0dKOR8Q2q-WXUIU_u6qom46Pzlg9C5b5MJ_JAoYUo0OuUv5woqNIVvLIWAKFU";</script>
 <script type="module">
 window.alhPush=async()=>{if(!window.ALH_VAPID)return 'unsupported';const p=await Notification.requestPermission();if(p!=='granted')return 'denied';
   const m=await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging.js');if(!(await m.isSupported()))return 'unsupported';
