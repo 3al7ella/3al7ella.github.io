@@ -129,6 +129,12 @@ label.f{display:block;font-weight:800;margin:10px 0 4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
+/* واتساب الشغل: على أندرويد يفتح WhatsApp Business، ولو مش متسطب يفتح العادي */
+function waLink(phone,text){const n='2'+String(phone||'').split(/[\/,،]/)[0].replace(/\D/g,'').replace(/^2(?=01)/,'');
+  const web='https://wa.me/'+n+'?text='+encodeURIComponent(text||'');
+  if(/Android/i.test(navigator.userAgent))return 'intent://send?phone='+n+'&text='+encodeURIComponent(text||'')+'#Intent;scheme=whatsapp;package=com.whatsapp.w4b;S.browser_fallback_url='+encodeURIComponent(web)+';end';
+  return web}
+
 import {app,db,ADMINS,STATUS,STATUS_X,doc,collection,setDoc,getDoc,onSnapshot,query,orderBy,limit,updateDoc,deleteDoc} from './fb.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 const $=id=>document.getElementById(id);
@@ -190,7 +196,7 @@ function card(o){const st=SN[o.status]||SN.new;const i=STATUS.findIndex(x=>x[0]=
     <div class="acts">${nx&&o.status!=='new'?`<button class="b ok sm" data-a="st" data-v="${nx[0]}">${nx[2]} ${nx[1]}</button>`:''}
       <select class="b sm" data-a="pick">${ALL.map(x=>`<option value="${x[0]}" ${x[0]===o.status?'selected':''}>${x[2]} ${x[1]}</option>`).join('')}</select>
       <button class="b sm" data-a="drv">🛵 للمندوب</button><button class="b sm" data-a="kit">🍳 للمطبخ</button>
-      <a class="b sm" href="https://wa.me/2${esc((o.phone||'').replace(/^\+?2/,''))}?text=${encodeURIComponent('أهلاً '+(o.name||'').split(' ')[0]+' 👋 ع الحلة معاك\nتقدر تتابع أوردرك من هنا: https://3al7ella.github.io/track.html?id='+o.id)}" target="_blank" rel="noopener" style="text-decoration:none">💬 العميل</a>
+      <a class="b sm" href="${esc(waLink(o.phone,'أهلاً '+(o.name||'').split(' ')[0]+' 👋 ع الحلة معاك\nتقدر تتابع أوردرك من هنا: https://3al7ella.github.io/track.html?id='+o.id))}" target="_blank" rel="noopener" style="text-decoration:none">💬 العميل</a>
       <button class="b red sm" data-a="del">🗑️</button></div></div>`}
 const drvTxt=o=>[`👤 ${o.name}`,`📞 ${o.phone}`,`📍 ${o.area?o.area+' — ':''}${o.addr}`,...(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`),`💰 الحساب: ${fmt(o.total)} ج${pend(o)?' + التوصيل':''} (${o.pay||''})`,o.note?`📝 ${o.note}`:''].filter(Boolean).join('\n');
 const kitTxt=o=>[`${o.name} — ${o.when||''}`,...(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`),o.note?`📝 ${o.note}`:''].filter(Boolean).join('\n');
@@ -202,7 +208,7 @@ $('olist').addEventListener('click',async e=>{const b=e.target.closest('[data-a]
   if(a==='st')setSt(id,b.dataset.v);
   if(a==='conf'){const v=Math.max(0,+b.closest('[data-o]').querySelector('[data-dl]').value||0);const tot=(+o.sub||0)+v;
     const msg=`أهلاً ${(o.name||'').split(' ')[0]} 👋 ع الحلة معاك\nأوردرك اتأكد ✅\n\n`+(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`).join('\n')+`\n\nالأصناف: ${fmt(o.sub)} ج\nالتوصيل: ${v?fmt(v)+' ج':'مجاني'}\nالإجمالي: ${fmt(tot)} ج\nالمعاد: ${o.when||''}\nالدفع: ${o.pay||''}`+(/إنستا|محفظ/.test(o.pay||'')?'\nالتحويل على 01275165496 وابعت صورة التحويل هنا 🙏':'')+`\n\nتابع أوردرك خطوة بخطوة:\nhttps://3al7ella.github.io/track.html?id=${o.id}`;
-    window.open('https://wa.me/2'+String(o.phone||'').replace(/^\+?2/,'')+'?text='+encodeURIComponent(msg),'_blank');
+    window.open(waLink(o.phone,msg),'_blank');
     try{await updateDoc(doc(db,'orders',id),{status:'confirmed',delivery:v,total:tot,at_confirmed:new Date()});toast('✅ اتأكد')}catch(e){toast('مش اتحفظ: '+e.code)}}
   if(a==='edl'){const r=prompt('سعر التوصيل للأوردر ده (ج):',pend(o)?suggest(o):o.delivery);if(r===null)return;const v=Math.max(0,+r||0);try{await updateDoc(doc(db,'orders',id),{delivery:v,total:(+o.sub||0)+v});toast('اتعدّل')}catch(e){toast('مش اتحفظ: '+e.code)}}
   if(a==='drv')copy(drvTxt(o));if(a==='kit')copy(kitTxt(o));
