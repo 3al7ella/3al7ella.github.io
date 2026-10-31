@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة التحكم — ع الحلة</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#E4521B">
+<link rel="icon" href="icon-512.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap">
+<style>
+:root{--bg:#FFF8EF;--paper:#fff;--ink:#2A1A12;--muted:#7A6152;--line:#EEDFCC;--brand:#E4521B;--soft:#FDE6D8;--leaf:#2F7A3E;--leafsoft:#E2F1E4;--red:#B83A12;--redsoft:#FDE3DB}
+@media (prefers-color-scheme:dark){:root{--bg:#1C130E;--paper:#271B14;--ink:#F8EBDD;--muted:#C2A691;--line:#3D2B20;--brand:#FF6A33;--soft:#3E2216;--leaf:#7FCB8C;--leafsoft:#1E3324;--red:#FF8A5C;--redsoft:#3E2216}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Cairo,system-ui,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:12px 16px 90px}
+header{display:flex;align-items:center;gap:10px;padding:8px 0 10px}header img{width:42px;height:42px;border-radius:50%}
+header b{font-weight:900;font-size:18px;flex:1}header small{color:var(--muted);font-weight:700;display:block;font-size:12px}
+button,input,select,textarea{font:inherit;color:inherit}
+.b{border:0;border-radius:12px;padding:9px 14px;font-weight:900;cursor:pointer;background:var(--soft);color:var(--brand)}
+.b.main{background:var(--brand);color:#fff}.b.ok{background:var(--leaf);color:#fff}.b.red{background:var(--redsoft);color:var(--red)}.b.sm{padding:6px 10px;font-size:13px}
+.tabs{display:flex;gap:6px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5;overflow-x:auto}
+.tabs button{flex:1;white-space:nowrap;border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:8px 4px;font-size:14px;font-weight:900;cursor:pointer}
+.tabs button[aria-pressed=true]{border-color:var(--brand);color:var(--brand)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}
+.chips button{white-space:nowrap;border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 12px;font-weight:800;cursor:pointer;font-size:13px}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.stat b{display:block;font-size:20px;font-weight:900}.stat small{color:var(--muted);font-weight:700}
+.oh{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.oh b{font-size:17px;font-weight:900}.muted{color:var(--muted);font-weight:700;font-size:13px}
+.pill{border-radius:999px;padding:3px 10px;font-weight:900;font-size:12px;white-space:nowrap;background:var(--soft);color:var(--brand)}
+.pill.new{background:#FFE9A8;color:#7A4B00}.pill.delivered{background:var(--leafsoft);color:var(--leaf)}.pill.cancelled{background:var(--redsoft);color:var(--red)}
+.its{margin:8px 0;padding:8px 10px;background:var(--bg);border-radius:10px;font-weight:700;font-size:14px}
+.its div{display:flex;justify-content:space-between;gap:8px}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.prow{display:grid;grid-template-columns:1fr 84px 70px 46px;gap:6px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line)}
+.prow.chg{background:var(--soft);border-radius:8px}.prow.off .nm{opacity:.5;text-decoration:line-through}
+.prow input[type=number]{width:100%;padding:6px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);text-align:center}
+.nm{font-weight:800;font-size:14px}.nm small{display:block;color:var(--muted);font-weight:700;font-size:11px}
+.sec{font-weight:900;color:var(--brand);margin:14px 0 2px}
+label.f{display:block;font-weight:800;margin:10px 0 4px}
+.f input,.f select,.f textarea,input.s{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper)}
+.sw{display:flex;align-items:center;gap:8px;font-weight:900}
+.save{position:fixed;bottom:0;inset-inline:0;background:var(--paper);border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:8px;justify-content:center;z-index:9}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:12px;font-weight:900;z-index:20}
+.login{text-align:center;padding:50px 10px}.login img{width:90px;border-radius:50%}
+.num{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="icon-512.png" alt=""><b>لوحة تحكم ع الحلة<small id="who"></small></b><button class="b sm" id="out" hidden>خروج</button></header>
+
+  <div class="login" id="login">
+    <img src="icon-512.png" alt="">
+    <h2>لوحة التحكم</h2>
+    <p class="muted" id="loginMsg">ادخل بحساب جوجل بتاع المطبخ</p>
+    <button class="b main" id="in">ادخل بجوجل</button>
+  </div>
+
+  <div id="app" hidden>
+    <div class="tabs"><button data-t="orders" aria-pressed="true">📦 أوردرات</button><button data-t="prep" aria-pressed="false">🍳 تجهيز</button><button data-t="menu" aria-pressed="false">💰 أسعار</button><button data-t="set" aria-pressed="false">⚙️ إعدادات</button></div>
+
+    <section id="t-orders">
+      <div class="stats"><div class="stat"><b id="sNew">0</b><small>جديد</small></div><div class="stat"><b id="sAct">0</b><small>شغالين</small></div><div class="stat"><b id="sDay">0</b><small>إجمالي المعروض</small></div></div>
+      <div class="chips" id="fDay"></div>
+      <div class="chips" id="fSt"></div>
+      <div class="acts" style="margin:0 0 10px"><button class="b sm" id="copyAll">📋 انسخ الأوردرات المعروضة</button></div>
+      <div id="olist"><p class="muted">بنحمّل…</p></div>
+    </section>
+
+    <section id="t-prep" hidden>
+      <p class="muted">اختار يوم التوصيل، وهتلاقي كمية كل صنف مجمّعة من كل الأوردرات (غير الملغية)، وخط سير المندوب متقسم بالمنطقة.</p>
+      <div class="chips" id="pDay"></div>
+      <div class="card"><div class="oh"><b>🍳 قايمة المطبخ</b><button class="b sm" id="pCopyK">📋 انسخ</button></div><div class="its" id="pKit"></div></div>
+      <div class="card"><div class="oh"><b>🛵 خط سير المندوب</b><button class="b sm" id="pCopyD">📋 انسخ</button></div><div id="pDrv" class="muted"></div></div>
+    </section>
+
+    <section id="t-menu" hidden>
+      <input class="s" id="mq" placeholder="دوّر على صنف…">
+      <p class="muted">غيّر السعر أو شيل علامة «متاح» عشان الصنف يختفي من الموقع. «قبل» = السعر القديم اللي بيظهر مشطوب في العروض. التغييرات بتظهر على الموقع على طول بعد الحفظ.</p>
+      <div id="mlist"></div>
+      <div class="card" style="margin-top:16px">
+        <b>➕ ضيف صنف جديد</b>
+        <label class="f">الاسم<input id="nName" placeholder="مثلًا: كوسة محشي"></label>
+        <label class="f">القسم<input id="nSec" list="secs" placeholder="اختار قسم موجود أو اكتب جديد"></label><datalist id="secs"></datalist>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <label class="f">الوحدة<select id="nUnit"><option>كيلو</option><option>علبة</option><option>كيس</option><option>وجبة</option><option>قطعة</option><option>صينية</option><option>فرخة</option></select></label>
+          <label class="f">السعر<input id="nPrice" type="number" inputmode="decimal" min="1"></label>
+        </div>
+        <label class="f">وصف قصير (اختياري)<input id="nDesc"></label>
+        <button class="b ok" id="nAdd" style="margin-top:10px">ضيف للقايمة</button>
+        <p class="muted">الصنف الجديد بيظهر بأيقونة لحد ما نحطله صورة.</p>
+      </div>
+    </section>
+
+    <section id="t-set" hidden>
+      <div class="card">
+        <label class="f">سعر التوصيل الافتراضي (لو المنطقة مش في القايمة)<input id="sDel" type="number" min="0"></label>
+        <label class="f">أسعار التوصيل حسب المنطقة — كل سطر: المنطقة = السعر<textarea id="sZones" rows="6" placeholder="سموحة = 50
+سيدي جابر = 50
+العجمي = 80
+البيطاش = 80
+المعمورة = 70"></textarea></label>
+        <p class="muted">الموقع بيعرض للزبون سعر تقريبي من القايمة دي أول ما يكتب منطقته. ولما تأكد الأوردر، اللوحة بتقترح نفس السعر وإنت تعدّله لو حبيت.</p>
+        <label class="f">توصيل مجاني لو الأوردر فوق (ج)<input id="sFree" type="number" min="0"></label>
+        <label class="f">رسالة تظهر فوق الموقع (اختياري)<textarea id="sNotice" rows="2" placeholder="مثلًا: عرض الجمعة: خصم 10% على ورق العنب"></textarea></label>
+        <label class="sw" style="margin-top:14px"><input type="checkbox" id="sClosed"> إيقاف استقبال الأوردرات من الموقع</label>
+        <label class="f">رسالة الإيقاف<textarea id="sClosedMsg" rows="2" placeholder="معلش، المطبخ مش بيستقبل أوردرات النهارده. كلمنا واتساب 01275165496"></textarea></label>
+        <button class="b main" id="sSave" style="margin-top:12px">احفظ الإعدادات</button>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3 style="margin:0 0 6px">⭐ آراء العملاء على الموقع</h3>
+        <p class="muted">انسخ رأي العميل زي ما بعته بالظبط (من الواتساب أو جوجل)، من غير ما تغيّر كلامه.</p>
+        <label class="f">الاسم (زي ما العميل وافق يظهر)<input id="rName" placeholder="مثلًا: أم يوسف"></label>
+        <label class="f">المنطقة<input id="rArea" placeholder="سموحة"></label>
+        <label class="f">الصنف<input id="rItem" placeholder="ورق عنب"></label>
+        <label class="f">الرأي بكلام العميل<textarea id="rText" rows="3"></textarea></label>
+        <button class="b main" id="rAdd" style="margin-top:8px">ضيف الرأي للموقع</button>
+        <div id="rList" style="margin-top:12px"></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="save" id="mSaveBar" hidden><span class="muted" id="mChg" style="align-self:center"></span><button class="b" id="mUndo">تراجع</button><button class="b main" id="mSave">احفظ التغييرات</button></div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+/* تنبيه الأوردر الجديد: صوت + عنوان الصفحة بينوّر لحد ما الأوردر يتأكد */
+let ACX=null,ALT=null,TTL=document.title,LASTNEW=0;
+function unlockSound(){try{ACX=ACX||new (window.AudioContext||window.webkitAudioContext)();if(ACX.state==='suspended')ACX.resume()}catch(_){}}
+document.addEventListener('pointerdown',unlockSound,{once:false,passive:true});
+function ding(){try{unlockSound();if(!ACX)return;const t=ACX.currentTime;[[880,0],[1320,.18],[1760,.36]].forEach(([f,d])=>{const o=ACX.createOscillator(),g=ACX.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.5,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.35);o.connect(g).connect(ACX.destination);o.start(t+d);o.stop(t+d+.4)})}catch(_){}}
+function newAlert(){const n=(typeof ORD!=='undefined'?ORD:[]).filter(o=>o.status==='new').length;clearInterval(ALT);
+  if(!n){document.title=TTL;return}
+  let k=0;ALT=setInterval(()=>{k++;document.title=(k%2?'🔴 ('+n+') أوردر جديد':TTL);if(k%30===0&&Date.now()-LASTNEW<180000)ding()},700)}
+
+/* واتساب الشغل: على أندرويد يفتح WhatsApp Business، ولو مش متسطب يفتح العادي */
+function waLink(phone,text){const n='2'+String(phone||'').split(/[\/,،]/)[0].replace(/\D/g,'').replace(/^2(?=01)/,'');
+  const web='https://wa.me/'+n+'?text='+encodeURIComponent(text||'');
+  if(/Android/i.test(navigator.userAgent))return 'intent://send?phone='+n+'&text='+encodeURIComponent(text||'')+'#Intent;scheme=whatsapp;package=com.whatsapp.w4b;S.browser_fallback_url='+encodeURIComponent(web)+';end';
+  return web}
+
+import {app,db,ADMINS,STATUS,STATUS_X,doc,collection,setDoc,getDoc,onSnapshot,query,orderBy,limit,updateDoc,deleteDoc} from './fb.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString('en-US');
+const toast=t=>{$('toast').textContent=t;$('toast').hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').hidden=true,1900)};
+const copy=async t=>{try{await navigator.clipboard.writeText(t);toast('اتنسخ ✅')}catch(_){prompt('انسخ من هنا:',t)}};
+const ALL=[...STATUS,STATUS_X];const SN=Object.fromEntries(ALL.map(x=>[x[0],x]));
+const auth=getAuth(app);let unsub=null,started=false;
+
+$('in').onclick=async()=>{const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+  $('loginMsg').textContent='هتفتحلك صفحة جوجل… اختار إيميل المطبخ';
+  try{await signInWithPopup(auth,p)}catch(e){const c=e.code||'';
+    $('loginMsg').textContent=c.includes('popup-blocked')?'كروم منع صفحة الدخول. من ⋮ ← الإعدادات ← إعدادات المواقع ← النوافذ المنبثقة، اسمح لـ 3al7ella.github.io وجرب تاني.'
+      :c.includes('closed-by-user')||c.includes('cancelled')?'صفحة جوجل اتقفلت قبل ما تختار الإيميل. دوس «ادخل بجوجل» تاني واختار Hamdyuwk1@gmail.com.'
+      :'حصلت مشكلة ('+c+'). افتح الصفحة من كروم العادي (مش من أيقونة على الشاشة) وجرب تاني.'}};
+$('out').onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{
+  const ok=u&&ADMINS.includes((u.email||'').toLowerCase());
+  $('login').hidden=!!ok;$('app').hidden=!ok;$('out').hidden=!u;$('who').textContent=u?u.email:'';
+  if(u&&!ok){$('loginMsg').textContent='الإيميل ده ('+u.email+') مش مسموحله يدخل. اخرج وادخل بإيميل المطبخ.'}
+  if(ok&&!started){started=true;startOrders();startMenu();startSettings()}
+});
+
+/* tabs */
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  ['orders','prep','menu','set'].forEach(t=>$('t-'+t).hidden=t!==b.dataset.t);$('mSaveBar').hidden=b.dataset.t!=='menu'||!dirty();if(b.dataset.t==='prep')drawPrep()};
+
+/* ---------- orders ---------- */
+const DEF_ZONES='الورديان = 30\nالقباري = 35\nالمنشية = 50';
+let ORD=[],FD='all',FS='open',SET={},PD='';
+const norm=t=>String(t||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
+function suggest(o){if(o.deliveryFree)return 0;const hay=norm((o.area||'')+' '+(o.addr||''));let best=null;String(SET.zones||DEF_ZONES).split('\n').forEach(l=>{const m=l.split(/[=:]/);if(m.length<2)return;const k=norm(m[0]).replace(/^ال/,''),v=parseFloat(m[1]);if(k&&v>=0&&hay.includes(k)&&(!best||k.length>best[0].length))best=[k,v]});return best?best[1]:(SET.delivery??60)}
+const pend=o=>o.delivery===null||o.delivery===undefined;
+const dayOf=o=>((o.when||'').match(/\d{1,2}\/\d{1,2}/)||[''])[0];
+const ts=o=>o.createdAt&&o.createdAt.toDate?o.createdAt.toDate():null;
+const tstr=d=>d?d.toLocaleString('ar-EG',{weekday:'short',day:'numeric',month:'numeric',hour:'numeric',minute:'2-digit'}):'';
+function startOrders(){onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(300)),s=>{
+  const before=new Set(ORD.map(o=>o.id));ORD=s.docs.map(d=>({id:d.id,...d.data()}));
+  if(before.size&&ORD.some(o=>!before.has(o.id)&&o.status==='new')){toast('🔔 أوردر جديد!');try{navigator.vibrate&&navigator.vibrate([300,120,300,120,300])}catch(_){}LASTNEW=Date.now();ding()}
+  newAlert();
+  drawOrders();if(!$('t-prep').hidden)drawPrep()},e=>{$('olist').innerHTML='<p class="muted">مش قادر أقرا الأوردرات: '+esc(e.code)+'</p>'})}
+function filtered(){return ORD.filter(o=>(FD==='all'||dayOf(o)===FD)&&(FS==='all'||(FS==='open'?!['delivered','cancelled'].includes(o.status):o.status===FS)))}
+function drawOrders(){
+  const days=[...new Set(ORD.filter(o=>o.status!=='cancelled').map(dayOf).filter(Boolean))].sort((a,b)=>{const [d1,m1]=a.split('/').map(Number),[d2,m2]=b.split('/').map(Number);return m1-m2||d1-d2});
+  $('fDay').innerHTML=[['all','كل الأيام'],...days.map(d=>[d,'توصيل '+d])].map(([k,l])=>`<button data-d="${k}" aria-pressed="${FD===k}">${l} ${k==='all'?'':'('+ORD.filter(o=>dayOf(o)===k&&o.status!=='cancelled').length+')'}</button>`).join('');
+  $('fSt').innerHTML=[['open','الشغالين'],['all','الكل'],...ALL.map(x=>[x[0],x[2]+' '+x[1]])].map(([k,l])=>`<button data-s="${k}" aria-pressed="${FS===k}">${l}</button>`).join('');
+  const L=filtered();
+  $('sNew').textContent=ORD.filter(o=>o.status==='new').length;$('sAct').textContent=ORD.filter(o=>!['delivered','cancelled'].includes(o.status)).length;
+  $('sDay').textContent=fmt(L.filter(o=>o.status!=='cancelled').reduce((a,o)=>a+(+o.total||0),0))+' ج';
+  $('olist').innerHTML=L.length?L.map(card).join(''):'<p class="muted">مفيش أوردرات هنا.</p>'}
+function card(o){const st=SN[o.status]||SN.new;const i=STATUS.findIndex(x=>x[0]===o.status);const nx=STATUS[i+1];
+  const items=(o.items||[]).map(x=>`<div><span>• ${esc(x.name)}${x.qty!=1||x.unit?' — '+fmt(x.qty)+' '+esc(x.unit||''):''}</span><span class="num">${fmt(x.total)}</span></div>`).join('');
+  return `<div class="card" data-o="${o.id}"><div class="oh"><div><b>${esc(o.name)}</b> <span class="muted num">#${o.id.slice(0,6).toUpperCase()}</span>
+    <div class="muted"><a href="tel:${esc(o.phone)}" class="num">${esc(o.phone)}</a> · ${esc(o.area||'')}</div></div><span class="pill ${o.status}">${st[2]} ${st[1]}</span></div>
+    <div class="muted">📍 ${esc(o.addr)}</div><div class="muted">🗓️ ${esc(o.when||'')} · اتطلب ${tstr(ts(o))}</div>
+    <div class="its">${items}<div style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>التوصيل</span><span class="num">${pend(o)?'<span style="color:var(--red)">لسه متحددش</span>':o.delivery?fmt(o.delivery):'مجاني'} ${o.status!=='cancelled'?'<button class="b sm" data-a="edl" style="padding:0 8px">✏️</button>':''}</span></div><div><b>الإجمالي</b><b class="num">${fmt(o.total)} ج${pend(o)?' + توصيل':''}</b></div></div>
+    ${o.status==='new'?`<div class="card" style="background:var(--soft);border:0;margin:8px 0 0;padding:10px"><b>✅ تأكيد الأوردر</b><div style="display:flex;gap:6px;align-items:center;margin-top:6px"><span class="muted">التوصيل</span><input type="number" min="0" inputmode="decimal" value="${pend(o)?suggest(o):o.delivery}" data-dl style="width:80px;padding:7px;border:1.5px solid var(--line);border-radius:10px;text-align:center;background:var(--paper)"><span class="muted">ج</span><button class="b ok sm" data-a="conf" style="flex:1">أكّد وابعت للعميل 💬</button></div></div>`:''}
+    <div class="muted">💳 ${esc(o.pay||'')}${o.note?' · 📝 '+esc(o.note):''}</div>
+    <div class="acts">${nx&&o.status!=='new'?`<button class="b ok sm" data-a="st" data-v="${nx[0]}">${nx[2]} ${nx[1]}</button>`:''}
+      <select class="b sm" data-a="pick">${ALL.map(x=>`<option value="${x[0]}" ${x[0]===o.status?'selected':''}>${x[2]} ${x[1]}</option>`).join('')}</select>
+      <button class="b sm" data-a="drv">🛵 للمندوب</button><button class="b sm" data-a="kit">🍳 للمطبخ</button>
+      <a class="b sm" href="${esc(waLink(o.phone,'أهلاً '+(o.name||'').split(' ')[0]+' 👋 ع الحلة معاك\nتقدر تتابع أوردرك من هنا: https://3al7ella.github.io/track.html?id='+o.id))}" target="_blank" rel="noopener" style="text-decoration:none">💬 العميل</a>
+      <button class="b red sm" data-a="del">🗑️</button></div></div>`}
+const drvTxt=o=>[`👤 ${o.name}`,`📞 ${o.phone}`,`📍 ${o.area?o.area+' — ':''}${o.addr}`,...(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`),`💰 الحساب: ${fmt(o.total)} ج${pend(o)?' + التوصيل':''} (${o.pay||''})`,o.note?`📝 ${o.note}`:''].filter(Boolean).join('\n');
+const kitTxt=o=>[`${o.name} — ${o.when||''}`,...(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`),o.note?`📝 ${o.note}`:''].filter(Boolean).join('\n');
+const fullTxt=o=>`#${o.id.slice(0,6).toUpperCase()} — ${o.when||''} — ${SN[o.status]?.[1]||''}\n`+drvTxt(o)+`\n(أصناف ${fmt(o.sub)} + توصيل ${pend(o)?'لسه':fmt(o.delivery)})`;
+$('fDay').onclick=e=>{const b=e.target.closest('[data-d]');if(b){FD=b.dataset.d;drawOrders()}};
+$('fSt').onclick=e=>{const b=e.target.closest('[data-s]');if(b){FS=b.dataset.s;drawOrders()}};
+$('copyAll').onclick=()=>{const L=filtered().filter(o=>o.status!=='cancelled');if(!L.length)return toast('مفيش أوردرات');copy(L.map(fullTxt).join('\n\n———\n\n')+`\n\nالإجمالي: ${L.length} أوردر · ${fmt(L.reduce((a,o)=>a+(+o.total||0),0))} ج`)};
+$('olist').addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b||b.tagName==='SELECT')return;const id=b.closest('[data-o]').dataset.o;const o=ORD.find(x=>x.id===id);const a=b.dataset.a;
+  if(a==='st')setSt(id,b.dataset.v);
+  if(a==='conf'){const v=Math.max(0,+b.closest('[data-o]').querySelector('[data-dl]').value||0);const tot=(+o.sub||0)+v;
+    const msg=`أهلاً ${(o.name||'').split(' ')[0]} 👋 ع الحلة معاك\nأوردرك اتأكد ✅\n\n`+(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`).join('\n')+`\n\nالأصناف: ${fmt(o.sub)} ج\nالتوصيل: ${v?fmt(v)+' ج':'مجاني'}\nالإجمالي: ${fmt(tot)} ج\nالمعاد: ${o.when||''}\nالدفع: ${o.pay||''}`+(/إنستا|محفظ/.test(o.pay||'')?'\nالتحويل على 01275165496 وابعت صورة التحويل هنا 🙏':'')+`\n\nتابع أوردرك خطوة بخطوة:\nhttps://3al7ella.github.io/track.html?id=${o.id}`;
+    window.open(waLink(o.phone,msg),'_blank');
+    try{await updateDoc(doc(db,'orders',id),{status:'confirmed',delivery:v,total:tot,at_confirmed:new Date()});toast('✅ اتأكد')}catch(e){toast('مش اتحفظ: '+e.code)}}
+  if(a==='edl'){const r=prompt('سعر التوصيل للأوردر ده (ج):',pend(o)?suggest(o):o.delivery);if(r===null)return;const v=Math.max(0,+r||0);try{await updateDoc(doc(db,'orders',id),{delivery:v,total:(+o.sub||0)+v});toast('اتعدّل')}catch(e){toast('مش اتحفظ: '+e.code)}}
+  if(a==='drv')copy(drvTxt(o));if(a==='kit')copy(kitTxt(o));
+  if(a==='del'&&confirm('تمسح أوردر '+o.name+' نهائي؟ (لو اتلغى الأحسن تخليه «اتلغى»)')){await deleteDoc(doc(db,'orders',id));toast('اتمسح')}});
+$('olist').addEventListener('change',e=>{const s=e.target.closest('[data-a=pick]');if(s)setSt(s.closest('[data-o]').dataset.o,s.value)});
+async function setSt(id,v){try{await updateDoc(doc(db,'orders',id),{status:v,['at_'+v]:new Date()});toast(SN[v][2]+' '+SN[v][1])}catch(e){toast('مش اتحفظ: '+e.code)}}
+
+/* ---------- prep ---------- */
+const UN=u=>/^(ك|كيلو)$/.test(u||'')?'كيلو':(u||'');
+function drawPrep(){const days=[...new Set(ORD.filter(o=>o.status!=='cancelled').map(dayOf).filter(Boolean))].sort((a,b)=>{const [d1,m1]=a.split('/').map(Number),[d2,m2]=b.split('/').map(Number);return m1-m2||d1-d2});
+  if(!PD||!days.includes(PD)){const t=new Date();t.setDate(t.getDate()+1);const tm=t.getDate()+'/'+(t.getMonth()+1);PD=days.includes(tm)?tm:(days[0]||'')}
+  $('pDay').innerHTML=days.map(d=>`<button data-pd="${d}" aria-pressed="${PD===d}">توصيل ${d}</button>`).join('')||'<span class="muted">مفيش أوردرات لسه.</span>';
+  const L=ORD.filter(o=>o.status!=='cancelled'&&dayOf(o)===PD);const agg={};
+  L.forEach(o=>(o.items||[]).forEach(x=>{const k=x.name+'|'+UN(x.unit);agg[k]=(agg[k]||0)+(+x.qty||0)}));
+  const K=Object.entries(agg).sort((a,b)=>a[0].localeCompare(b[0],'ar'));
+  $('pKit').innerHTML=K.length?K.map(([k,q])=>{const [n,u]=k.split('|');return `<div><span>• ${esc(n)}</span><b class="num">${fmt(q)} ${esc(u)}</b></div>`}).join('')+`<div style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>${L.length} أوردر</span><b class="num">${fmt(L.reduce((a,o)=>a+(+o.sub||0),0))} ج أصناف</b></div>`:'<span class="muted">مفيش أصناف.</span>';
+  const byA={};L.forEach(o=>{const a=(o.area||'').trim()||'من غير منطقة';(byA[a]=byA[a]||[]).push(o)});
+  $('pDrv').innerHTML=Object.entries(byA).map(([a,os])=>`<p style="margin:8px 0 2px;color:var(--ink);font-weight:900">📍 ${esc(a)} (${os.length})</p>`+os.map(o=>`<div>• ${esc(o.name)} — <span class="num">${esc(o.phone)}</span> — ${fmt(o.total)} ج${pend(o)?' + توصيل':''}</div>`).join('')).join('')||'—';
+  window.__prep={K,L,byA}}
+$('pDay').onclick=e=>{const b=e.target.closest('[data-pd]');if(b){PD=b.dataset.pd;drawPrep()}};
+$('pCopyK').onclick=()=>{const P=window.__prep;if(!P||!P.K.length)return toast('مفيش');copy(`🍳 تجهيز أوردرات ${PD} (${P.L.length} أوردر)\n\n`+P.K.map(([k,q])=>{const [n,u]=k.split('|');return `• ${n}: ${fmt(q)} ${u}`}).join('\n')+'\n\n— بالتفصيل —\n'+P.L.map(kitTxt).join('\n\n'))};
+$('pCopyD').onclick=()=>{const P=window.__prep;if(!P||!P.L.length)return toast('مفيش');copy(`🛵 أوردرات ${PD}\n\n`+Object.entries(P.byA).map(([a,os])=>`📍 ${a}\n\n`+os.map(drvTxt).join('\n\n')).join('\n\n━━━━━━\n\n'))};
+
+/* ---------- menu ---------- */
+let BASE=[],OV={o:{},add:{}},ED={o:{},add:{}};
+const clone=x=>JSON.parse(JSON.stringify(x||{}));
+const dirty=()=>JSON.stringify(ED)!==JSON.stringify(OV);
+async function startMenu(){
+  try{const t=await (await fetch('index.html?t='+Date.now())).text();const m=t.match(/^const ROWS=(\[.*\]);\s*$/m);BASE=JSON.parse(m[1])}catch(e){$('mlist').innerHTML='<p class="muted">مش قادر أقرا المنيو من الموقع.</p>';return}
+  onSnapshot(doc(db,'menu','main'),s=>{const d=s.exists()?s.data():{};const nv={o:d.o||{},add:d.add||{}};const wasDirty=dirty();OV=nv;if(!wasDirty)ED=clone(OV);drawMenu()})}
+function rowsAll(){return [...BASE.map(r=>({id:r[0],type:r[1],sec:r[2],name:r[3],unit:r[4],price:+r[5]||0,before:+r[10]||0,on:/نعم/.test(r[6]||'')})),...Object.entries(ED.add).map(([id,a])=>({id,type:a.type||'صنف',sec:a.sec||'أخرى',name:a.name,unit:a.unit,price:+a.price,before:+a.before||0,on:true,added:true}))]}
+function eff(r){const x=ED.o[r.id]||{};return {price:x.price>0?x.price:r.price,before:'before' in x?(+x.before||0):r.before,on:r.on&&!x.off}}
+function drawMenu(){const q=$('mq').value.trim();const R=rowsAll().filter(r=>r.on&&(!q||r.name.includes(q)||r.sec.includes(q)));
+  const secs=[...new Set(rowsAll().map(r=>r.sec))];$('secs').innerHTML=secs.map(s=>`<option value="${esc(s)}">`).join('');
+  let h='',last='';R.forEach(r=>{const e=eff(r);const ch=JSON.stringify(ED.o[r.id]||{})!==JSON.stringify(OV.o[r.id]||{})||(r.added&&JSON.stringify(ED.add[r.id])!==JSON.stringify(OV.add[r.id]));
+    if(r.sec!==last){h+=`<div class="sec">${esc(r.sec)}</div><div class="prow muted" style="border:0;padding:0"><span></span><span style="text-align:center">السعر</span><span style="text-align:center">${r.type==='عرض'?'قبل':''}</span><span style="text-align:center">متاح</span></div>`;last=r.sec}
+    h+=`<div class="prow ${ch?'chg':''} ${e.on?'':'off'}" data-id="${r.id}"><span class="nm">${esc(r.name)}<small>${esc(r.unit||'')}${r.added?' · جديد <button class="b red sm" data-rm="1" style="padding:0 6px">شيل</button>':''}</small></span>
+      <input type="number" inputmode="decimal" min="1" value="${e.price}" data-f="price"><span>${r.type==='عرض'?`<input type="number" inputmode="decimal" min="0" value="${e.before||''}" data-f="before">`:''}</span>
+      <input type="checkbox" ${e.on?'checked':''} data-f="on" style="width:22px;height:22px;margin:auto"></div>`});
+  $('mlist').innerHTML=h||'<p class="muted">مفيش نتايج.</p>';syncBar()}
+function syncBar(){const d=dirty();$('mSaveBar').hidden=!d||$('t-menu').hidden;if(d){const n=new Set([...Object.keys(ED.o),...Object.keys(OV.o)].filter(k=>JSON.stringify(ED.o[k]||{})!==JSON.stringify(OV.o[k]||{}))).size+(JSON.stringify(ED.add)!==JSON.stringify(OV.add)?1:0);$('mChg').textContent=n+' تغيير'}}
+$('mq').oninput=drawMenu;
+$('mlist').addEventListener('change',e=>{const inp=e.target.closest('[data-f]');if(!inp)return;const id=inp.closest('[data-id]').dataset.id;const r=rowsAll().find(x=>x.id===id);const f=inp.dataset.f;
+  if(r.added){const a=ED.add[id];if(f==='price'&&+inp.value>0)a.price=+inp.value;if(f==='before')a.before=+inp.value||0;if(f==='on'&&!inp.checked){ED.o[id]={...(ED.o[id]||{}),off:true}}if(f==='on'&&inp.checked&&ED.o[id]){delete ED.o[id].off;if(!Object.keys(ED.o[id]).length)delete ED.o[id]}drawMenu();return}
+  const x={...(ED.o[id]||{})};
+  if(f==='price'){const v=+inp.value;if(v>0&&v!==r.price)x.price=v;else delete x.price}
+  if(f==='before'){const v=+inp.value||0;if(v!==r.before)x.before=v;else delete x.before}
+  if(f==='on'){if(!inp.checked)x.off=true;else delete x.off}
+  if(Object.keys(x).length)ED.o[id]=x;else delete ED.o[id];drawMenu()});
+$('mlist').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;const id=b.closest('[data-id]').dataset.id;if(confirm('تشيل الصنف ده من القايمة؟')){delete ED.add[id];delete ED.o[id];drawMenu()}});
+$('mUndo').onclick=()=>{ED=clone(OV);drawMenu()};
+$('mSave').onclick=async()=>{try{await setDoc(doc(db,'menu','main'),{o:ED.o,add:ED.add,updatedAt:new Date()});OV=clone(ED);drawMenu();toast('اتحفظ ✅ والموقع اتحدّث')}catch(e){toast('مش اتحفظ: '+e.code)}};
+$('nAdd').onclick=()=>{const name=$('nName').value.trim(),sec=$('nSec').value.trim()||'أخرى',price=+$('nPrice').value;
+  if(!name||!(price>0))return toast('اكتب الاسم والسعر');const id='n'+Date.now().toString(36);
+  ED.add[id]={name,sec,unit:$('nUnit').value,price,desc:$('nDesc').value.trim(),type:'صنف'};['nName','nPrice','nDesc'].forEach(k=>$(k).value='');drawMenu();toast('اتضاف، دوس «احفظ التغييرات»')};
+
+/* ---------- settings ---------- */
+function startSettings(){onSnapshot(doc(db,'settings','main'),s=>{const d=s.exists()?s.data():{};$('sDel').value=d.delivery??60;$('sFree').value=d.freeOver??1000;$('sNotice').value=d.notice||'';$('sClosed').checked=!!d.closed;$('sClosedMsg').value=d.closedMsg||'';$('sZones').value=d.zones||DEF_ZONES;SET=d;drawRevs();if(!$('t-orders').hidden)drawOrders()})}
+function drawRevs(){const r=(SET&&SET.reviews)||[];$('rList').innerHTML=r.length?r.map((x,i)=>`<div class="card" style="padding:10px;margin-top:8px"><b>${esc(x.name||'عميل')}</b> <span class="muted">${esc(x.area||'')} · ${esc(x.item||'')}</span><p style="margin:6px 0">${esc(x.text)}</p><button class="b" data-rdel="${i}">امسح</button></div>`).join(''):'<p class="muted">لسه مفيش آراء.</p>'}
+async function saveRevs(r){try{await setDoc(doc(db,'settings','main'),{reviews:r},{merge:true});toast('اتحفظ ✅')}catch(e){toast('مش اتحفظ: '+e.code)}}
+$('rAdd').onclick=()=>{const t=$('rText').value.trim();if(!t)return toast('اكتب الرأي');const r=[{name:$('rName').value.trim(),area:$('rArea').value.trim(),item:$('rItem').value.trim(),text:t},...((SET&&SET.reviews)||[])].slice(0,30);['rName','rArea','rItem','rText'].forEach(k=>$(k).value='');saveRevs(r)};
+$('rList').onclick=e=>{const b=e.target.closest('[data-rdel]');if(!b)return;if(!confirm('تمسح الرأي ده من الموقع؟'))return;const r=[...((SET&&SET.reviews)||[])];r.splice(+b.dataset.rdel,1);saveRevs(r)};
+$('sSave').onclick=async()=>{const d={delivery:Math.max(0,+$('sDel').value||0),freeOver:Math.max(0,+$('sFree').value||0),notice:$('sNotice').value.trim(),closed:$('sClosed').checked,closedMsg:$('sClosedMsg').value.trim(),zones:$('sZones').value.trim(),updatedAt:new Date()};
+  try{await setDoc(doc(db,'settings','main'),d,{merge:true});toast('اتحفظ ✅')}catch(e){toast('مش اتحفظ: '+e.code)}};
+</script>
+</body>
+</html>
