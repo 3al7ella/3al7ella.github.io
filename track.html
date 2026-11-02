@@ -29,12 +29,25 @@ header b{font-size:20px;font-weight:900;display:block}header small{color:var(--m
 .btn{display:block;text-align:center;text-decoration:none;border-radius:14px;padding:13px;font-weight:900;margin-top:10px}
 .wa{background:var(--leaf);color:#fff}.back{border:2px solid var(--brand);color:var(--brand)}
 .num{font-variant-numeric:tabular-nums}
+details.day{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;margin-bottom:12px;overflow:hidden}
+details.day>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 16px;font-weight:900}
+details.day>summary::-webkit-details-marker{display:none}
+details.day>summary .t{flex:1}details.day>summary .t small{display:block;color:var(--muted);font-weight:700;font-size:13px}
+details.day>summary .v{transition:transform .2s}details.day[open]>summary .v{transform:rotate(180deg)}
+details.day[open]>summary{background:var(--soft);border-bottom:1px solid var(--line)}
+details.day.today{border-color:var(--brand)}
+.dbody{padding:12px}.dbody .card{margin-bottom:10px}
+.q{display:flex;align-items:center;gap:6px}.q button{all:unset;cursor:pointer;width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--brand);font-weight:900;text-align:center;line-height:30px}
+.q .del{background:#FDE3DB;color:#B83A12}
+.it.gone span:first-child{text-decoration:line-through;color:var(--muted)}
+.edit{all:unset;cursor:pointer;display:block;text-align:center;border:2px dashed var(--brand);color:var(--brand);border-radius:14px;padding:10px;font-weight:900;margin-top:10px}
+.note{background:var(--soft);border-radius:12px;padding:10px;font-weight:700;font-size:14px;margin-top:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header><img src="icon-512.png" alt="ع الحلة"><div><b>تابع أوردرك</b><small>ع الحلة · أكل بيتي في إسكندرية</small></div></header>
-  <div id="box"><div class="card"><p class="muted">بنجيب أوردرك…</p></div></div>
+  <header><img src="icon-512.png" alt="ع الحلة"><div><b>أوردراتك</b><small>ع الحلة · كل يوم توصيل في فولدر لوحده</small></div></header>
+  <div id="box"><div class="card"><p class="muted">بنجيب أوردراتك…</p></div></div>
   <a class="btn wa" href="https://wa.me/201275165496" target="_blank" rel="noopener">💬 كلمنا واتساب 01275165496</a>
   <a class="btn back" href="./">🍲 ارجع للمنيو</a>
 </div>
@@ -43,22 +56,55 @@ import {db,doc,onSnapshot,STATUS,STATUS_X} from './fb.js';
 const box=document.getElementById('box');
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString('en-US');
-const id=new URLSearchParams(location.search).get('id')||'';
-if(!/^[A-Za-z0-9]{10,40}$/.test(id)){box.innerHTML='<div class="card"><p class="big">الرابط ناقص</p><p class="muted">افتح رابط المتابعة اللي جالك مع الأوردر، أو كلمنا واتساب.</p></div>'}
-else onSnapshot(doc(db,'orders',id),s=>{
-  if(!s.exists()){box.innerHTML='<div class="card"><p class="big">مش لاقيين الأوردر ده</p><p class="muted">ممكن يكون لسه بيتسجل، استنى دقيقة. ولو المشكلة فضلت كلمنا واتساب.</p></div>';return}
-  const o=s.data();const idx=STATUS.findIndex(x=>x[0]===o.status);const cancelled=o.status===STATUS_X[0];
-  const first=(o.name||'').split(' ')[0];
+const up5=v=>Math.ceil(v/5-1e-9)*5;
+const WA='201275165496';
+const qid=new URLSearchParams(location.search).get('id')||'';
+let L=[];try{L=JSON.parse(localStorage.getItem('alhella-orders')||'[]').filter(x=>x&&/^[A-Za-z0-9]{10,40}$/.test(x.id))}catch(_){}
+if(/^[A-Za-z0-9]{10,40}$/.test(qid)&&!L.some(x=>x.id===qid)){L.unshift({id:qid,when:'',at:Date.now()});try{localStorage.setItem('alhella-orders',JSON.stringify(L.slice(0,30)))}catch(_){}}
+if(qid&&!/^[A-Za-z0-9]{10,40}$/.test(qid)&&!L.length){box.innerHTML='<div class="card"><p class="big">الرابط ناقص</p><p class="muted">افتح رابط المتابعة اللي جالك مع الأوردر، أو كلمنا واتساب.</p></div>'}
+else if(!L.length){box.innerHTML='<div class="card"><p class="big">مفيش أوردرات لسه</p><p class="muted">أول ما تطلب من الموقع، أوردراتك هتظهر هنا متقسمة بالأيام.</p></div>'}
+const O={},ED={},OPEN=new Set(),CLOSE=new Set();
+const dayOf=o=>((o.when||'').match(/\d{1,2}\/\d{1,2}/)||[''])[0];
+const now=new Date(),key=d=>{if(!d)return 1e9;const [dd,mm]=d.split('/').map(Number);return mm*100+dd};
+const tk=(now.getMonth()+1)*100+now.getDate(),t2=new Date(now.getTime()+864e5),tmk=(t2.getMonth()+1)*100+t2.getDate();
+const WD=['الحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'];
+const wd=d=>{const [dd,mm]=d.split('/').map(Number);return WD[new Date(now.getFullYear()+(mm<now.getMonth()-5?1:0),mm-1,dd).getDay()]};
+const canEdit=o=>['new','confirmed'].includes(o.status);
+const step=x=>/كيلو/.test((x.unit||'')+x.name)&&!/عرض/.test(x.unit||'')?0.5:1;
+function itemsHTML(id,o){const e=ED[id];const its=o.items||[];
+  return its.map((x,i)=>{const q=e?e[i]:x.qty;const gone=e&&q<=0;const tot=e?up5((+x.price||0)*q):x.total;
+    return `<div class="it${gone?' gone':''}"><span>${esc(x.name)} ${q!=1||x.unit?'— '+fmt(q)+' '+esc(x.unit||''):''}</span>${e?`<span class="q"><button data-m="${id}|${i}|-">−</button><button data-m="${id}|${i}|+">+</button><button class="del" data-m="${id}|${i}|x">🗑</button></span>`:`<span class="num">${fmt(tot)} ج</span>`}</div>`}).join('')}
+function orderHTML(id){const o=O[id];if(o===null)return `<div class="card"><p class="muted">أوردر <b class="num">${esc(id.slice(0,6).toUpperCase())}</b> مش لاقيينه. لو لسه طالبه استنى دقيقة.</p></div>`;if(!o)return `<div class="card"><p class="muted">بنجيب الأوردر…</p></div>`;
+  const idx=STATUS.findIndex(x=>x[0]===o.status);const cancelled=o.status===STATUS_X[0];
   const steps=STATUS.map((x,i)=>`<li class="${i<idx?'ok':i===idx?'now':''}"><span class="d">${x[2]}</span>${x[1]}</li>`).join('');
-  const items=(o.items||[]).map(x=>`<div class="it"><span>${esc(x.name)} ${x.qty!=1||x.unit?'— '+fmt(x.qty)+' '+esc(x.unit||''):''}</span><span class="num">${fmt(x.total)} ج</span></div>`).join('');
-  box.innerHTML=`<div class="card"><p class="big">${first?'أهلاً '+esc(first)+' 👋':'أوردرك'}</p>
-    <p class="muted">رقم الأوردر <b class="num">${esc(id.slice(0,6).toUpperCase())}</b>${o.when?' · المعاد: '+esc(o.when):''}</p>
-    ${cancelled?`<div class="x">✖️ الأوردر ده اتلغى. لو ده غلط كلمنا واتساب.</div>`:`<ul class="steps">${steps}</ul>`}</div>
-    <div class="card"><b>الأصناف</b>${items}
-    <div class="it"><span>التوصيل</span><span class="num">${o.delivery==null?'هيتحدد لما نأكد الأوردر':o.delivery?fmt(o.delivery)+' ج':'مجاني'}</span></div>
-    <div class="tot"><span>الإجمالي</span><span class="num">${fmt(o.total)} ج${o.delivery==null?' + التوصيل':''}</span></div>
-    <p class="muted" style="margin:6px 0 0">الدفع: ${esc(o.pay||'')}</p></div>${o.status==='delivered'?`<div class="card"><p class="big" style="font-size:19px">بالهنا والشفا 😋</p><p class="muted">الأكل عجبك؟ رأيك بكلامك بيفرق معانا جدًا.</p><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('رأيي في أوردر ع الحلة ⭐\nالصنف: \nرأيي: \nأوافق إن رأيي يظهر على الموقع باسم: ')}">💬 ابعت رأيك واتساب</a><a class="btn back" target="_blank" rel="noopener" href="https://g.page/r/CT-4UMLtgxyFEBM/review">⭐ قيّمنا على جوجل</a></div>`:''}`;
-},()=>{box.innerHTML='<div class="card"><p class="big">في مشكلة في الاتصال</p><p class="muted">جرّب تاني بعد شوية، أو كلمنا واتساب.</p></div>'});
+  const e=ED[id];let edTot='';if(e){const s=(o.items||[]).reduce((a,x,i)=>a+up5((+x.price||0)*e[i]),0);edTot=`<div class="tot"><span>الأصناف بعد التعديل</span><span class="num">${fmt(s)} ج</span></div><p class="note">التعديل بيتبعت للمطبخ على واتساب، وبنأكدلك الحساب الجديد.</p><a class="btn wa" data-send="${id}" href="#">💬 ابعت التعديل</a><button class="edit" data-cancel="${id}">رجوع من غير تعديل</button>`}
+  return `<div class="card"><p class="muted">أوردر <b class="num">${esc(id.slice(0,6).toUpperCase())}</b>${o.when?' · '+esc(o.when):''}</p>
+   ${cancelled?`<div class="x">✖️ الأوردر ده اتلغى. لو ده غلط كلمنا واتساب.</div>`:`<ul class="steps">${steps}</ul>`}</div>
+   <div class="card"><b>الأصناف</b>${itemsHTML(id,o)}
+   ${e?edTot:`<div class="it"><span>التوصيل</span><span class="num">${o.delivery==null?'هيتحدد لما نأكد الأوردر':o.delivery?fmt(o.delivery)+' ج':'مجاني'}</span></div>
+   <div class="tot"><span>الإجمالي</span><span class="num">${fmt(o.total)} ج${o.delivery==null?' + التوصيل':''}</span></div>
+   <p class="muted" style="margin:6px 0 0">الدفع: ${esc(o.pay||'')}</p>
+   <a class="btn back" data-re="${id}" href="#">🔁 اطلب نفس الأوردر تاني</a>
+   ${canEdit(o)?`<button class="edit" data-ed="${id}">✏️ عدّل أو امسح صنف</button>`:(!cancelled&&o.status!=='delivered'?`<p class="note">الأوردر بيتجهز دلوقتي، لو محتاج تعديل كلمنا واتساب.</p>`:'')}`}</div>
+   ${o.status==='delivered'?`<div class="card"><p class="big" style="font-size:19px">بالهنا والشفا 😋</p><p class="muted">الأكل عجبك؟ رأيك بكلامك بيفرق معانا جدًا.</p><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/${WA}?text=${encodeURIComponent('رأيي في أوردر ع الحلة ⭐\nالصنف: \nرأيي: \nأوافق إن رأيي يظهر على الموقع باسم: ')}">💬 ابعت رأيك واتساب</a><a class="btn back" target="_blank" rel="noopener" href="https://g.page/r/CT-4UMLtgxyFEBM/review">⭐ قيّمنا على جوجل</a></div>`:''}`}
+function draw(){if(!L.length)return;const g={};L.forEach(x=>{const o=O[x.id];const d=(o&&dayOf(o))||dayOf(x)||'';(g[d]=g[d]||[]).push(x.id)});
+  const ds=Object.keys(g).sort((a,b)=>key(b)-key(a));
+  const first=(Object.values(O).find(o=>o&&o.name)||{}).name||'';
+  box.innerHTML=(first?`<p class="big" style="margin:0 4px 10px">أهلاً ${esc(first.split(' ')[0])} 👋</p>`:'')+ds.map(d=>{const k=key(d),ids=g[d];const os=ids.map(i=>O[i]).filter(Boolean);
+    const open=(ids.includes(qid)||k===tk||k===tmk||ds.length===1||OPEN.has(d))&&!CLOSE.has(d);
+    return `<details class="day${k===tk?' today':''}" data-day="${d}" ${open?'open':''}><summary><span style="font-size:22px">📁</span><span class="t">${d?wd(d)+' '+d:'أوردرات من غير يوم'}${k===tk?' · النهارده':k===tmk?' · بكره':''}<small>${ids.length} أوردر${os.length?' · '+fmt(os.filter(o=>o.status!=='cancelled').reduce((a,o)=>a+(+o.total||0),0))+' ج':''}</small></span><span class="v">▾</span></summary><div class="dbody">${ids.map(orderHTML).join('')}</div></details>`}).join('')}
+L.forEach(x=>onSnapshot(doc(db,'orders',x.id),s=>{O[x.id]=s.exists()?s.data():null;if(!ED[x.id])draw()},()=>{O[x.id]=null;draw()}));
+box.addEventListener('toggle',e=>{const f=e.target;if(!f.classList||!f.classList.contains('day'))return;const d=f.dataset.day;if(f.open){OPEN.add(d);CLOSE.delete(d)}else{CLOSE.add(d);OPEN.delete(d)}},true);
+box.addEventListener('click',e=>{const t=e.target.closest('[data-ed],[data-m],[data-cancel],[data-send],[data-re]');if(!t)return;e.preventDefault();
+  if(t.dataset.re){const o=O[t.dataset.re];try{localStorage.setItem('alhella-reorder',JSON.stringify((o.items||[]).map(x=>({k:x.k||'',name:x.name,qty:x.qty}))))}catch(_){}location.href='./?reorder=1';return}
+  if(t.dataset.ed){const o=O[t.dataset.ed];ED[t.dataset.ed]=(o.items||[]).map(x=>+x.qty||0);draw();return}
+  if(t.dataset.cancel){delete ED[t.dataset.cancel];draw();return}
+  if(t.dataset.m){const [id,i,op]=t.dataset.m.split('|');const o=O[id],x=o.items[+i];const st=step(x);let q=ED[id][+i];q=op==='+'?q+st:op==='-'?Math.max(0,q-st):0;ED[id][+i]=Math.round(q*100)/100;draw();return}
+  if(t.dataset.send){const id=t.dataset.send,o=O[id],e2=ED[id];const ch=[];(o.items||[]).forEach((x,i)=>{const q0=+x.qty||0,q1=e2[i];if(q1===q0)return;ch.push(q1<=0?`❌ شيل: ${x.name}`:`✏️ ${x.name}: ${fmt(q1)} ${x.unit||''} بدل ${fmt(q0)}`)});
+    if(!ch.length){delete ED[id];draw();return}
+    const s=(o.items||[]).reduce((a,x,i)=>a+up5((+x.price||0)*e2[i]),0);
+    const msg=`تعديل أوردر #${id.slice(0,6).toUpperCase()} — ${o.name||''} (${o.when||''})\n\n${ch.join('\n')}\n\nالأصناف بعد التعديل: ${fmt(s)} ج\nرابط الأوردر: https://3al7ella.github.io/track.html?id=${id}`;
+    window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');delete ED[id];draw()}});
 </script>
 </body>
 </html>

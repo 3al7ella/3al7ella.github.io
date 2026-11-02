@@ -25,6 +25,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}
 .chips button{white-space:nowrap;border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 12px;font-weight:800;cursor:pointer;font-size:13px}
 .chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dfold{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}.dfold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 14px;font-weight:900}.dfold>summary::-webkit-details-marker{display:none}.dfold>summary .di{font-size:22px}.dfold>summary .dt{flex:1}.dfold>summary .dt small{display:block;color:var(--muted);font-weight:700;font-size:12px}.dfold>summary .dc{background:var(--soft);color:var(--brand);border-radius:999px;padding:2px 10px;font-size:13px}.dfold>summary .dv{transition:transform .2s}.dfold[open]>summary .dv{transform:rotate(180deg)}.dfold[open]>summary{border-bottom:1px solid var(--line);background:var(--soft)}.dfold .dbody{padding:10px}.dfold.today{border-color:var(--brand)}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
 .stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
@@ -194,9 +195,21 @@ function drawOrders(){
   const L=filtered();
   $('sNew').textContent=ORD.filter(o=>o.status==='new').length;$('sAct').textContent=ORD.filter(o=>!['delivered','cancelled'].includes(o.status)).length;
   $('sDay').textContent=fmt(L.filter(o=>o.status!=='cancelled').reduce((a,o)=>a+(+o.total||0),0))+' ج';
-  $('olist').innerHTML=L.length?L.map(card).join(''):'<p class="muted">مفيش أوردرات هنا.</p>'}
+  if(!L.length){$('olist').innerHTML='<p class="muted">مفيش أوردرات هنا.</p>';return}
+  if(FD!=='all'){$('olist').innerHTML=L.map(card).join('');return}
+  const g={};L.forEach(o=>{const d=dayOf(o)||'—';(g[d]=g[d]||[]).push(o)});
+  const key=d=>{if(d==='—')return 1e9;const [dd,mm]=d.split('/').map(Number);return mm*100+dd};
+  const now=new Date(),tk=(now.getMonth()+1)*100+now.getDate(),tm=new Date(now.getTime()+864e5),tmk=(tm.getMonth()+1)*100+tm.getDate();
+  const WD=['الحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'];
+  const wd=d=>{if(d==='—')return '';const [dd,mm]=d.split('/').map(Number);const y=now.getFullYear()+((mm<now.getMonth()+1-6)?1:0);return WD[new Date(y,mm-1,dd).getDay()]};
+  const rel=k=>k===tk?' · النهارده':k===tmk?' · بكره':'';
+  const ds=Object.keys(g).sort((a,b)=>key(a)-key(b));
+  $('olist').innerHTML=ds.map(d=>{const os=g[d],k=key(d),act=os.filter(o=>o.status!=='cancelled');const open=k===tk||k===tmk||(OPEND.has(d));
+    return `<details class="dfold${k===tk?' today':''}" data-day="${d}" ${open&&!CLOSED.has(d)?'open':''}><summary><span class="di">📁</span><span class="dt">${d==='—'?'من غير يوم':(wd(d)+' '+d)}${rel(k)}<small>${act.length} أوردر · ${fmt(act.reduce((a,o)=>a+(+o.total||0),0))} ج</small></span><span class="dc">${os.filter(o=>!['delivered','cancelled'].includes(o.status)).length} شغال</span><span class="dv">▾</span></summary><div class="dbody">${os.map(card).join('')}</div></details>`}).join('')}
+const OPEND=new Set(),CLOSED=new Set(),EDIT=new Set();
+document.addEventListener('toggle',e=>{const f=e.target;if(!f.classList||!f.classList.contains('dfold'))return;const d=f.dataset.day;if(f.open){OPEND.add(d);CLOSED.delete(d)}else{CLOSED.add(d);OPEND.delete(d)}},true);
 function card(o){const st=SN[o.status]||SN.new;const i=STATUS.findIndex(x=>x[0]===o.status);const nx=STATUS[i+1];
-  const items=(o.items||[]).map(x=>`<div><span>• ${esc(x.name)}${x.qty!=1||x.unit?' — '+fmt(x.qty)+' '+esc(x.unit||''):''}</span><span class="num">${fmt(x.total)}</span></div>`).join('');
+  const ed=EDIT.has(o.id);const items=(o.items||[]).map((x,i)=>ed?`<div><span>• ${esc(x.name)} <small class="muted">${esc(x.unit||'')} · ${fmt(x.price)} ج</small></span><span style="display:flex;gap:4px;align-items:center"><input type="number" min="0" step="0.25" inputmode="decimal" value="${x.qty}" data-iq="${i}" style="width:64px;padding:5px;border:1.5px solid var(--line);border-radius:8px;text-align:center;background:var(--paper)"><button class="b red sm" data-a="irm" data-i="${i}" style="padding:2px 8px">🗑</button></span></div>`:`<div><span>• ${esc(x.name)}${x.qty!=1||x.unit?' — '+fmt(x.qty)+' '+esc(x.unit||''):''}</span><span class="num">${fmt(x.total)}</span></div>`).join('')+(ed?`<div style="display:flex;gap:6px;margin-top:6px"><button class="b ok sm" data-a="isave" style="flex:1">💾 احفظ التعديل</button><button class="b sm" data-a="icancel">إلغاء</button></div>`:'');
   return `<div class="card" data-o="${o.id}"><div class="oh"><div><b>${esc(o.name)}</b> <span class="muted num">#${o.id.slice(0,6).toUpperCase()}</span>
     <div class="muted"><a href="tel:${esc(o.phone)}" class="num">${esc(o.phone)}</a> · ${esc(o.area||'')}</div></div><span class="pill ${o.status}">${st[2]} ${st[1]}</span></div>
     <div class="muted">📍 ${esc(o.addr)}</div><div class="muted">🗓️ ${esc(o.when||'')} · اتطلب ${tstr(ts(o))}</div>
@@ -205,7 +218,7 @@ function card(o){const st=SN[o.status]||SN.new;const i=STATUS.findIndex(x=>x[0]=
     <div class="muted">💳 ${esc(o.pay||'')}${o.note?' · 📝 '+esc(o.note):''}</div>
     <div class="acts">${nx&&o.status!=='new'?`<button class="b ok sm" data-a="st" data-v="${nx[0]}">${nx[2]} ${nx[1]}</button>`:''}
       <select class="b sm" data-a="pick">${ALL.map(x=>`<option value="${x[0]}" ${x[0]===o.status?'selected':''}>${x[2]} ${x[1]}</option>`).join('')}</select>
-      <button class="b sm" data-a="drv">🛵 للمندوب</button><button class="b sm" data-a="kit">🍳 للمطبخ</button>
+      ${o.status!=='cancelled'&&!ed?'<button class="b sm" data-a="iedit">✏️ الأصناف</button>':''}<button class="b sm" data-a="drv">🛵 للمندوب</button><button class="b sm" data-a="kit">🍳 للمطبخ</button>
       <a class="b sm" href="${esc(waLink(o.phone,'أهلاً '+(o.name||'').split(' ')[0]+' 👋 ع الحلة معاك\nتقدر تتابع أوردرك من هنا: https://3al7ella.github.io/track.html?id='+o.id))}" target="_blank" rel="noopener" style="text-decoration:none">💬 العميل</a>
       <button class="b red sm" data-a="del">🗑️</button></div></div>`}
 const drvTxt=o=>[`👤 ${o.name}`,`📞 ${o.phone}`,`📍 ${o.area?o.area+' — ':''}${o.addr}`,...(o.items||[]).map(x=>`• ${x.name}${x.qty!=1||x.unit?' '+fmt(x.qty)+' '+(x.unit||''):''}`),`💰 الحساب: ${fmt(o.total)} ج${pend(o)?' + التوصيل':''} (${o.pay||''})`,o.note?`📝 ${o.note}`:''].filter(Boolean).join('\n');
@@ -221,6 +234,14 @@ $('olist').addEventListener('click',async e=>{const b=e.target.closest('[data-a]
     window.open(waLink(o.phone,msg),'_blank');
     try{await updateDoc(doc(db,'orders',id),{status:'confirmed',delivery:v,total:tot,at_confirmed:new Date()});toast('✅ اتأكد')}catch(e){toast('مش اتحفظ: '+e.code)}}
   if(a==='edl'){const r=prompt('سعر التوصيل للأوردر ده (ج):',pend(o)?suggest(o):o.delivery);if(r===null)return;const v=Math.max(0,+r||0);try{await updateDoc(doc(db,'orders',id),{delivery:v,total:(+o.sub||0)+v});toast('اتعدّل')}catch(e){toast('مش اتحفظ: '+e.code)}}
+  if(a==='iedit'){EDIT.add(id);drawOrders();return}
+  if(a==='icancel'){EDIT.delete(id);drawOrders();return}
+  if(a==='irm'){const r=b.closest('div').querySelector('[data-iq]');if(r)r.value=0;b.closest('div').style.opacity=.4;return}
+  if(a==='isave'){const box=b.closest('[data-o]');const up5=v=>Math.ceil(v/5-1e-9)*5;
+    const its=(o.items||[]).map((x,i)=>{const q=Math.max(0,+box.querySelector('[data-iq="'+i+'"]').value||0);return {...x,qty:q,total:up5((+x.price||0)*q)}}).filter(x=>x.qty>0);
+    if(!its.length)return toast('لو عايز تلغي الأوردر كله غيّر حالته لـ «اتلغى»');
+    const sub=its.reduce((s2,x)=>s2+x.total,0);const dl=pend(o)?null:(+o.delivery||0);
+    try{await updateDoc(doc(db,'orders',id),{items:its,sub,total:sub+(dl||0),edited_at:new Date()});EDIT.delete(id);toast('✅ الأوردر اتعدّل · '+fmt(sub+(dl||0))+' ج')}catch(e){toast('مش اتحفظ: '+e.code)}return}
   if(a==='drv')copy(drvTxt(o));if(a==='kit')copy(kitTxt(o));
   if(a==='del'&&confirm('تمسح أوردر '+o.name+' نهائي؟ (لو اتلغى الأحسن تخليه «اتلغى»)')){await deleteDoc(doc(db,'orders',id));toast('اتمسح')}});
 $('olist').addEventListener('change',e=>{const s=e.target.closest('[data-a=pick]');if(s)setSt(s.closest('[data-o]').dataset.o,s.value)});
