@@ -70,7 +70,7 @@ function render(){
  $("movesList").innerHTML=moves.slice(0,60).map(x=>recordItem(x,"stockMoves",x.name||x.item||"حركة",x.date+" · "+(x.type||""),String(x.qty??""))).join("")||'<p class="muted">لا توجد حركات.</p>';
  const monthSum=m=>orders.filter(x=>String(x.date||"").startsWith(m)).reduce((s,x)=>s+(Number(x.total)||0),0);
  $("octSales").textContent=money(monthSum("2026-10"));$("novSales").textContent=money(monthSum("2026-11"));$("expReport").textContent=money(exp);$("laborReport").textContent=money(collection("labor").reduce((s,x)=>s+(Number(x.amount)||0),0));
- $("monthReports").innerHTML=collection("months").map(x=>{const z=x.closeSummary||{};return item("شهر "+x._id,x.note||"قفلة الشهر · "+(z.orders??0)+" أوردر",z.net!=null?money(z.net):"شهر مفتوح")}).join("");
+ $("monthReports").innerHTML=collection("months").map(x=>{const z=x.closeSummary||{};const detail=z.sales!=null?("مبيعات "+money(z.sales)+" · تكلفة "+money(z.cogs)+" · عمالة "+money(z.labor)+" · توصيل "+money(z.delivery)+" · نصيب أم حمزة "+money(z.hamza)):"الشهر مفتوح · مخزون أول المدة "+money(x.openingStock);return item("شهر "+x._id,x.note||("قفلة الشهر · "+(z.orders??0)+" أوردر · "+detail),z.net!=null?money(z.net):"قيد العمل")}).join("");
  const labor=collection("labor").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  $("laborCount").textContent=labor.length+" حركة";
  $("laborList").innerHTML=labor.map(x=>recordItem(x,"labor",x.name||x.worker||"عامل",(x.date||"")+" · "+(x.kind||"")+(x.paid===false?" · غير مدفوع":" · مدفوع"),money(x.amount))).join("")||'<p class="muted">لا توجد حركات عمالة.</p>';
