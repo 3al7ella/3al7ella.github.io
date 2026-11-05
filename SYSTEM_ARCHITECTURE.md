@@ -62,7 +62,17 @@ The November 2026 month remains open. Do not close it without explicit owner app
 
 Do not auto-generate historical attendance or payroll entries until the current payroll rules, absences, and already-paid periods have been reconciled.
 
-## 5. Delivery and order accounting rules
+## 5. Payroll and leave operating rules
+
+- Fixed monthly wages are managed as period-based entitlements, not repeated daily wage expense entries.
+- The owner explicitly reports each employee's leave/absence and date. No absence is inferred from missing attendance records.
+- Only owner-reported leave can create a payroll deduction.
+- Weekly settlement closes Thursday for the Friday-to-Thursday period and creates one reviewed labor-expense settlement.
+- Month-end settlement closes monthly-paid staff after applying only explicitly reported leave and creates one reviewed labor-expense settlement.
+- Track entitlement, leave deductions, amount paid, remaining balance, and payment date separately.
+- Do not retroactively generate settlements or rewrite historical payroll. Set a controlled go-live date after opening balances are reconciled.
+
+## 6. Delivery and order accounting rules
 
 - Wardian delivery cost: 30 EGP per order.
 - Outside Wardian delivery cost: 75 EGP per order.
@@ -70,7 +80,7 @@ Do not auto-generate historical attendance or payroll entries until the current 
 - Weekly delivery reporting is Monday through Sunday.
 - A non-empty address containing الورديان is treated as Wardian; another non-empty address is outside Wardian; an empty address is unknown unless the order contains an explicit area classification.
 
-## 6. Delivery roadmap
+## 7. Delivery roadmap
 
 ### Phase A — Protect and stabilize
 - [x] Inspect existing GitHub, Firebase, and Supabase architecture.
@@ -105,7 +115,7 @@ Do not auto-generate historical attendance or payroll entries until the current 
 - [ ] Add receivables, supplier balances, cash / wallet / InstaPay reconciliation, and custody balances.
 - [ ] Provide owner KPIs and exception alerts on mobile.
 
-## 7. Safety and release rules
+## 8. Safety and release rules
 
 - No destructive schema or data changes without a verified backup and a rollback path.
 - No edits to October 2026 records.
