@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "ع الحلة",
+  "short_name": "ع الحلة",
+  "description": "منيو وطلبات ع الحلة — أكل بيتي في إسكندرية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8EF",
+  "theme_color": "#E4521B",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
