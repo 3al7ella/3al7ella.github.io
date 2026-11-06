@@ -970,8 +970,9 @@ body.spopen{overflow:hidden}
 .fbfollow{justify-content:center;min-width:min(82%,260px)}
 @media(max-width:720px){.hero{padding-top:12px}.banner{grid-template-columns:1fr;gap:14px}.fbcard{order:-1}.fbcover{aspect-ratio:1200/430}.banner h1{font-size:clamp(36px,10vw,48px)}.banner p{font-size:15px}.facts{gap:7px}.fact{font-size:12px}.ctas{display:grid;grid-template-columns:1.3fr 1fr}.ctas .go{justify-content:center;padding:12px 10px;font-size:15px}.leadtime{margin-top:12px}}
 
-/* Fresh fruit shop — a separate WhatsApp order flow, independent from the home-food cart */
-.fruit-shop{display:flex;flex-direction:column;align-items:center;padding:14px 10px;margin:0 auto 14px;max-width:100%;background:transparent;border:0;box-shadow:none}.fruit-launch{width:116px;height:116px;border:2px solid #edc7ae;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff9f2,#f9e4d5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#713b25;box-shadow:0 5px 16px rgba(117,66,36,.12);cursor:pointer;font-family:inherit;transition:transform .18s,box-shadow .18s}.fruit-launch:active{transform:scale(.96)}.fruit-launch-icon{font-size:35px;line-height:1.1}.fruit-launch-title{font-size:14px;font-weight:900}.fruit-launch small{font-size:10px;color:#8b6956}.fruit-shop:has(#fruitMenuPanel:not([hidden])){display:block;padding:14px;background:#fffaf5;border:1px solid #f0dfd1;border-radius:18px}.fruit-shop:has(#fruitMenuPanel:not([hidden])) .fruit-launch{width:100%;height:auto;min-height:46px;border-radius:13px;flex-direction:row;justify-content:center;gap:8px;margin-bottom:12px;background:#fff1e7;box-shadow:none}.fruit-shop:has(#fruitMenuPanel:not([hidden])) .fruit-launch-icon{font-size:20px}.fruit-shop:has(#fruitMenuPanel:not([hidden])) .fruit-launch small{font-size:11px}.fruit-shop #fruitMenuPanel[hidden]{display:none}.fruit-shop{margin:12px 0 20px;padding:16px;border:1px solid #f0d5c2;border-radius:22px;background:linear-gradient(145deg,#fffdf8,#fff1e7);box-shadow:0 8px 24px rgba(120,50,10,.07)}
+/* Fresh fruit shop — always visible, separate from the home-food cart */
+.fruit-shop{display:block;width:100%;margin:12px 0 20px;padding:14px;border:1px solid #f0d5c2;border-radius:18px;background:#fffaf5;box-shadow:0 3px 12px rgba(120,50,10,.045)}
+.fruit-shop #fruitMenuPanel{display:block!important}
 .fruit-head{text-align:center;margin-bottom:12px}.fruit-kicker{display:inline-flex;padding:4px 11px;border-radius:999px;background:#e5f2e5;color:#28683a;font-size:11px;font-weight:900}
 .fruit-head h2{margin:7px 0 2px;color:#9f3516;font-size:23px;font-weight:900}.fruit-head p{margin:0;color:#73594b;font-size:13px;line-height:1.7}
 .fruit-note{padding:10px 12px;margin:12px 0;border-radius:13px;background:#fff8e9;border:1px solid #f0dfbd;color:#705338;font-size:11px;line-height:1.7}.fruit-note b{display:block;color:#9c481d;margin-top:3px}
@@ -1047,14 +1048,12 @@ body.spopen{overflow:hidden}
 <main class="wrap">
   <button type="button" class="bfbanner" id="bfBanner" hidden><span class="bfdot" aria-hidden="true"></span><span class="bft"><b>🖤 عروض بلاك فرايدي ع الحلة</b><small>محشي 3 كيلو بـ349 · فريزر بـ100 · لحد 30 نوفمبر</small></span><i aria-hidden="true">‹</i></button>
   <section class="catgrid" id="catgrid" aria-labelledby="cgTitle"><section class="fruit-shop" id="fruitShop" aria-labelledby="fruitTitle">
-  <button type="button" class="fruit-launch" id="fruitLaunch" aria-expanded="false" aria-controls="fruitMenuPanel"><span class="fruit-launch-icon">🍎</span><span class="fruit-launch-title">فاكهة طازة</span><small>افتح منيو الفاكهة</small></button>
-  <div id="fruitMenuPanel" hidden>
+  <div id="fruitMenuPanel">
   <div class="fruit-head"><div class="fruit-kicker">🍎 قسم مستقل</div><h2 id="fruitTitle">فاكهة طازة للبيت</h2><p>اختار الفاكهة اللي محتاجها، واطلبها لوحدها من غير ما تضيف أكل.</p></div>
   <div class="fruit-note">الأصناف غير المتاحة حاليًا مش هنضيفها للمنيو، والإضافة هتكون حسب توافرها في السوق.<b>الأسعار متغيرة حسب سعر السوق، والسعر النهائي بيتأكد على واتساب.</b></div>
   <div class="fruit-grid" id="fruitGrid"></div>
   <div class="fruit-selected" id="fruitSelected" hidden><div class="fruit-selected-head"><b>سلتك 🍎</b><button type="button" id="fruitClear">فضّي السلة</button></div><div id="fruitSelectedLines"></div></div>
   <div class="fruit-checkout"><div class="fruit-total"><span>إجمالي تقريبي</span><b id="fruitTotal">0 جنيه</b></div><small>الحساب تقديري حسب الكميات المختارة، والسعر النهائي يتأكد قبل تأكيد الطلب.</small><button type="button" id="fruitOrder" disabled>اختار فاكهتك واطلب على واتساب</button></div>
-  </div>
 </section>
 <h2 class="cgh" id="cgTitle">اختار القسم 👇</h2><div id="cgrid"></div><div class="cgfoot" id="cgFoot"><button type="button" class="sharebtn" data-share>📲 ابعت المنيو لحد بتحبه<small>صاحبتك، مامتك، جروب العيلة… بضغطة واحدة</small></button></div></section>
   <section class="offers" id="offers" aria-labelledby="offTitle">
@@ -1556,9 +1555,6 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
     {id:'siwi-dates',name:'بلح سيوي',price:80,emoji:'🌴'}
   ];
   const quantities={};
-  const launch=document.getElementById('fruitLaunch');
-  const panel=document.getElementById('fruitMenuPanel');
-  if(launch&&panel){launch.addEventListener('click',()=>{const opening=panel.hidden;panel.hidden=!opening;launch.setAttribute('aria-expanded',String(opening));launch.querySelector('small').textContent=opening?'اقفل منيو الفاكهة':'افتح منيو الفاكهة';if(opening)setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50);});}
   const grid=document.getElementById('fruitGrid');
   const total=document.getElementById('fruitTotal');
   const order=document.getElementById('fruitOrder');
