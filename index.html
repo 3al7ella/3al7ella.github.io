@@ -1191,7 +1191,7 @@ function build(rows){byId={};items=[];secs=[];secImg={};OFFERS=[];FREEZER=[];FRE
       const badge=String(r[12]||'').trim();const o={id,g,title:name.replace(/^عرض\s+/,''),tl:p.desc,inc:splitInc(r[9]),before:num(r[10]),free:yes(r[11]),badges:badge?[[/أكبر|أوفر|يكفي/.test(badge)?'hot':'',badge]]:[],pick,box,ebox,big:box||/أكبر/.test(badge),img:p.img,kinds:(bfk||sec==='عرض اليوم')&&pick?['ورق عنب','كرنب','كوسة','باذنجان','فلفل','بصل']:null,rawOnly:(bfk||sec==='عرض اليوم')&&!!pick};
       if(o.free)FREE_DEL.add(id);OFFERS.push(o)}
     else{items.push(p);if(!secs.includes(sec)){secs.push(sec);secImg[sec]=p.img}}});
-  if(!secImg['الوجبات']&&byId.p168)secImg['الوجبات']='meal1';if(secImg['مصنعات الفراخ']!==undefined)secImg['مصنعات الفراخ']='f-mix.jpg';if(secImg['الخضار المتنضف']!==undefined)secImg['الخضار المتنضف']='f-beans.jpg';Object.keys(secImg).forEach(sx=>{if(!img(secImg[sx])){const f=items.find(p=>p.section===sx&&img(p.img));secImg[sx]=f?f.img:''}});buildPairs()}
+  if(!secImg['الوجبات']&&byId.p168)secImg['الوجبات']='meal1';if(secImg['مصنعات الفراخ']!==undefined)secImg['مصنعات الفراخ']='f-mix.jpg';if(secImg['المحاشي']!==undefined)secImg['المحاشي']='f-grape.jpg';if(secImg['الخضار المتنضف']!==undefined)secImg['الخضار المتنضف']='f-beans.jpg';Object.keys(secImg).forEach(sx=>{if(!img(secImg[sx])){const f=items.find(p=>p.section===sx&&img(p.img));secImg[sx]=f?f.img:''}});buildPairs()}
 const offerOf=id=>OFFERS.find(o=>o.id===id);
 
 /* ---------- CSV ---------- */
