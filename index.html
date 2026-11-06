@@ -918,6 +918,8 @@ body.spopen{overflow:hidden}
 
 /* Homepage clarity + advance-order policy */
 .banner{gap:22px}
+/* Keep the Facebook/community card visible at the very start of the homepage */
+.banner>.fbcard{order:-1}
 .banner h1{letter-spacing:-.4px}
 .leadtime{display:flex;align-items:center;gap:12px;margin:16px 0 4px;padding:13px 16px;border:1.5px solid #F0C7AE;border-radius:16px;background:linear-gradient(120deg,var(--brand-soft),var(--paper));color:var(--ink)}
 .leadtime>span{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:13px;background:var(--paper);font-size:22px}
