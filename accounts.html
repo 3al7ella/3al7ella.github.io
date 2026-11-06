@@ -172,7 +172,7 @@ function getStockRows(){
   }
   const status=it.onDemand?"onDemand":!base?"unknown":String(base.date||"")<"2026-11-06"?"review":balance<=0?"empty":it.min>0&&balance<=it.min?"low":"available";
   return {...it,name:base?.name||it.name,balance,base,lastDate,status,unit:stockUnit(it.id,it.unit,base)};
- }).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+ }).filter(x=>x.base&&String(x.base.date||"")>="2026-11-06").sort((a,b)=>a.name.localeCompare(b.name,"ar"));
 }
 function renderStockDashboard(){
  const rows=getStockRows(),q=($("stockSearch")?.value||"").trim().toLowerCase(),filter=$("stockFilter")?.value||"all";
