@@ -1294,7 +1294,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
     'موعد الطلب: '+$('fWhen').value,
     '━━━━━━━━━━━━━━━━━━',
     '*تفاصيل الأصناف*',
-    ...ent.map(([k,q],i)=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return (i+1)+'. '+lineName(k)+'\\n   '+fmtE(q)+u+' × '+fmtE(p.price)+' ج = '+fmtE(up5(p.price*q))+' ج'}),
+    ...ent.map(([k,q],i)=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return (i+1)+'. '+lineName(k)+'\n   '+fmtE(q)+u+' × '+fmtE(p.price)+' ج = '+fmtE(up5(p.price*q))+' ج'}),
     '━━━━━━━━━━━━━━━━━━',
     'قيمة الأصناف: '+fmtE(s)+' ج',
     'التوصيل: '+(isFree()?(freeDel()?'مجاني (مع العرض)':'مجاني (لأن الأوردر فوق '+FREE_OVER+' ج)'):DEF_DEL+' ج'),
@@ -1306,7 +1306,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
     '━━━━━━━━━━━━━━━━━━',
     'برجاء مراجعة تفاصيل الطلب وإرسال أي تعديل قبل التأكيد.',
     'شكرًا لثقتكم في ع الحلة ❤️'
-  ].filter(Boolean).join('\\n').trim();
+  ].filter(Boolean).join('\n').trim();
   try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
   let oid='';try{if(window.FB){oid=FB.newId();const its=ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:(offerOf(p.id)||p.name.startsWith(p.unit))?'':p.unit,price:p.price,total:up5(p.price*q)}});FB.save(oid,{name,phone,area,addr,when:$('fWhen').value,pay,note:((WEEKLY()?'🔁 اشتراك أسبوعي — كل '+WDAY()+'. ':'')+($('fRef')&&$('fRef').value.trim()?'🎁 مرشّحة من: '+$('fRef').value.trim()+'. ':'')+$('fNote').value.trim()).trim(),weekly:WEEKLY(),deliveryEst:delFee(),items:its,sub:s,delivery:delFee(),deliveryFree:isFree(),total:s+delFee(),src:'site'}).catch(()=>{});}}catch(_){oid=''}
   const T=t;
