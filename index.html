@@ -981,7 +981,7 @@ body.spopen{overflow:hidden}
 .fruit-name{font-size:13px;font-weight:900;color:#39251b;line-height:1.4}.fruit-unit{font-size:10px;color:#8a7567}
 .fruit-price{font-size:16px;font-weight:900;color:#b83a12}.fruit-price small{font-size:10px;color:#806b5e;font-weight:700}
 .fruit-step{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto}.fruit-step button{width:30px;height:30px;border:0;border-radius:9px;background:#fce5d8;color:#a43c16;font-size:19px;font-weight:900;cursor:pointer}.fruit-step button:disabled{opacity:.35;cursor:default}.fruit-qty{min-width:54px;text-align:center;font-size:11px;font-weight:800;color:#4a3529}
-.fruit-selected{margin-top:12px;padding:12px;border:1px solid #efd6c5;border-radius:15px;background:#fffaf5}.fruit-selected-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#68422e;font-size:13px}.fruit-selected-head button,.fruit-remove{border:0;background:transparent;color:#a94320;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.fruit-selected-line{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #f2e5db;font-size:12px}.fruit-selected-line b{color:#493326}.fruit-selected-line small{display:block;color:#8a7567;font-size:10px;margin-top:2px}.fruit-line-total{font-weight:900;color:#a93815;white-space:nowrap}.fruit-remove{padding:5px}.fruit-checkout{margin-top:12px;padding:12px;border-radius:15px;background:#fff;border:1px solid #f0d8c8}.fruit-total{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#654735}.fruit-total b{font-size:19px;color:#a93815}.fruit-checkout>small{display:block;margin:3px 0 10px;color:#806f62;font-size:10px;line-height:1.6}
+.fruit-selected{margin-top:12px;padding:12px;border:1px solid #efd6c5;border-radius:15px;background:#fffaf5}.fruit-selected-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#68422e;font-size:13px}.fruit-selected-head button,.fruit-remove{border:0;background:transparent;color:#a94320;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.fruit-selected-line{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:7px;padding:9px 0;border-top:1px solid #f2e5db;font-size:12px}.fruit-selected-line b{color:#493326}.fruit-selected-line small{display:block;color:#8a7567;font-size:10px;margin-top:2px}.fruit-line-total{font-weight:900;color:#a93815;white-space:nowrap}.fruit-mini-step{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #ead7c9;border-radius:9px;padding:2px}.fruit-mini-step button{width:25px;height:25px;border:0;border-radius:6px;background:#fff1e7;color:#a94320;font-size:16px;font-weight:900;cursor:pointer}.fruit-mini-step output{min-width:34px;text-align:center;font-size:10px;font-weight:800}.fruit-remove{padding:5px}.fruit-checkout{margin-top:12px;padding:12px;border-radius:15px;background:#fff;border:1px solid #f0d8c8}.fruit-total{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#654735}.fruit-total b{font-size:19px;color:#a93815}.fruit-checkout>small{display:block;margin:3px 0 10px;color:#806f62;font-size:10px;line-height:1.6}
 #fruitOrder{width:100%;border:0;border-radius:12px;padding:12px;background:#277443;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer}
 #fruitOrder:disabled{background:#b9b2aa;cursor:not-allowed}
 @media(min-width:650px){.fruit-shop{padding:20px}.fruit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.fruit-item{padding:13px}.fruit-head h2{font-size:26px}}
@@ -1578,11 +1578,11 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
     selected.hidden=!chosen.length;
     selectedLines.innerHTML=chosen.map(p=>{
       const q=quantities[p.id],line=q*p.price;
-      return '<div class="fruit-selected-line" data-selected-fruit="'+p.id+'"><div><b>'+p.name+'</b><small>'+qtyText(q)+' × '+fmt(p.price)+' جنيه / كجم</small></div><span class="fruit-line-total">'+fmt(line)+' ج</span><button type="button" class="fruit-remove" data-fruit-remove="'+p.id+'" aria-label="حذف '+p.name+'">حذف ✕</button></div>';
+      return '<div class="fruit-selected-line" data-selected-fruit="'+p.id+'"><div><b>'+p.name+'</b><small>'+fmt(p.price)+' جنيه / كجم</small></div><div class="fruit-mini-step"><button type="button" data-fruit-summary-change="-0.5" data-id="'+p.id+'" aria-label="تقليل '+p.name+'">−</button><output>'+qtyText(q)+'</output><button type="button" data-fruit-summary-change="0.5" data-id="'+p.id+'" aria-label="زيادة '+p.name+'">+</button></div><span class="fruit-line-total">'+fmt(line)+' ج</span><button type="button" class="fruit-remove" data-fruit-remove="'+p.id+'" aria-label="حذف '+p.name+'">✕</button></div>';
     }).join('');
     total.textContent=fmt(sum)+' جنيه';
     order.disabled=count===0;
-    order.textContent=count?'راجع السلة وابعت الطلب · '+fmt(count)+' أصناف':'اختار فاكهتك واطلب على واتساب';
+    order.textContent=count?'إرسال طلب الفاكهة على واتساب · '+fmt(count)+' أصناف':'اختار فاكهتك واطلب على واتساب';
     order.dataset.total=String(sum);
     order.dataset.count=String(count);
     order.dataset.units=String(units);
@@ -1595,8 +1595,14 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
     update();
   });
   selectedLines.addEventListener('click',e=>{
-    const b=e.target.closest('[data-fruit-remove]');if(!b)return;
-    quantities[b.dataset.fruitRemove]=0;update();
+    const remove=e.target.closest('[data-fruit-remove]');
+    if(remove){quantities[remove.dataset.fruitRemove]=0;update();return;}
+    const change=e.target.closest('[data-fruit-summary-change]');
+    if(change){
+      const id=change.dataset.id;
+      quantities[id]=Math.max(0,Math.round(((quantities[id]||0)+Number(change.dataset.fruitSummaryChange))*2)/2);
+      update();
+    }
   });
   clear.addEventListener('click',()=>{
     products.forEach(p=>quantities[p.id]=0);update();
