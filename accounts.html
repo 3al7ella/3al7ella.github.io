@@ -142,20 +142,28 @@ function stockUnit(item, base, countMove){
 function getStockRows(){
  const items=collection("stockItems"), moves=collection("stockMoves");
  const map=new Map();
- items.filter(x=>x.active!==false&&!x.onDemand).forEach(x=>map.set(x._id,{id:x._id,name:x.name||x._id,unit:x.unit||"",min:Number(x.min)||0,onDemand:false,cost:Number(x.cost)||0}));
+ items.filter(x=>x.active!==false||x.onDemand).forEach(x=>map.set(x._id,{id:x._id,name:x.name||x._id,unit:x.unit||"",min:Number(x.min)||0,onDemand:!!x.onDemand,cost:Number(x.cost)||0}));
  moves.forEach(m=>{
-  const key=String(m.item||m.name||"").trim(); if(!key)return;
+  const raw=String(m.item||m.name||"").trim(); if(!raw)return;
+  const byName=[...map.entries()].find(([id,it])=>it.name===raw||it.name===String(m.name||"").trim());
+  const key=map.has(raw)?raw:(byName?.[0]||raw);
   if(!map.has(key))map.set(key,{id:key,name:m.name||key,unit:m.unit||"",min:0,onDemand:false,cost:0,fromMove:true});
-  else if(m.name&&!map.get(key).name)map.get(key).name=m.name;
  });
+ const resolveKey=m=>{
+  const raw=String(m.item||m.name||"").trim();
+  if(map.has(raw))return raw;
+  const found=[...map.entries()].find(([id,it])=>it.name===raw||it.name===String(m.name||"").trim());
+  return found?.[0]||raw;
+ };
  return [...map.values()].map(it=>{
-  const related=moves.filter(m=>String(m.item||m.name||"").trim()===it.id || (!String(m.item||"").startsWith("si-")&&String(m.name||"").trim()===it.name));
+  const related=moves.filter(m=>resolveKey(m)===it.id);
   const counts=related.filter(m=>m.type==="count").sort((a,b)=>(String(a.date||"")+" "+String(a.createdAt||"")).localeCompare(String(b.date||"")+" "+String(b.createdAt||"")));
   const base=counts[counts.length-1]||null;
   let balance=null, lastDate=base?.date||"";
   if(base){
    balance=Number(base.qty)||0;
-   related.filter(m=>m.type!=="count"&&String(m.date||"")>String(base.date||"")).forEach(m=>{
+   const baselineKey=String(base.date||"")+" "+String(base.createdAt||"");
+   related.filter(m=>m!==base&&m.type!=="count"&&(String(m.date||"")+" "+String(m.createdAt||""))>baselineKey).forEach(m=>{
     if(m.type==="in")balance+=Number(m.qty)||0;
     else if(m.type==="out")balance-=Number(m.qty)||0;
     else if(m.type==="adjust")balance=Number(m.qty)||0;
@@ -163,7 +171,7 @@ function getStockRows(){
    });
   }
   const status=it.onDemand?"onDemand":!base?"unknown":balance<=0?"empty":it.min>0&&balance<=it.min?"low":"available";
-  return {...it,balance,base,lastDate,status,unit:stockUnit(it.id,it.unit,base)};
+  return {...it,name:base?.name||it.name,balance,base,lastDate,status,unit:stockUnit(it.id,it.unit,base)};
  }).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
 }
 function renderStockDashboard(){
