@@ -1071,8 +1071,8 @@ body.spopen{overflow:hidden}
     <div id="addons"></div>
     <form id="orderForm" novalidate>
       <div class="two">
-        <label for="fName">الاسم<input id="fName" autocomplete="name" placeholder="مثلًا: منى أحمد"></label>
-        <label for="fPhone">رقم الموبايل<input id="fPhone" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" class="num"></label>
+        <label for="fName">الاسم<input id="fName" autocomplete="name" required placeholder="مثلًا: منى أحمد"></label>
+        <label for="fPhone">رقم الموبايل<input id="fPhone" inputmode="tel" autocomplete="tel" required placeholder="01xxxxxxxxx" class="num"></label>
       </div>
       <div class="two">
         <label for="fArea" style="grid-column:1/-1">المنطقة <span class="req" aria-hidden="true">*</span><input id="fArea" list="areas" autocomplete="address-level2" required placeholder="اكتب منطقتك: سموحة، سيدي جابر، العجمي…"></label>
@@ -1080,7 +1080,7 @@ body.spopen{overflow:hidden}
       <input type="hidden" id="fWhen" value="قبلها بيوم على الأقل">
       <div class="cutoff">⏰ بنستقبل الطلبات قبلها بيوم على الأقل. موعد التسليم النهائي بيتأكد معاك على واتساب.</div>
       <datalist id="areas"></datalist>
-      <label for="fAddr">العنوان بالتفصيل<textarea id="fAddr" placeholder="الشارع، رقم العمارة، الدور والشقة، وعلامة مميزة"></textarea></label>
+      <label for="fAddr">العنوان بالتفصيل<textarea id="fAddr" required autocomplete="street-address" placeholder="الشارع، رقم العمارة، الدور والشقة، وعلامة مميزة"></textarea></label>
       <label style="gap:6px">طريقة الدفع
         <div class="pay" role="radiogroup">
           <label><input type="radio" name="pay" value="كاش عند الاستلام" id="pCash" checked><span>كاش عند الاستلام</span></label>
@@ -1142,7 +1142,7 @@ const wide=k=>isF(k)?k:(OI[k]||TH[k]||'');
 const SEC_EMO={'بوكسات الضيافة':'🎁','المحاشي':'🫑','جاهز على الحشو':'🥒','الخضار المتنضف':'🥬','مصنعات الفراخ':'🍗','فراخ متبلة':'🐔','مصنعات اللحمة':'🥩','الحمام والبط':'🕊️','صواني الفرن':'🥘','طواجن وطبيخ':'🥘','بولات وشوربة':'🍲','مخللات وصوصات':'🫙','الرز المعمر':'🍚','المقبلات':'🥟','الوجبات':'🍱','أصناف تانية':'🧺','إضافات على الأوردر':'🔥','توفير الفريزر':'❄️'};
 const NAME_EMO=[[/بط/,'🦆'],[/حمام/,'🕊️'],[/جزر/,'🥕'],[/ثوم/,'🧄'],[/بصل/,'🧅'],[/طماطم|صلصة/,'🍅'],[/بطاطس/,'🥔'],[/فلفل|هريسة|شطة/,'🌶️'],[/فاصوليا/,'🫛'],[/بامية|خضار|تورلي|شوربة/,'🥗'],[/سلق|سبانخ|ملوخية/,'🥬'],[/كوسة|ورق عنب مسلوق/,'🥒'],[/قرنبيط/,'🥦'],[/قلقاس/,'🥔'],[/سجق|كبدة|كفتة|كباب|بفتيك|طرب|داوود|لحم|حواوشي|شاورما/,'🥩'],[/جلاش|رقاق|مكرونة|نجرسكو|مسقعة|طاجن/,'🥘'],[/بولة/,'🍲'],[/فراخ|استربس|طاووق|زنجر|ناجتس|مسحب|كوردن|بانيه/,'🍗'],[/برام/,'🏺'],[/مستوي/,'🔥']];
 const emo=p=>{if(/^كرات بطاطس/.test(p.name))return '🥔';for(const [r,e] of NAME_EMO)if(r.test(p.name))return e;return SEC_EMO[p.section]||'🍽️'};
-const thumb=(p,cls='dot')=>{const u=wide(p.img);return u?`<div class="${cls}" data-zoom="${esc(p.name)}" role="button" aria-label="كبّر صورة ${esc(p.name)}"><img src="${u}" alt="" loading="lazy"></div>`:`<div class="${cls} emo" aria-hidden="true"><span>${emo(p)}</span></div>`};
+const thumb=(p,cls='dot')=>{const u=wide(p.img);return u?`<div class="${cls}" data-zoom="${esc(p.name)}" role="button" aria-label="كبّر صورة ${esc(p.name)}"><img src="${u}" alt="" loading="lazy" decoding="async"></div>`:`<div class="${cls} emo" aria-hidden="true"><span>${emo(p)}</span></div>`};
 /* ---------- build model from rows ---------- */
 const DEAL_END=new Date('2026-11-02T00:00:00+02:00').getTime();const DEAL_ON=()=>Date.now()<DEAL_END;
 let byId={},items=[],secs=[],secImg={},OFFERS=[],FREEZER=[],FREE_DEL=new Set(),OGROUPS=[];
@@ -1187,7 +1187,7 @@ function offerCard(o){const p=byId[o.id];const q=qtyOf(o.id);const saveAmt=o.bef
   const bd=[...o.badges,...(o.free?[['green','توصيل مجاني']]:[])].map(([c,t])=>`<span class="bdg ${c}">${esc(t)}</span>`).join('');
   const btn=o.pick||o.box?`<button type="button" class="addo${q?' added':''}" data-pick="${o.id}">${q?'اتضاف · ضيف تاني':(o.box?'اختار الحشوات':'اختار الأصناف')}</button>`
     :(q?`<div class="ostep"><button type="button" data-ok="${o.id}" data-d="-1" aria-label="قلّل">−</button><output class="num">${fmt(q)}</output><button type="button" data-ok="${o.id}" data-d="1" aria-label="زوّد">+</button></div>`:`<button type="button" class="addo" data-ok="${o.id}" data-d="1">أضف للأوردر</button>`);
-  return `<article class="oc${o.big?' big':''}"><div class="pic${wide(o.img)?'':' noimg'}">${wide(o.img)?`<img src="${wide(o.img)}" alt="عرض ${esc(o.title)}" loading="lazy">`:`<span aria-hidden="true">🍃</span>`}<div class="badges">${bd}</div></div>
+  return `<article class="oc${o.big?' big':''}"><div class="pic${wide(o.img)?'':' noimg'}">${wide(o.img)?`<img src="${wide(o.img)}" alt="عرض ${esc(o.title)}" loading="lazy" decoding="async">`:`<span aria-hidden="true">🍃</span>`}<div class="badges">${bd}</div></div>
   <div class="ob"><div class="ot"><small>عرض</small><b>${esc(o.title)}</b></div>${o.tl?`<div class="tl">${esc(o.tl)}</div>`:''}
   ${o.inc.length?`<ul class="inc">${o.inc.map(x=>`<li>${x[0]?`<i class="num">${esc(x[0])}</i>`:'<i>✓</i>'}<span>${esc(x[1])}</span></li>`).join('')}</ul>`:''}
   <div class="pricebox"><div class="pv">${saveAmt?`<s class="num">لوحدهم ${fmt(o.before)} ج</s>`:''}<strong class="num">${fmt(p.price)} <span>جنيه</span></strong>${saveAmt||o.free?`<span class="save">${saveAmt?'وفّر '+fmt(saveAmt+(o.free?DELIVERY:0))+' ج':'التوصيل عليه مجاني'}</span>`:''}</div>${btn}</div></div></article>`}
@@ -1380,7 +1380,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
 $('copyOrder').addEventListener('click',()=>copy(lastText));
 $('newOrder').addEventListener('click',()=>{cart={};save();refresh();closeSheet()});
 const GALN={grape:'ورق عنب',mix:'محاشي مشكلة',pane:'بانيه',cabbagest:'كرنب محشي',wholech:'فراخ متبلة',m_pepper:'فلفل محشي',peppercore:'جاهز ع الحشو',meal1:'وجبات'};
-function drawGal(){$('gal').innerHTML=GALK.filter(k=>TH[k]).map(k=>[k,TH[k]]).map(([k,v])=>`<figure><img src="${v}" alt="${GALN[k]}" loading="lazy"><figcaption>${GALN[k]}</figcaption></figure>`).join('')}
+function drawGal(){$('gal').innerHTML=GALK.filter(k=>TH[k]).map(k=>[k,TH[k]]).map(([k,v])=>`<figure><img src="${v}" alt="${GALN[k]}" loading="lazy" decoding="async"><figcaption>${GALN[k]}</figcaption></figure>`).join('')}
 
 
 /* ---------- reviews ---------- */
@@ -1388,7 +1388,7 @@ let REVS=[];
 const REVTXT='رأيي في ع الحلة ⭐\nالصنف: \nرأيي: \nالاسم والمنطقة: ';
 document.querySelectorAll('.revlink').forEach(a=>a.href='https://g.page/r/CT-4UMLtgxyFEBM/review');
 function renderRevs(){const r=[...(window.__SREVS||[]),...(REVS||[])].filter(x=>x&&x.text);if(!r.length){$('revs').hidden=true;return}
-  $('rlist').innerHTML=r.map(x=>`<article class="rv">${x.item?`<span class="tag">${esc(x.item)}</span>`:''}<p>${esc(x.text)}</p>${x.img?`<img src="${esc(x.img)}" alt="رأي ${esc(x.name||'عميل')}" loading="lazy">`:''}<footer><span class="av">${esc((x.name||'ع').trim()[0])}</span><span><b>${esc(x.name||'عميل ع الحلة')}</b><small>${esc(x.area||'')}</small></span></footer></article>`).join('');
+  $('rlist').innerHTML=r.map(x=>`<article class="rv">${x.item?`<span class="tag">${esc(x.item)}</span>`:''}<p>${esc(x.text)}</p>${x.img?`<img src="${esc(x.img)}" alt="رأي ${esc(x.name||'عميل')}" loading="lazy" decoding="async">`:''}<footer><span class="av">${esc((x.name||'ع').trim()[0])}</span><span><b>${esc(x.name||'عميل ع الحلة')}</b><small>${esc(x.area||'')}</small></span></footer></article>`).join('');
   $('revs').hidden=false}
 fetch('reviews.json?t='+Date.now()).then(r=>r.ok?r.json():[]).then(j=>{REVS=Array.isArray(j)?j:(j.reviews||[]);renderRevs()}).catch(()=>{});
 
@@ -1404,15 +1404,15 @@ function cats(){const L=[];if(OGROUPS.length){const ps=OFFERS.map(o=>byId[o.id].
   secs.forEach((x,i)=>{const its=items.filter(p=>p.section===x);if(!its.length)return;L.push({id:'s'+i,name:x,emo:SEC_EMO[x]||'🍽️',img:img(secImg[x]),n:its.length,from:Math.min(...its.map(p=>p.price))})});return L}
 const FAM=[['🫑 محاشي وخضار',['المحاشي','جاهز على الحشو','الخضار المتنضف']],['🍗 فراخ ولحوم جاهزة للطبخ',['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','المقبلات']],['🍽️ أكل مطبوخ جاهز',['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر','مخللات وصوصات']]];
 const BEST=['p044','p046','p056','p150','p145','p144'];
-function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
+function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
 function heroSlides(){const order=BF_ON&&OFFERS.some(o=>o.g==='bf'&&wide(o.img))?['bf']:['chicken','mahshi','events'];const NEWO=['p208','p203','p204'];const out=OFFERS.filter(o=>NEWO.includes(o.id)&&wide(o.img));order.forEach(g=>OFFERS.filter(o=>o.g===g&&wide(o.img)&&!NEWO.includes(o.id)).forEach(o=>out.push(o)));return out.slice(0,8)}
 function heroHTML(){const S=heroSlides();if(!S.length)return '';
   const bfh=S.some(o=>o.g==='bf')?`<div class="hsh"><h2>${S[0].g==='bf'?'🖤 عروض بلاك فرايدي':'🔥 عروض ع الحلة'}</h2><button type="button" class="hall" data-bfall>عرض الكل</button></div>`:'';
   return `<section class="hx${bfh?' isbf':''}" aria-label="العروض">${bfh}<div class="hxs" id="hxs">${S.map((o,i)=>{const pr=byId[o.id].price;const b=o.before>pr?o.before:0;const bf=o.g==='bf';
-    return `<button type="button" class="hxc${bf?' bf':''}" data-og="${o.g}" data-oid="${o.id}" aria-label="${esc(o.title)} بـ ${fmt(pr)} جنيه"><img src="${wide(o.img)}" alt="" ${i?'loading="lazy"':'fetchpriority="high"'}><span class="hxt">${bf?'<i class="hxk">بلاك فرايدي</i>':(o.badges[0]?`<i class="hxk">${esc(o.badges[0][1])}</i>`:'')}<b>${esc(o.title)}</b>${o.tl?`<small>${esc(o.tl)}</small>`:''}<em class="hxgo">اطلب دلوقتي</em></span><span class="hxp"><b class="num">${fmt(pr)}</b><small>جنيه</small>${b?`<s class="num">${fmt(b)}</s>`:''}</span></button>`}).join('')}</div><div class="hxd" id="hxd">${S.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div></section>`}
+    return `<button type="button" class="hxc${bf?' bf':''}" data-og="${o.g}" data-oid="${o.id}" aria-label="${esc(o.title)} بـ ${fmt(pr)} جنيه"><img src="${wide(o.img)}" alt="" ${i?'loading="lazy" decoding="async"':'fetchpriority="high"'}><span class="hxt">${bf?'<i class="hxk">بلاك فرايدي</i>':(o.badges[0]?`<i class="hxk">${esc(o.badges[0][1])}</i>`:'')}<b>${esc(o.title)}</b>${o.tl?`<small>${esc(o.tl)}</small>`:''}<em class="hxgo">اطلب دلوقتي</em></span><span class="hxp"><b class="num">${fmt(pr)}</b><small>جنيه</small>${b?`<s class="num">${fmt(b)}</s>`:''}</span></button>`}).join('')}</div><div class="hxd" id="hxd">${S.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div></section>`}
 function railItems(names){const seen=new Set();return items.filter(p=>names.includes(p.section)&&img(p.img)&&!p.off).filter(p=>{const k=(PAIR_OF[p.id]||p.id);if(seen.has(k))return false;seen.add(k);return true}).slice(0,10)}
 function renderGrid(){const L=cats();{const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}let h=heroHTML();
-  const off=L.find(c=>c.id==='offers');const mt=c=>`<button type="button" class="mt" data-cat="${c.id}"><span class="mtp">${c.img?`<img src="${c.img}" alt="" loading="lazy">`:`<i aria-hidden="true">${c.emo}</i>`}</span><b>${esc(c.name)}</b><small>${fmt(c.n)} صنف</small></button>`;
+  const off=L.find(c=>c.id==='offers');const mt=c=>`<button type="button" class="mt" data-cat="${c.id}"><span class="mtp">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<i aria-hidden="true">${c.emo}</i>`}</span><b>${esc(c.name)}</b><small>${fmt(c.n)} صنف</small></button>`;
   let mh=off?`<button type="button" class="moff" data-cat="offers"><span class="moe" aria-hidden="true">🔥</span><span><b>العروض والبوكسات</b><small>${fmt(off.n)} عرض · من ${fmt(off.from)} ج .. وفّر أكتر</small></span><i aria-hidden="true">‹</i></button>`:'';
   const used=new Set();FAM.forEach(([t,names])=>{const cs=names.map(n=>L.find(c=>c.name===n)).filter(Boolean);cs.forEach(c=>used.add(c.id));if(cs.length)mh+=`<h3 class="mfam">${esc(t)}</h3><div class="mgrid">${cs.map(mt).join('')}</div>`});
   const rest=L.filter(c=>c.id!=='offers'&&!used.has(c.id));if(rest.length)mh+=`<h3 class="mfam">🍴 أقسام تانية</h3><div class="mgrid">${rest.map(mt).join('')}</div>`;
@@ -1437,7 +1437,7 @@ function partyTxt(){return `لـ <b class="num">${fmt(PG)}</b> ضيف محتاج
 $('cgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');if(b){PG=Math.min(200,Math.max(2,PG+(+b.dataset.pg)*(PG>=20?5:1)));$('pgN').textContent=fmt(PG);$('pgOut').innerHTML=partyTxt();$('pgAdd').textContent='ضيف '+fmt(partyKg())+' كيلو محشي مشكل مستوي';return}
   if(e.target.closest('#pgAdd')){T('party_calc_add',{guests:PG});setQty('p048',partyKg());toast('اتضاف '+fmt(partyKg())+' كيلو محشي مشكل');return}
   if(e.target.closest('#pgBox')){OPENG='events';openCat('offers');setTimeout(()=>{const el=$('fold-events');if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-(document.querySelector('.strip')?.offsetHeight||0)-8,behavior:'instant'})},50)}});
-function renderGridOld(){$('cgrid').innerHTML=cats().map(c=>`<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`).join('')}
+function renderGridOld(){$('cgrid').innerHTML=cats().map(c=>`<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`).join('')}
 function applyView(){const q=$('q').value.trim();const v=q?'search':VIEW;document.body.dataset.view=v;
   document.querySelectorAll('#sections .sec').forEach(x=>x.hidden=!(v==='search'||(v==='cat'&&CUR===x.id)));
   if(v==='cat')$('offers').hidden=CUR!=='offers'||!OGROUPS.length;
