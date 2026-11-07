@@ -146,16 +146,19 @@ function stockUnit(item, base, countMove){
  return fixed[item]||base||((/كيلو|جرام/.test(countMove?.note||""))?"كيلو":"وحدة");
 }
 function getStockRows(){
- const items=collection("stockItems"),moves=collection("stockMoves"),map=new Map();
- items.filter(x=>x.active!==false||x.onDemand).forEach(x=>map.set(x._id,{id:x._id,name:x.name||x._id,unit:x.unit||"",min:Number(x.min)||0,onDemand:!!x.onDemand,cost:Number(x.cost)||0}));
+ const items=collection("stockItems"),moves=collection("stockMoves"),map=new Map(),nameToId=new Map();
+ items.filter(x=>x.active!==false||x.onDemand).forEach(x=>{
+  const it={id:x._id,name:x.name||x._id,unit:x.unit||"",min:Number(x.min)||0,onDemand:!!x.onDemand,cost:Number(x.cost)||0};
+  map.set(x._id,it);if(!nameToId.has(it.name))nameToId.set(it.name,x._id);
+ });
  moves.forEach(m=>{
   const raw=String(m.item||m.name||"").trim();if(!raw)return;
-  const byName=[...map.entries()].find(([id,it])=>it.name===raw||it.name===String(m.name||"").trim());
-  const key=map.has(raw)?raw:(byName?.[0]||raw);
-  if(!map.has(key))map.set(key,{id:key,name:m.name||key,unit:m.unit||"",min:0,onDemand:false,cost:0,fromMove:true});
+  const label=String(m.name||"").trim(),key=map.has(raw)?raw:(nameToId.get(raw)||nameToId.get(label)||raw);
+  if(!map.has(key)){
+   const name=label||key;map.set(key,{id:key,name,unit:m.unit||"",min:0,onDemand:false,cost:0,fromMove:true});
+   if(!nameToId.has(name))nameToId.set(name,key);
+  }
  });
- const nameToId=new Map();
- map.forEach((it,id)=>{if(!nameToId.has(it.name))nameToId.set(it.name,id)});
  const grouped=new Map();
  moves.forEach(m=>{
   const raw=String(m.item||m.name||"").trim();if(!raw)return;
