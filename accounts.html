@@ -152,7 +152,7 @@ function renderCustomerDatabase(){
  if(shown.length>100)$('customerDatabase').insertAdjacentHTML('beforeend','<p class="muted">معروض أول 100 نتيجة. ضيّق البحث لعرض عميل معين.</p>');
 }
 
-function stockMoveLabel(type){return ({in:"وارد",out:"منصرف",count:"جرد فعلي",adjust:"تسوية"})[type]||type||"حركة"}
+function stockMoveLabel(type){return ({in:"وارد",out:"منصرف",count:"جرد فعلي",adjust:"تسوية",production:"تصنيع"})[type]||type||"حركة"}
 function stockUnit(item, base, countMove){
  if(item==="si-grapeleaf" && /كيلو خام/.test(countMove?.note||"")) return "كيلو خام";
  const fixed={"si-halba":"ربع","si-chili-paste":"ربع","si-oil":"أزاز","si-mango":"كيس"};
