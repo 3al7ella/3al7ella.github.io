@@ -69,12 +69,12 @@ const SB_URL="https://jijwwqgukheviejogfdy.supabase.co";
 const SB_KEY="sb_publishable_MhOgUwlO03I2GrVH1TLWjg_3SMic1oW";
 const FN=SB_URL+"/functions/v1/alhella-import";
 const sb=window.supabase.createClient(SB_URL,SB_KEY);
-let records=[],session=null;
+let records=[],session=null,collectionCache=new Map(),loadPromise=null;
 const $=id=>document.getElementById(id), money=n=>(Number(n)||0).toLocaleString("ar-EG")+" ج", today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 function msg(id,t){$(id).textContent=t;$(id).classList.remove("hidden")}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 async function api(payload){const {data:{session:s}}=await sb.auth.getSession();if(!s)throw Error("سجّل الدخول أولًا");const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+s.access_token,"apikey":SB_KEY},body:JSON.stringify(payload)});const j=await r.json();if(!r.ok)throw Error(j.error||"تعذر تنفيذ العملية");return j}
-function collection(c){return records.filter(x=>x.collection===c).map(x=>({...x.data,_id:x.record_id}))}
+function collection(c){if(!collectionCache.has(c))collectionCache.set(c,records.filter(x=>x.collection===c).map(x=>({...x.data,_id:x.record_id})));return collectionCache.get(c).slice()}
 let selectedMonth="all";
 function scopedCollection(c){return collection(c).filter(x=>selectedMonth==="all"||monthOf(x)===selectedMonth||((c==="months")&&x._id===selectedMonth));}
 function setupMonthFilter(){const keys=[...new Set(records.flatMap(r=>{const d=r.data||{};const m=String(d.date||d.month||r.record_id||"").slice(0,7);return /^\d{4}-\d{2}$/.test(m)?[m]:[]}))].sort().reverse();const sel=$("globalMonth");if(!sel)return;const latest=keys[0]||today().slice(0,7);selectedMonth=sel.value&&sel.value!=="all"?sel.value:latest;sel.innerHTML='<option value="all">كل الشهور</option>'+keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");sel.value=selectedMonth;$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";sel.onchange=()=>{selectedMonth=sel.value;if(selectedMonth!=="all"){$("laborMonth").value=selectedMonth;$("purchaseMonth").value=selectedMonth}$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";render()};}
@@ -146,26 +146,28 @@ function stockUnit(item, base, countMove){
  return fixed[item]||base||((/كيلو|جرام/.test(countMove?.note||""))?"كيلو":"وحدة");
 }
 function getStockRows(){
- const items=collection("stockItems"), moves=collection("stockMoves");
- const map=new Map();
+ const items=collection("stockItems"),moves=collection("stockMoves"),map=new Map();
  items.filter(x=>x.active!==false||x.onDemand).forEach(x=>map.set(x._id,{id:x._id,name:x.name||x._id,unit:x.unit||"",min:Number(x.min)||0,onDemand:!!x.onDemand,cost:Number(x.cost)||0}));
  moves.forEach(m=>{
-  const raw=String(m.item||m.name||"").trim(); if(!raw)return;
+  const raw=String(m.item||m.name||"").trim();if(!raw)return;
   const byName=[...map.entries()].find(([id,it])=>it.name===raw||it.name===String(m.name||"").trim());
   const key=map.has(raw)?raw:(byName?.[0]||raw);
   if(!map.has(key))map.set(key,{id:key,name:m.name||key,unit:m.unit||"",min:0,onDemand:false,cost:0,fromMove:true});
  });
- const resolveKey=m=>{
-  const raw=String(m.item||m.name||"").trim();
-  if(map.has(raw))return raw;
-  const found=[...map.entries()].find(([id,it])=>it.name===raw||it.name===String(m.name||"").trim());
-  return found?.[0]||raw;
- };
+ const nameToId=new Map();
+ map.forEach((it,id)=>{if(!nameToId.has(it.name))nameToId.set(it.name,id)});
+ const grouped=new Map();
+ moves.forEach(m=>{
+  const raw=String(m.item||m.name||"").trim();if(!raw)return;
+  const label=String(m.name||"").trim(),key=map.has(raw)?raw:(nameToId.get(raw)||nameToId.get(label)||raw);
+  if(!grouped.has(key))grouped.set(key,[]);
+  grouped.get(key).push(m);
+ });
  return [...map.values()].map(it=>{
-  const related=moves.filter(m=>resolveKey(m)===it.id);
+  const related=grouped.get(it.id)||[];
   const counts=related.filter(m=>m.type==="count").sort((a,b)=>(String(a.date||"")+" "+String(a.createdAt||"")).localeCompare(String(b.date||"")+" "+String(b.createdAt||"")));
   const base=counts[counts.length-1]||null;
-  let balance=null, lastDate=base?.date||"";
+  let balance=null,lastDate=base?.date||"";
   if(base){
    balance=Number(base.qty)||0;
    const baselineKey=String(base.date||"")+" "+String(base.createdAt||"");
@@ -254,8 +256,8 @@ function render(){
  $("suppliersList").innerHTML=Object.entries(suppliers).sort((a,b)=>b[1]-a[1]).map(([n,v])=>item(n,"إجمالي مصروفات ومشتريات مسجلة",money(v))).join("")||'<p class="muted">لا توجد بيانات موردين.</p>';
  renderCustomerDatabase();
 }
-async function load(){const j=await api({action:"list"});records=j.records||[];render()}
-function showApp(s){session=s;$("auth").classList.toggle("hidden",!!s);$("app").classList.toggle("hidden",!s);$("logout").classList.toggle("hidden",!s);if(s)load().catch(e=>msg("globalmsg",e.message))}
+async function load(){if(loadPromise)return loadPromise;loadPromise=(async()=>{const j=await api({action:"list"});records=j.records||[];collectionCache.clear();render()})();try{return await loadPromise}finally{loadPromise=null}}
+function showApp(s){const sameUser=!!s&&!!session&&s.user?.id===session.user?.id;session=s;$("auth").classList.toggle("hidden",!!s);$("app").classList.toggle("hidden",!s);$("logout").classList.toggle("hidden",!s);if(s&&!sameUser)load().catch(e=>msg("globalmsg",e.message))}
 $("login").onclick=async()=>{const btn=$("login"),email=$("email").value.trim(),password=$("password").value;if(!email||!password){msg("authmsg","اكتب البريد الإلكتروني وكلمة المرور قبل تسجيل الدخول.");return}if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){msg("authmsg","راجع كتابة البريد الإلكتروني.");return}btn.disabled=true;btn.textContent="جارٍ التحقق...";try{const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;if(!data?.session)throw new Error("تم التحقق لكن لم يتم إنشاء جلسة دخول. حاول مرة أخرى.");$("authmsg").classList.add("hidden");showApp(data.session)}catch(e){const m=String(e?.message||"");let friendly=m;if(/invalid login credentials/i.test(m))friendly="البريد الإلكتروني أو كلمة المرور غير صحيحة.";else if(/email not confirmed/i.test(m))friendly="لازم تأكد البريد الإلكتروني من رسالة التأكيد أولًا.";else if(/too many requests/i.test(m))friendly="محاولات كثيرة. استنى شوية وجرب تاني.";else if(/failed to fetch|network/i.test(m))friendly="تعذر الاتصال بخدمة تسجيل الدخول. افحص الإنترنت وحاول مرة أخرى.";msg("authmsg",friendly)}finally{btn.disabled=false;btn.textContent="دخول"}};
 $("signup").onclick=async()=>{try{const {data,error}=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});if(error)throw error;msg("authmsg","تم طلب إنشاء الحساب. لو طُلب تأكيد البريد، افتح رسالة التأكيد. بعد كده لازم يتضاف بريدك لقائمة السماح الخاصة بالنظام.");}catch(e){msg("authmsg",e.message)}};
 $("logout").onclick=async()=>{await sb.auth.signOut();showApp(null)};
@@ -263,7 +265,7 @@ sb.auth.onAuthStateChange((_e,s)=>{if(s)showApp(s)});
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
 document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>document.querySelector('[data-tab="'+b.dataset.goto+'"]').click());
 $("odate").value=today();$("edate").value=today();
- $("crmSearch").addEventListener("input",renderCustomerDatabase);$("crmFilter").addEventListener("change",renderCustomerDatabase);
+ let crmRenderTimer=null;$("crmSearch").addEventListener("input",()=>{clearTimeout(crmRenderTimer);crmRenderTimer=setTimeout(renderCustomerDatabase,180)});$("crmFilter").addEventListener("change",renderCustomerDatabase);
 $("addOrder").onclick=async()=>{try{const customer=$("ocustomer").value.trim(),total=Number($("ototal").value),date=$("odate").value||today();assertMonthOpen(date,"الأوردر");if(!customer||!total)throw Error("اكتب اسم العميل والإجمالي");const delivery=Number($("odelivery").value)||0;const deliveryArea=$("odeliveryArea").value,deliveryCost=deliveryArea==="wardian"?30:75;const data={customer,date,phone:$("ophone").value.trim(),total,subtotal:total-delivery,delivery,deliveryArea,deliveryCost,method:$("omethod").value,details:$("odetails").value.trim(),paid:$("omethod").value!=="آجل",createdAt:new Date().toISOString(),month:($("odate").value||today()).slice(0,7),source:"لوحة إدارة ع الحلة"};await api({action:"save",collection:"orders",data});await load();$("ocustomer").value=$("ophone").value=$("ototal").value=$("odetails").value="";alert("تم حفظ الأوردر");}catch(e){alert(e.message)}};
 $("addExpense").onclick=async()=>{try{const item=$("eitem").value.trim(),amount=Number($("eamount").value),date=$("edate").value||today();assertMonthOpen(date,"المصروف");if(!item||!amount)throw Error("اكتب البند والمبلغ");const data={item,amount,date,category:$("ecat").value,supplier:$("esupplier").value.trim(),note:$("enote").value.trim(),createdAt:new Date().toISOString(),month:date.slice(0,7),source:"لوحة إدارة ع الحلة"};await api({action:"save",collection:"expenses",data});await load();$("eitem").value=$("eamount").value=$("esupplier").value=$("enote").value="";alert("تم حفظ المصروف");}catch(e){alert(e.message)}};
 $("importBackup").onclick=async()=>{try{const f=$("backupFile").files[0];if(!f)throw Error("اختار ملف النسخة الاحتياطية الأول");const d=JSON.parse(await f.text()),cs=d.collections||{},allowed=["orders","expenses","stockMoves","stockItems","labor","attendance","custody","months","catalog","staff","config"],rows=[];for(const c of allowed)for(const x of (cs[c]||[])){const id=String(x.id);if(isLockedRecord(c,id,x.data)){continue}rows.push({collection:c,id,data:x.data})}if(!rows.length)throw Error("الملف مفيهوش سجلات قابلة للاستيراد");if(!confirm("هيتم استيراد "+rows.length+" سجل. السجلات بنفس المعرف هتتحدث بدون تكرار. نكمل؟"))return;const j=await api({action:"import",records:rows,source_file:f.name,exported_at:d.meta?.exported_at});msg("importMsg","تم استيراد "+j.imported+" سجل. سجلات أكتوبر 2026 المقفولة تم تخطيها وحمايتها.");await load()}catch(e){msg("importMsg",e.message)}};
