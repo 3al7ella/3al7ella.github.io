@@ -190,6 +190,7 @@ if(panel&&form&&lines&&totals&&addons&&!$('orderFlowProgress')){
 }
 function setStep(n){
  step=n;
+ if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;
  ['cfStep1','cfStep2','cfStep3'].forEach((id,i)=>{const el=$(id);if(el)el.hidden=(i+1)!==n;});
  document.querySelectorAll('#orderFlowProgress [data-step-label]').forEach(el=>el.setAttribute('aria-current',String(+el.dataset.stepLabel===n?'step':'false')));
  if($('done'))$('done').hidden=true;
@@ -300,9 +301,17 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#openCart,#cartFab'))setTimeout(()=>setStep(1),0);
  if(e.target.closest('#closeCart'))setTimeout(()=>{if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;},0);
 },true);
-const oldNew=$('newOrder');if(oldNew)oldNew.addEventListener('click',()=>{orderNo='';if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;setStep(1);},{capture:true});
+const oldNew=$('newOrder');if(oldNew)oldNew.addEventListener('click',()=>{orderNo='';lastInvoice='';if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;setStep(1);},{capture:true});
 if($('fArea'))$('fArea').addEventListener('change',()=>{saveCustomerNow();if(!$('sheet').hidden){renderCart();bar();}});
 if($('fPhone'))$('fPhone').addEventListener('input',()=>{ $('fPhone').setCustomValidity(/^01\d{0,9}$/.test($('fPhone').value.replace(/\s/g,''))?'':'اكتب 11 رقم يبدأ بـ 01');});
 syncQuickNav();
+if(typeof window.bar==='function')window.bar();
+if('MutationObserver'in window&&$('sections')){
+ const watch=new MutationObserver(()=>{document.querySelectorAll('#sections .sec,#offers').forEach(x=>{if(x.dataset.quickObserved)return;x.dataset.quickObserved='1';try{window.__ALH_QUICK_IO&&window.__ALH_QUICK_IO.observe(x)}catch(_){}});});
+ watch.observe($('sections'),{childList:true,subtree:true});
+ const quickObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const id=entry.target.id;if(id==='offers'){syncQuickNav('offers');return;}const title=entry.target.querySelector('h2')?.textContent||'';if(title==='المحاشي'||title==='جاهز على الحشو')syncQuickNav('mahshi');else if(title==='الخضار المتنضف')syncQuickNav('veg');else if(['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','المقبلات'].includes(title))syncQuickNav('chicken');else if(['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر'].includes(title))syncQuickNav('meals');});},{rootMargin:'-120px 0px -65% 0px'});
+ window.__ALH_QUICK_IO=quickObserver;
+ document.querySelectorAll('#sections .sec,#offers').forEach(x=>{x.dataset.quickObserved='1';quickObserver.observe(x);});
+}
 window.__ALH_ORDER_FLOW={get source(){return source;},get step(){return step;},get orderNumber(){return orderNo;},invoiceText:invoiceText,validate:validData};
 })();
