@@ -993,6 +993,7 @@ body.spopen{overflow:hidden}
 
 </style>
 <link rel="stylesheet" href="customer-first-v4.css">
+<link rel="stylesheet" href="order-flow.css">
 </head>
 <body>
 
@@ -1022,7 +1023,7 @@ body.spopen{overflow:hidden}
       <div class="ctas"><a class="go" href="#catgrid">اطلب دلوقتي 👇</a><a class="go alt" href="#offers">🔥 العروض</a></div>
     </div>
     <div class="fbcard">
-      <div class="fbcover"><img src="cover.jpg" alt="من أكل ع الحلة" fetchpriority="high" decoding="async"></div>
+      <div class="fbcover"><img src="cover.jpg" alt="من أكل ع الحلة" loading="lazy" decoding="async"></div>
       <img class="fblogo" src="logo.png" alt="لوجو ع الحلة">
       <div class="fbname">ع الحلة <span dir="ltr">3al7ella</span> <i class="fbv" aria-label="صفحة رسمية">✓</i></div>
       <div class="fbmeta"><b class="num">16</b> ألف متابع · مطبخ بيتي في إسكندرية</div>
@@ -1557,8 +1558,22 @@ window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;setZ
   $('sendBtn').textContent=st.closed?'مش بنستقبل أوردرات دلوقتي':'ابعت الأوردر على واتساب';if(STARTED){bar();if(!$('sheet').hidden)renderCart()}};
 
 
-start(window.__LIVE||ROWS);/* show the menu right away, then swap in photos as each sprite arrives */
-loadSprite(SPR[0]).then(()=>{drawGal();start(window.__LIVE||ROWS);return loadSprite(SPR[1])}).then(()=>start(window.__LIVE||ROWS));
+start(window.__LIVE||ROWS);
+/* Load menu thumbnails only as the menu entry comes near view; load offer artwork only when offers are opened. */
+let menuSpriteStarted=false,offerSpriteStarted=false;
+function loadMenuSprite(){if(menuSpriteStarted)return;menuSpriteStarted=true;loadSprite(SPR[0]).then(()=>{drawGal();start(window.__LIVE||ROWS)})}
+function loadOfferSprite(){if(offerSpriteStarted)return;offerSpriteStarted=true;loadSprite(SPR[1]).then(()=>{try{renderOffers()}catch(_){}})}
+if('IntersectionObserver'in window){
+ const assetObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(!entry.isIntersecting)return;
+  if(entry.target.id==='menu'||entry.target.id==='catgrid'){loadMenuSprite();assetObserver.unobserve(entry.target)}
+  if(entry.target.id==='offers'){loadOfferSprite();assetObserver.unobserve(entry.target)}
+ }),{rootMargin:'350px 0px'});
+ const waDirect=new URLSearchParams(location.search).get('src')==='wa';
+ const menuTarget=waDirect?$('menu'):$('catgrid');
+ if(menuTarget)assetObserver.observe(menuTarget);
+ const offersTarget=$('offers');if(offersTarget)assetObserver.observe(offersTarget);
+}else{loadMenuSprite();loadOfferSprite();}
 if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes('?')?'&':'?')+'t='+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(t=>{const rows=parseCSV(t);if(rows.length>1&&/الكود/.test(rows[0][0]||'')){window.__LIVE=rows.slice(1);if(Object.keys(TH).length)start(window.__LIVE)}}).catch(()=>{})}
 
 /* bottom nav */
@@ -1674,6 +1689,7 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
 </script>
 
 
+<script src="./order-flow.js"></script>
 <script type="module">
 import {db,doc,collection,setDoc,onSnapshot,serverTimestamp} from './fb.js';
 window.FB={newId:()=>doc(collection(db,'orders')).id,save:(id,d)=>setDoc(doc(db,'orders',id),{...d,status:'new',createdAt:serverTimestamp()})};
