@@ -1635,6 +1635,22 @@ window.FB={newId:()=>doc(collection(db,'orders')).id,save:(id,d)=>setDoc(doc(db,
 onSnapshot(doc(db,'menu','main'),s=>{window.__OV=s.exists()?s.data():null;window.reMenu()},()=>{});
 onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data():{})},()=>{});
 </script>
+
+<style id="category-photo-refresh">
+/* Category refresh: larger editorial photos, clear labels underneath; keep the existing brand palette and category actions */
+.mgrid{gap:12px!important}
+.mt{background:transparent!important;border:0!important;border-radius:18px!important;padding:0 0 8px!important;gap:7px!important;box-shadow:none!important;overflow:hidden}
+.mt:focus-visible{outline:3px solid var(--c-burnt)!important;outline-offset:3px}
+.mtp{aspect-ratio:1/1!important;border-radius:17px!important;border:1px solid var(--c-line)!important;background:var(--c-soft)!important;box-shadow:0 5px 15px rgba(120,50,10,.08)!important;overflow:hidden}
+.mt .mtp img{transition:transform .25s ease}
+.mt:active .mtp img{transform:scale(1.035)}
+.mt b{font-size:14.5px!important;font-weight:900!important;line-height:1.35!important;color:var(--ink)!important;padding-inline:3px}
+.mt small{font-size:11px!important;color:var(--muted)!important;font-weight:700!important}
+.mfam{margin-top:18px!important;margin-bottom:10px!important;padding-bottom:7px!important;border-bottom:1px solid var(--c-line)!important;color:var(--c-brown)!important}
+@media(min-width:700px){.mgrid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:16px!important}}
+@media(max-width:699px){.mgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px 12px!important}.mt{padding-bottom:6px!important}.mtp{border-radius:16px!important}}
+@media(prefers-reduced-motion:reduce){.mt .mtp img{transition:none!important}}
+</style>
 </body>
 
 </html>
