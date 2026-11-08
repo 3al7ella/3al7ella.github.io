@@ -1452,17 +1452,18 @@ function renderGrid(){
   const L=cats();
   {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
   const find=(name)=>L.find(c=>c.name===name);
+  const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\\sـ]/g,'').toLowerCase();
   const groups=[
-    {title:'هجهّز محشي',desc:'مقوّر، مسلوق، أو ع التسوية',emoji:'🫑',names:['المحاشي','جاهز على الحشو']},
-    {title:'هجهّز خضار',desc:'خضار متنضف وجاهز للطبخ',emoji:'🥬',names:['الخضار المتنضف']},
-    {title:'عايز أطبخ',desc:'وجبات وصواني وطواجن',emoji:'🍲',names:['الوجبات','صواني الفرن','طواجن وطبيخ']},
-    {title:'أجهّز الفريزر',desc:'فراخ ولحوم جاهزة للطبخ',emoji:'❄️',names:['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط']}
+    {title:'هجهّز محشي',desc:'مقوّر، مسلوق، أو ع التسوية',emoji:'🫑',terms:['محاشي','محشي','جاهز على الحشو','جاهز للحشو']},
+    {title:'هجهّز خضار',desc:'خضار متنضف وجاهز للطبخ',emoji:'🥬',terms:['الخضار','خضار','متنضف']},
+    {title:'عايز أطبخ',desc:'وجبات وصواني وطواجن',emoji:'🍲',terms:['الوجبات','وجبات','صواني','طواجن','بولات','الرز المعمر']},
+    {title:'أجهّز الفريزر',desc:'فراخ ولحوم جاهزة للطبخ',emoji:'❄️',terms:['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','الفريزر']}
   ];
   let h=heroHTML();
   h+=`<section class="journey-intro"><div><span>من مطبخنا لبيتك</span><h2>النهارده ناوي تعمل إيه؟</h2><p>اختار احتياجك، ووصل للقسم المناسب من غير لف كتير في المنيو.</p></div><button type="button" data-focus-search aria-label="ابحث عن صنف">⌕ <small>دور على صنف</small></button></section>`;
   h+='<section class="journey-grid" aria-label="اختار حسب احتياجك">';
   groups.forEach(g=>{
-    const cs=g.names.map(find).filter(Boolean);
+    const cs=L.filter(c=>g.terms.some(t=>normName(c.name).includes(normName(t))));
     if(!cs.length)return;
     const first=cs[0],names=cs.map(c=>c.name).join(' · ');
     h+=`<button type="button" class="journey-card" data-cat="${first.id}">${first.img?`<img src="${first.img}" alt="" loading="lazy" decoding="async">`:`<span class="journey-emoji">${g.emoji}</span>`}<span class="journey-copy"><b>${g.title}</b><small>${g.desc}</small><i>${esc(names)}</i></span><span class="journey-arrow">‹</span></button>`;
