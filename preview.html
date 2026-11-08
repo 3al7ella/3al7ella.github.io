@@ -997,7 +997,7 @@ body.spopen{overflow:hidden}
 <body>
 
 
-<div class="ribbon"><div class="wrap"><span>🚚 <b>توصيل مجاني</b> لأي أوردر فوق <b class="num">1000</b> ج ومع عروض الفراخ</span><span>· الطلب قبلها بيوم</span><span>· 🎁 <b>هات صاحبتك</b> وخدي نص كيلو محشي هدية</span></div></div>
+<div class="ribbon"><div class="wrap"><span>🚚 <b>توصيل مجاني</b> لأي أوردر فوق <b class="num">1000</b> ج ومع عروض الفراخ</span><span>· أصناف اليوم المحددة حتى 2 ظهرًا</span><span>· 🎁 <b>هات صاحبتك</b> وخدي نص كيلو محشي هدية</span></div></div>
 
 <section class="top-social wrap" aria-label="تابع ع الحلة">
   <div class="top-social-copy"><b>خليك قريب من ع الحلة ❤️</b><small>تابع الصفحة واعرف العروض أول بأول</small></div>
@@ -1018,7 +1018,7 @@ body.spopen{overflow:hidden}
       <h1>أكل بيتي <em>حقيقي</em>،<br>من مطبخنا لسفرتك</h1>
       <p>محاشي مخدومة، خضار متنضف، وتجهيز بيتي باهتمام من أول اختيارك لحد ما الأوردر يوصلك. اختار من المنيو وابعت طلبك على واتساب.</p>
       <div class="hchips"><span>🚚 توصيل لكل إسكندرية</span><span>💳 كاش · إنستاباي · محفظة</span></div>
-      <div class="facts"><div class="fact">🚚 توصيل <span>كل إسكندرية</span></div><div class="fact">📍 التوصيل <span>حسب المنطقة</span></div><div class="fact">🗓️ الطلب <span>قبلها بيوم على الأقل</span></div><div class="fact">💳 كاش · إنستاباي · محفظة</div></div>
+      <div class="facts"><div class="fact">🚚 توصيل <span>كل إسكندرية</span></div><div class="fact">📍 التوصيل <span>حسب المنطقة</span></div><div class="fact">🗓️ الطلب <span>أصناف محددة حتى 2 ظهرًا، والباقي قبلها بيوم</span></div><div class="fact">💳 كاش · إنستاباي · محفظة</div></div>
       <div class="ctas"><a class="go" href="#catgrid">اطلب دلوقتي 👇</a><a class="go alt" href="#offers">🔥 العروض</a></div>
     </div>
     <div class="fbcard">
@@ -1502,7 +1502,7 @@ function renderTaskSuggestions(key){
   const source=items.filter(p=>task.sections.includes(p.section));
   const ids=[];
   ADDON_RULES.forEach(([matches,list])=>{if(source.some(p=>matches(p.id)))ids.push(...list)});
-  const chosen=[...new Set(ids)].filter(id=>byId[id]&&!byId[id].off&&!offerOf(id)&&!cart[id]&&!source.some(p=>p.id===id)).slice(0,3);
+  const chosen=[...new Set(ids)].filter(id=>byId[id]&&!byId[id].off&&!offerOf(id)&&!cart[id]).slice(0,3);
   if(!chosen.length)return;
   host.insertAdjacentHTML('afterbegin',`<section class="task-suggestions" id="taskSuggestions"><div class="task-suggest-head"><div><span>كمّل طبختك</span><h2>ممكن تحتاج معاها</h2></div><small>اقتراحات من المنيو</small></div><div class="list">${chosen.map(id=>rowHTML(byId[id])).join('')}</div></section>`);
 }
