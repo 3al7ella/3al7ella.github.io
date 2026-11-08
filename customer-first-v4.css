@@ -258,3 +258,8 @@ input,select,textarea{font-size:16px}
 .journey-card[data-task="mahshi"] .journey-copy{align-items:stretch}
 .journey-card[data-task="mahshi"] .journey-copy>i:not(.journey-states i){font-style:normal}
 @media(max-width:360px){.journey-states{gap:3px}.journey-states i{font-size:10px;padding-inline:1px}}
+
+/* Cart summary: clear subtotal, live area-based delivery, and final estimate */
+.cart-summary-title{font-size:16px;font-weight:900;margin:14px 0 6px;color:var(--ink)}
+.delivery-hint{margin:5px 0 9px;padding:8px 11px;border-radius:10px;background:var(--brand-soft);color:var(--pot);font-size:12px;font-weight:800;line-height:1.6}
+#totals .tot.big{border-top:1px solid var(--line);padding-top:12px;margin-top:8px}
