@@ -1,0 +1,60 @@
+
+/* #ع_الحلة — mobile WhatsApp order flow; inherits existing brand tokens */
+#waEntryHead{max-width:980px;margin:8px auto 0;padding:0 16px}
+#waStatus{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--leaf);font-size:13px;font-weight:900}
+#waStatus.closed{color:var(--pot);background:var(--brand-soft);border-color:var(--brand)}
+#waEntryHead .again{margin:8px 0 0}
+#waEntryHead .again>span{flex:1;min-width:180px}
+#waEntryHead .again b{font-size:14px}
+#waEntryHead .again small{display:block;line-height:1.6}
+#waQuickNav{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:9px max(12px,env(safe-area-inset-left)) 10px;max-width:980px;margin:auto}
+#waQuickNav::-webkit-scrollbar{display:none}
+#waQuickNav button{flex:0 0 auto;border:1.5px solid var(--line);border-radius:999px;background:var(--paper);color:var(--ink);padding:7px 13px;font:inherit;font-size:13px;font-weight:900;white-space:nowrap;cursor:pointer}
+#waQuickNav button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+body.wa-entry .ribbon,body.wa-entry .top-social,body.wa-entry header.hero,body.wa-entry .trust-strip,body.wa-entry #catgrid{display:none!important}
+body.wa-entry #waEntryHead{margin-top:8px}
+body.wa-entry .strip{margin-top:8px;top:0}
+body.wa-entry .strip .catbar{display:none!important}
+body.wa-entry main{padding-top:8px}
+body.wa-entry #menu{scroll-margin-top:112px}
+body.wa-entry .wafloat{display:none}
+#bar .wrap{gap:6px}
+#bar button{border-radius:15px;min-height:54px;padding:9px 14px;font-size:14px}
+#bar .barhint{font-size:12.5px}
+body.hascart .wafloat{display:none}
+#sheet .panel{padding-top:12px}
+#orderFlowProgress{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:4px 0 14px}
+#orderFlowProgress span{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;padding:8px 4px;border-radius:11px;background:var(--paper);border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:900}
+#orderFlowProgress span i{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:50%;background:var(--line);font-style:normal;font-size:11px}
+#orderFlowProgress span[aria-current=step]{background:var(--brand-soft);border-color:var(--brand);color:var(--pot)}
+#orderFlowProgress span[aria-current=step] i{background:var(--brand);color:#fff}
+#cfStep1,#cfStep2,#cfStep3{min-width:0}
+.cf-actions{display:flex;gap:8px;margin-top:14px}
+.cf-actions>*{flex:1;min-width:0}
+.cf-next,.cf-back,.cf-send{border:0;border-radius:14px;padding:13px 12px;min-height:50px;font:inherit;font-weight:900;cursor:pointer}
+.cf-next{background:var(--brand);color:var(--brand-ink)}
+.cf-back{background:var(--paper);border:1.5px solid var(--line);color:var(--ink)}
+.cf-send{background:#218C4A;color:#fff;font-size:16px;box-shadow:0 7px 18px rgba(47,122,62,.16)}
+.cf-step-title{margin:0 0 9px;font-size:17px;font-weight:900}
+#cfStep2 #orderForm{margin-top:0;gap:11px}
+#cfStep2 #orderForm>label,#cfStep2 #orderForm>.two{margin:0}
+#cfStep2 #orderForm .cutoff{font-size:12px}
+#cfStep2 #fPhone{direction:ltr;text-align:left}
+#cfStep2 #fWhen{direction:ltr;text-align:left;min-height:46px}
+#cfStep2 #fArea{min-height:46px}
+#cfStep2 #sendBtn{display:none!important}
+#cfStep2 .cf-actions{margin-top:2px}
+#cfStep3 .cf-review{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:13px;white-space:pre-wrap;overflow-wrap:anywhere;direction:rtl;text-align:right;font:700 13px/1.9 var(--body);max-height:52vh;overflow:auto;color:var(--ink)}
+#cfStep3 .cf-review-title{font-size:15px;font-weight:900;margin:0 0 8px}
+#cfStep3 .cf-actions{display:grid;grid-template-columns:1fr}
+#cfStep3 .cf-send{min-height:56px}
+#done{margin-top:10px}
+#done #orderText{direction:rtl;text-align:right;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:380px){
+ #waQuickNav{gap:5px;padding-inline:9px}
+ #waQuickNav button{padding:7px 10px;font-size:12px}
+ #bar button{font-size:13px;padding-inline:10px}
+ #orderFlowProgress span{font-size:10.5px;gap:3px}
+ #orderFlowProgress span i{width:20px;height:20px}
+ #cfStep3 .cf-review{font-size:12px;padding:10px}
+}
