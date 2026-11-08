@@ -6,9 +6,10 @@ const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
 const source=(params.get('src')||'site').trim().slice(0,40)||'site';
 const waEntry=source==='wa';
+const stagingPreview=['cdn.jsdelivr.net','raw.githubusercontent.com','raw.githack.com','rawgit.hack'].includes(location.hostname);
 let step=1,orderNo='',lastInvoice='';
 window.__ALH_SOURCE=source;
-try{T('menu_entry_source',{source:source,entry:waEntry?'whatsapp_welcome':'website'})}catch(_){}
+if(!stagingPreview){try{T('menu_entry_source',{source:source,entry:waEntry?'whatsapp_welcome':'website'})}catch(_){}}
 
 /* Keep the agreed delivery rules independent of old remote settings. */
 function lockDelivery(){DEF_DEL=60;FREE_OVER=1000;}
@@ -63,7 +64,7 @@ function updateKitchenStatus(){
  const s=$('waStatus');if(!s)return;
  const closed=!!window.__CLOSED;
  s.classList.toggle('closed',closed);
- s.textContent=closed?'● المطبخ لا يستقبل طلبات الموقع حاليًا · تواصل معنا على واتساب':'● بنستقبل الطلبات · التوصيل لكل إسكندرية · آخر طلب لنفس اليوم 2 ظهرًا';
+ s.textContent=stagingPreview?'● معاينة اختبارية — لن يتم إرسال طلب حقيقي · التوصيل 60 ج ومجاني من 1000 ج أو مع عروض الفراخ':(closed?'● المطبخ لا يستقبل طلبات الموقع حاليًا · تواصل معنا على واتساب':'● بنستقبل الطلبات · التوصيل لكل إسكندرية · آخر طلب لنفس اليوم 2 ظهرًا');
 }
 updateKitchenStatus();
 function syncQuickNav(active){
@@ -178,6 +179,7 @@ if(panel&&form&&lines&&totals&&addons&&!$('orderFlowProgress')){
  const back2=document.createElement('button');back2.type='button';back2.className='cf-back';back2.textContent='رجوع للسلة';
  const next2=document.createElement('button');next2.type='button';next2.className='cf-next';next2.textContent='راجع الفاتورة';
  actions2.append(back2,next2);form.appendChild(actions2);
+ if(stagingPreview&&$('cfSend'))$('cfSend').textContent='إنهاء المعاينة (بدون إرسال)';
  s3.innerHTML='<h4 class="cf-review-title">راجع الفاتورة قبل الإرسال</h4><pre class="cf-review" id="cfInvoice"></pre><div class="cf-actions"><button type="button" class="cf-back" id="cfBackData">تعديل البيانات</button><button type="button" class="cf-send" id="cfSend">ابعت الأوردر على واتساب</button></div>';
  s2.insertAdjacentElement('afterend',s3);
  panel.insertBefore(s1,s2);
@@ -275,19 +277,25 @@ function sendOrder(){
  const date=$('fWhen').value,note=$('fNote').value.trim();
  const ent=Object.entries(cart);
  const itemsData=ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k:k,name:lineName(k),qty:q,unit:(offerOf(p.id)||p.name.startsWith(p.unit))?'':p.unit,price:p.price,total:up5(p.price*q)};});
- try{localStorage.setItem('alhella-last',JSON.stringify({cart:{...cart},at:Date.now(),customer:customer,when:date,pay:pay==='InstaPay'?'إنستاباي':pay,note:note,orderNumber:orderNo,src:source}));localStorage.setItem('alhella-customer-v1',JSON.stringify(customer));}catch(_){}
- let dbId='';
- try{
-  if(window.FB){dbId=FB.newId();FB.save(dbId,{orderNumber:orderNo,name:customer.name,phone:customer.phone,area:customer.area,addr:customer.addr,when:date,pay:pay,items:itemsData,sub:s,delivery:d,deliveryFree:d===0,total:s+d,note:note,src:source}).catch(()=>{});}
- }catch(_){}
- try{gtag('event','purchase',{transaction_id:orderNo,currency:'EGP',value:s,source:source,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q};})});T('order_whatsapp_sent',{order_number:orderNo,source:source,value:s+d,currency:'EGP'});}catch(_){}
+ if(!stagingPreview){
+  try{localStorage.setItem('alhella-last',JSON.stringify({cart:{...cart},at:Date.now(),customer:customer,when:date,pay:pay==='InstaPay'?'إنستاباي':pay,note:note,orderNumber:orderNo,src:source}));localStorage.setItem('alhella-customer-v1',JSON.stringify(customer));}catch(_){}
+  try{if(window.FB){dbId=FB.newId();FB.save(dbId,{orderNumber:orderNo,name:customer.name,phone:customer.phone,area:customer.area,addr:customer.addr,when:date,pay:pay,items:itemsData,sub:s,delivery:d,deliveryFree:d===0,total:s+d,note:note,src:source}).catch(()=>{});}}catch(_){}
+  try{gtag('event','purchase',{transaction_id:orderNo,currency:'EGP',value:s,source:source,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q};})});T('order_whatsapp_sent',{order_number:orderNo,source:source,value:s+d,currency:'EGP'});}catch(_){}
+ }
  const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(lastInvoice);
  if($('orderText'))$('orderText').textContent=lastInvoice;
  if($('waLink'))$('waLink').href=url;
+ lastText=lastInvoice;
  ['cfStep1','cfStep2','cfStep3'].forEach(id=>{if($(id))$(id).hidden=true;});
  if($('orderFlowProgress'))$('orderFlowProgress').hidden=true;
  if(done)done.hidden=false;
- const title=$('sheetTitle');if(title)title.textContent='الأوردر جاهز للإرسال';
+ const title=$('sheetTitle');if(title)title.textContent=stagingPreview?'انتهت المعاينة':'الأوردر جاهز للإرسال';
+ if(stagingPreview){
+  if($('waLink'))$('waLink').hidden=true;
+  const doneTitle=done?.querySelector('p');if(doneTitle)doneTitle.textContent='دي معاينة اختبارية — مفيش أوردر اتبعت ومفيش بيانات اتسجلت في الحسابات.';
+  done?.querySelectorAll('.donefb,.sharebtn,.revlink').forEach(el=>el.hidden=true);
+  return;
+ }
  const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
 }
 document.addEventListener('submit',e=>{
