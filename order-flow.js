@@ -298,7 +298,7 @@ document.addEventListener('submit',e=>{
 
 /* The old one-step submit handler is stopped above; opening the cart always begins at step 1. */
 document.addEventListener('click',e=>{
- if(e.target.closest('#openCart,#cartFab'))setTimeout(()=>setStep(1),0);
+ if(e.target.closest('#openCart,#cartFab,#againBtn'))setTimeout(()=>setStep(1),0);
  if(e.target.closest('#closeCart'))setTimeout(()=>{if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;},0);
 },true);
 const oldNew=$('newOrder');if(oldNew)oldNew.addEventListener('click',()=>{orderNo='';lastInvoice='';if($('orderFlowProgress'))$('orderFlowProgress').hidden=false;setStep(1);},{capture:true});
