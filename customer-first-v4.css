@@ -242,3 +242,7 @@ input,select,textarea{font-size:16px}
  .order-guide small{font-size:9px}
  .home-picks,.task-suggestions{padding:11px}
 }
+
+#cgrid .order-guide{display:flex!important;visibility:visible!important;opacity:1!important}
+#cgrid .order-guide>div{flex:1}
+#cgrid .order-guide small{display:block}
