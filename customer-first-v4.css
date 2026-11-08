@@ -251,3 +251,10 @@ input,select,textarea{font-size:16px}
 /* Live homepage: keep community links visible at first glance */
 .top-social{display:flex!important;visibility:visible!important;opacity:1!important;position:relative;z-index:2}
 @media(max-width:520px){.top-social{display:block!important}}
+
+/* Make the three mahshi preparation states immediately visible side by side */
+.journey-states{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:7px;width:100%;direction:rtl}
+.journey-states i{display:block;min-width:0;text-align:center;font-style:normal;font-size:11px;line-height:1.35;font-weight:900;padding:6px 3px;border-radius:9px;background:#fff1e8;color:#a63e16;border:1px solid #f1c7b0;white-space:nowrap}
+.journey-card[data-task="mahshi"] .journey-copy{align-items:stretch}
+.journey-card[data-task="mahshi"] .journey-copy>i:not(.journey-states i){font-style:normal}
+@media(max-width:360px){.journey-states{gap:3px}.journey-states i{font-size:10px;padding-inline:1px}}
