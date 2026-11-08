@@ -292,7 +292,7 @@ function sendOrder(){
  const title=$('sheetTitle');if(title)title.textContent=stagingPreview?'انتهت المعاينة':'الأوردر جاهز للإرسال';
  if(stagingPreview){
   if($('waLink'))$('waLink').hidden=true;
-  const doneTitle=done?.querySelector('p');if(doneTitle)doneTitle.textContent='دي معاينة اختبارية — مفيش أوردر اتبعت ومفيش بيانات اتسجلت في الحسابات.';
+  const doneParas=done?.querySelectorAll('p');if(doneParas?.[0])doneParas[0].textContent='دي معاينة اختبارية — مفيش أوردر اتبعت ومفيش بيانات اتسجلت في الحسابات.';if(doneParas?.[1])doneParas[1].textContent='الفاتورة معروضة للمعاينة فقط، ومش هيتم إرسالها على واتساب.';
   done?.querySelectorAll('.donefb,.sharebtn,.revlink').forEach(el=>el.hidden=true);
   return;
  }
