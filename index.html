@@ -1524,7 +1524,7 @@ function openCat(id,push=true){VIEW='cat';CUR=id;try{const c=cats().find(c=>c.id
 function openTask(key,push=true){const t=SHOP_TASKS.find(x=>x.key===key);if(!t)return;VIEW='task';CUR=key;T('open_task',{task:t.title});if(push)try{history.pushState({task:key},'','#task-'+key)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 function goHome(push=true){VIEW='home';CUR='';if($('q').value){$('q').value='';renderMenu.lastQ='';renderMenu()}if(push&&location.hash)try{history.pushState({},'',location.pathname+location.search)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 $('cgrid').addEventListener('click',e=>{const t=e.target.closest('[data-task]');if(t){openTask(t.dataset.task);return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
-$('cgrid').addEventListener('click',e=>{if(e.target.closest('[data-focus-search]'))$('heroQ').click()});
+$('cgrid').addEventListener('click',e=>{if(e.target.closest('[data-focus-search]')){const q=$('q');document.body.classList.add('qopen');if($('hSearch'))$('hSearch').click();else{q.focus();}setTimeout(()=>{q.focus();const n=q.closest('nav');if(n)scrollTo({top:Math.max(0,n.getBoundingClientRect().top+scrollY-4),behavior:'smooth'});},60)}});
 function goMenu(){goHome();setTimeout(()=>{const m=$('mnu');if(m)scrollTo({top:m.getBoundingClientRect().top+scrollY-10,behavior:'instant'})},40)}
 $('backCats').addEventListener('click',()=>goMenu());
 $('catNext').addEventListener('click',e=>{if(e.target.closest('[data-allcats]')){goMenu();return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
