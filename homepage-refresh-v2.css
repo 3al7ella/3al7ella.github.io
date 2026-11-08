@@ -1,0 +1,144 @@
+/* #ع_الحلة — homepage redesign preview, 08 Nov 2026
+   Preview-only visual layer. Product data, prices, images, cart and WhatsApp checkout stay unchanged. */
+
+/* Warm, clean storefront */
+:root{
+  --bg:#FFF8F0;--paper:#FFFEFC;--ink:#302016;--muted:#806553;
+  --line:#EEDBCB;--brand:#E4521B;--brand-soft:#FFE8D9;
+  --shadow:0 8px 24px rgba(91,43,17,.07);
+}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg)!important;color:var(--ink)}
+.wrap{width:min(100% - 28px,1120px)!important;max-width:1120px}
+
+/* Remove the old long promotional stack: one compact brand/search header */
+.ribbon,.top-social,.trust-strip,header.hero .banner,header.hero .leadtime,
+header.hero .notice,header.hero .gal,header.hero .how,nav.strip{display:none!important}
+header.hero{padding:10px 0 8px!important;margin-bottom:0!important}
+header.hero .top{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 12px!important;background:var(--paper);border:1px solid var(--line);
+  border-radius:20px;box-shadow:var(--shadow)
+}
+header.hero .brand{display:flex;align-items:center;gap:10px;min-width:0}
+header.hero .brand img{width:54px!important;height:54px!important;object-fit:contain}
+header.hero .brand b{font-size:27px!important;color:var(--brand)!important}
+header.hero .brand small{font-size:11px!important;color:var(--muted)}
+header.hero .wa-chip{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;
+  background:#EAF5EA!important;color:#236B38!important;font-size:0!important}
+header.hero .wa-chip svg{width:23px;height:23px}
+header.hero .herosearch{
+  display:flex!important;align-items:center;gap:10px;width:100%;min-height:48px;
+  margin:9px 0 0!important;padding:0 14px!important;border:1px solid #E7C7B1!important;
+  border-radius:14px!important;background:var(--paper)!important;color:var(--muted);
+  box-shadow:0 3px 12px rgba(91,43,17,.035);font-size:13px!important;text-align:right
+}
+
+/* Page rhythm */
+main.wrap{display:flex;flex-direction:column;gap:17px;padding-top:8px!important}
+#cgrid{display:flex;flex-direction:column;gap:16px}
+#cgrid .hx{order:0;margin:0}
+#cgrid .mnu{order:1;margin:0;padding:16px 13px 14px;border:1px solid var(--line);
+  border-radius:22px;background:var(--paper);box-shadow:var(--shadow)}
+#cgrid .hsec{margin-top:0}
+#cgrid .mhd{text-align:right;margin:0 2px 13px}
+#cgrid .mhd h2{font-size:25px!important;color:var(--ink)!important}
+#cgrid .mhd p{font-size:13px!important;color:var(--muted)!important;font-weight:700}
+
+/* Offer hero: strong visual card, first thing after the header */
+#cgrid .hx{padding:0}
+#cgrid .hxs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;margin:0;padding:0 0 5px;scroll-padding-inline:0}
+#cgrid .hxs::-webkit-scrollbar{display:none}
+#cgrid .hxc{flex:0 0 100%;aspect-ratio:16/7;min-height:175px;max-height:270px;
+  border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+#cgrid .hxc:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+#cgrid .hxc::before{background:linear-gradient(270deg,rgba(35,18,10,.88),rgba(35,18,10,.48) 48%,rgba(35,18,10,.04) 100%)}
+#cgrid .hxt{width:65%;padding:18px 20px;gap:7px}
+#cgrid .hxt b{font-size:clamp(20px,4.5vw,31px);line-height:1.3}
+#cgrid .hxt small{font-size:13px;line-height:1.6}
+#cgrid .hxgo{margin-top:8px;background:var(--brand);border-radius:12px;padding:9px 16px}
+#cgrid .hxp{width:66px;height:66px;top:14px;left:14px}
+#cgrid .hxd{display:flex;justify-content:center;gap:6px;margin-top:8px}
+#cgrid .hxd button{width:7px;height:7px;border:0;border-radius:99px;background:#D8B9A5;padding:0}
+#cgrid .hxd button.on{width:20px;background:var(--brand)}
+
+/* Offer shortcut and category tiles */
+#cgrid .moff{margin:0 0 14px!important;padding:13px 15px!important;border-radius:17px!important;
+  background:linear-gradient(115deg,#E4521B,#B83A12)!important;box-shadow:0 7px 18px rgba(184,58,18,.16)}
+#cgrid .moff b{font-size:18px!important}
+#cgrid .mfam{font-size:16px!important;color:var(--ink)!important;margin:17px 2px 9px!important;
+  padding-bottom:7px;border-bottom:1px solid var(--line)}
+#cgrid .mgrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
+#cgrid .mt{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;
+  min-width:0;padding:9px!important;border:1px solid var(--line)!important;border-radius:17px!important;
+  background:#fff!important;text-align:right!important;box-shadow:0 4px 13px rgba(91,43,17,.045)
+}
+#cgrid .mtp{width:100%!important;aspect-ratio:1.22/1!important;border-radius:12px!important;
+  background:var(--brand-soft)!important;overflow:hidden}
+#cgrid .mtp img{width:100%!important;height:100%!important;object-fit:cover!important}
+#cgrid .mtp i{font-size:34px}
+#cgrid .mt b{font-size:14px!important;line-height:1.45!important;color:var(--ink)!important}
+#cgrid .mt small{font-size:10.5px!important;color:var(--muted)!important}
+#cgrid .mt:active{transform:scale(.985)}
+#cgrid .party{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+
+/* Featured products on home stay browseable horizontally */
+#cgrid .hsec:not(.mnu){padding:4px 0 0}
+#cgrid .hsh{margin-bottom:10px}
+#cgrid .hsh h2{font-size:20px!important;color:var(--ink)}
+#cgrid .hall{color:var(--brand)!important}
+
+/* Product category page: compact two-column cards on phones */
+#sections .sec{margin-top:0!important;padding-top:14px!important}
+#sections .sec h2{font-size:24px!important;color:var(--ink)}
+#sections .list:not(.rail){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#sections .list:not(.rail) .row{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;
+  min-width:0;padding:9px!important;border:1px solid var(--line)!important;border-radius:16px!important;
+  background:#fff!important;box-shadow:0 4px 13px rgba(91,43,17,.04)
+}
+#sections .list:not(.rail) .row>.dot{width:100%!important;height:auto!important;aspect-ratio:1.15/1;
+  flex:none!important;border-radius:12px!important}
+#sections .list:not(.rail) .row>.info{width:100%;min-height:55px}
+#sections .list:not(.rail) .row>.info>b{font-size:13px!important;line-height:1.45!important}
+#sections .list:not(.rail) .row>.info .desc{font-size:10.5px!important;line-height:1.45}
+#sections .list:not(.rail) .row>.price{font-size:14px!important;color:var(--brand)!important}
+#sections .list:not(.rail) .row>.step{width:100%;justify-content:space-between}
+#sections .list:not(.rail) .row>.step button{width:32px;height:32px;border-radius:10px}
+#sections .list:not(.rail) .row>.step output{min-width:24px}
+
+/* Bottom navigation and cart remain easy to reach */
+.bnav{background:var(--paper)!important;border-top:1px solid var(--line)!important;
+  box-shadow:0 -5px 18px rgba(60,30,10,.07)!important}
+.bar{box-shadow:0 -5px 18px rgba(60,30,10,.08)}
+.cartfab{bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:calc(100vw - 24px)}
+.sheet .panel{max-height:calc(100dvh - env(safe-area-inset-top,0px));overflow-y:auto;overscroll-behavior:contain}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--brand);outline-offset:3px}
+input,select,textarea{font-size:16px}
+@media(min-width:700px){
+  #cgrid .mgrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
+  #cgrid .mt{padding:11px!important}
+  #cgrid .mtp{aspect-ratio:1.15/1!important}
+  #sections .list:not(.rail){grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:420px){
+  header.hero .brand img{width:48px!important;height:48px!important}
+  header.hero .brand b{font-size:24px!important}
+  #cgrid .hxc{aspect-ratio:4/3;min-height:160px}
+  #cgrid .hxt{width:72%;padding:13px}
+  #cgrid .hxt b{font-size:20px}
+  #cgrid .hxt small{font-size:11px}
+  #cgrid .mgrid{gap:8px!important}
+  #cgrid .mt{padding:7px!important;gap:6px!important}
+  #cgrid .mt b{font-size:12.5px!important}
+  #sections .list:not(.rail){gap:7px!important}
+  #sections .list:not(.rail) .row{padding:7px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;
+    animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
