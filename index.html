@@ -993,6 +993,7 @@ body.spopen{overflow:hidden}
 
 </style>
 <link rel="stylesheet" href="customer-first-v4.css">
+<link rel="stylesheet" href="order-flow.css">
 </head>
 <body>
 
@@ -1674,6 +1675,7 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
 </script>
 
 
+<script src="./order-flow.js"></script>
 <script type="module">
 import {db,doc,collection,setDoc,onSnapshot,serverTimestamp} from './fb.js';
 window.FB={newId:()=>doc(collection(db,'orders')).id,save:(id,d)=>setDoc(doc(db,'orders',id),{...d,status:'new',createdAt:serverTimestamp()})};
