@@ -992,7 +992,7 @@ body.spopen{overflow:hidden}
 @media(prefers-reduced-motion:no-preference){.fruit-item{transition:border-color .15s,transform .15s}.fruit-item:has(.fruit-qty:not(:empty)){border-color:#e5b99f}.fruit-step button:active{transform:scale(.94)}}
 
 </style>
-<link rel="stylesheet" href="homepage-refresh-v2.css">
+<link rel="stylesheet" href="customer-first-v4.css">
 </head>
 <body>
 
@@ -1030,7 +1030,7 @@ body.spopen{overflow:hidden}
       <div class="fblinks"><a href="https://chat.whatsapp.com/K0htNMql9w6IX9kIBSDmxg" target="_blank" rel="noopener">💬 جروب العروض على واتساب</a><a href="https://t.me/al7ella" target="_blank" rel="noopener">✈️ تليجرام</a></div>
     </div>
   </div>
-  <div class="leadtime"><span aria-hidden="true">🗓️</span><div><b>بنستقبل الطلبات قبلها بيوم على الأقل</b><small>هنراجع طلبك ونأكد معاك التفاصيل وموعد التسليم على واتساب.</small></div></div>
+  <div class="leadtime"><span aria-hidden="true">🗓️</span><div><b>أصناف محددة متاحة لطلب نفس اليوم حتى 2 ظهرًا</b><small>باقي الأصناف اطلبها قبلها بيوم. وموعد التسليم النهائي بنأكده معاك على واتساب.</small></div></div>
   <div class="notice" id="notice" hidden></div>
   <div class="again" id="again" hidden><span>🔁 <b>تطلب نفس أوردرك اللي فات؟</b><small id="againTxt"></small></span><button type="button" id="againBtn">أيوه، حطّه في السلة</button></div>
   <div class="gal" id="gal" aria-label="من شغلنا"></div>
@@ -1114,8 +1114,8 @@ body.spopen{overflow:hidden}
       <div class="two">
         <label for="fArea" style="grid-column:1/-1">المنطقة <span class="req" aria-hidden="true">*</span><input id="fArea" list="areas" autocomplete="address-level2" required placeholder="اكتب منطقتك: سموحة، سيدي جابر، العجمي…"></label>
       </div>
-      <input type="hidden" id="fWhen" value="قبلها بيوم على الأقل">
-      <div class="cutoff">⏰ بنستقبل الطلبات قبلها بيوم على الأقل. موعد التسليم النهائي بيتأكد معاك على واتساب.</div>
+      <input type="hidden" id="fWhen" value="الأصناف المحددة لنفس اليوم حتى 2 ظهرًا، وباقي الأصناف قبلها بيوم">
+      <div class="cutoff">⏰ الأصناف المحددة متاحة لطلب نفس اليوم حتى 2 ظهرًا. باقي الأصناف تُطلب قبلها بيوم. موعد التسليم النهائي بيتأكد معاك على واتساب.</div>
       <datalist id="areas"></datalist>
       <label for="fAddr">العنوان بالتفصيل<textarea id="fAddr" required autocomplete="street-address" placeholder="الشارع، رقم العمارة، الدور والشقة، وعلامة مميزة"></textarea></label>
       <label style="gap:6px">طريقة الدفع
@@ -1321,7 +1321,7 @@ $('heroQ').addEventListener('click',()=>{const q=$('q');q.focus({preventScroll:t
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
 $('q').addEventListener('input',()=>{clearTimeout(window.__qt);window.__qt=setTimeout(()=>{const q=$('q').value.trim();if(q.length>1)T('search',{search_term:q})},1500)});
 function refresh(){document.querySelectorAll('.pair[data-pair]').forEach(r=>{const g=PAIRS[r.dataset.pair];if(!g)return;const t=document.createElement('div');t.innerHTML=pairHTML(g);const n=t.firstElementChild;if(n.outerHTML!==r.outerHTML)r.replaceWith(n)});document.querySelectorAll('.row[data-id]').forEach(r=>{const p=byId[r.dataset.id];if(!p)return;const tmp=document.createElement('div');tmp.innerHTML=rowHTML(p);const nr=tmp.firstElementChild;if(r.dataset.x!==undefined){nr.setAttribute('style',r.getAttribute('style'));nr.dataset.x=''}if(nr.outerHTML!==r.outerHTML)r.replaceWith(nr)});
-  renderOffers();bar();if(!$('sheet').hidden)renderCart()}
+  renderOffers();bar();if(!$('sheet').hidden)renderCart();if(document.body.dataset.view==='task')renderTaskSuggestions(CUR)}
 function bar(){const n=Object.keys(cart).length;$('bar').hidden=true;{const f=$('cartFab');const was=+f.dataset.n||0;f.hidden=!n;f.dataset.n=n;$('fabCnt').textContent=fmt(n);$('fabTot').textContent=fmt(sub())+' ج';if(n>was&&was>=0&&STARTED){f.classList.remove('bump');void f.offsetWidth;f.classList.add('bump')}document.body.classList.toggle('hascart',!!n)}{const h=$('barHint'),s=sub();if(n&&isFree()){h.textContent='🎉 توصيلك مجاني';h.hidden=false;h.className='barhint ok'}else if(n&&s<FREE_OVER){h.innerHTML='🚚 فاضلك <b class="num">'+fmt(FREE_OVER-s)+' ج</b> والتوصيل يبقى مجاني';h.hidden=false;h.className='barhint'}else h.hidden=true}$('cnt').textContent=fmt(n);$('barTotal').textContent=fmt(sub()+delivery())+' ج'}
 
 let spyObs;function spy(){if(spyObs)spyObs.disconnect();if(!('IntersectionObserver' in window))return;spyObs=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){document.querySelectorAll('#strip a').forEach(a=>{const on=a.dataset.s===en.target.id;a.setAttribute('aria-current',on);if(on)a.scrollIntoView({block:'nearest',inline:'center'})})}})},{rootMargin:'-80px 0px -70% 0px'});document.querySelectorAll('.sec,#offers').forEach(s=>spyObs.observe(s))}
@@ -1392,7 +1392,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
     'الاسم: '+name,
     'الموبايل: '+phone,
     'العنوان: '+[area,addr].filter(Boolean).join(' — '),
-    'موعد التسليم: يتم تأكيده على واتساب (الطلب قبلها بيوم على الأقل)',
+    'موعد التسليم: يتم تأكيده على واتساب. الأصناف المحددة متاحة لنفس اليوم حتى 2 ظهرًا، وباقي الأصناف قبلها بيوم',
     '━━━━━━━━━━━━━━━━━━',
     '*تفاصيل الأصناف*',
     ...ent.map(([k,q],i)=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return (i+1)+'. '+lineName(k)+'\n   '+fmtE(q)+u+' × '+fmtE(p.price)+' ج = '+fmtE(up5(p.price*q))+' ج'}),
@@ -1441,6 +1441,12 @@ function cats(){const L=[];if(OGROUPS.length){const ps=OFFERS.map(o=>byId[o.id].
   secs.forEach((x,i)=>{const its=items.filter(p=>p.section===x);if(!its.length)return;L.push({id:'s'+i,name:x,emo:SEC_EMO[x]||'🍽️',img:img(secImg[x]),n:its.length,from:Math.min(...its.map(p=>p.price))})});return L}
 const FAM=[['🫑 محاشي وخضار',['المحاشي','جاهز على الحشو','الخضار المتنضف']],['🍗 فراخ ولحوم جاهزة للطبخ',['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','المقبلات']],['🍽️ أكل مطبوخ جاهز',['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر','مخللات وصوصات']]];
 const BEST=['p044','p046','p056','p150','p145','p144'];
+const SHOP_TASKS=[
+ {key:'mahshi',title:'هجهّز محشي',desc:'مقوّر، مسلوق، أو ع التسوية',emoji:'🫑',sections:['المحاشي','جاهز على الحشو']},
+ {key:'veg',title:'هجهّز خضار',desc:'خضار متنضف وجاهز للطبخ',emoji:'🥬',sections:['الخضار المتنضف']},
+ {key:'cook',title:'عايز أطبخ',desc:'وجبات وصواني وطواجن',emoji:'🍲',sections:['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر']},
+ {key:'freezer',title:'أجهّز الفريزر',desc:'فراخ ولحوم ومقبلات جاهزة',emoji:'❄️',sections:['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','المقبلات']}
+];
 function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
 function heroSlides(){const order=BF_ON&&OFFERS.some(o=>o.g==='bf'&&wide(o.img))?['bf']:['chicken','mahshi','events'];const NEWO=['p208','p203','p204'];const out=OFFERS.filter(o=>NEWO.includes(o.id)&&wide(o.img));order.forEach(g=>OFFERS.filter(o=>o.g===g&&wide(o.img)&&!NEWO.includes(o.id)).forEach(o=>out.push(o)));return out.slice(0,8)}
 function heroHTML(){const S=heroSlides();if(!S.length)return '';
@@ -1451,27 +1457,23 @@ function railItems(names){const seen=new Set();return items.filter(p=>names.incl
 function renderGrid(){
   const L=cats();
   {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
-  const find=(name)=>L.find(c=>c.name===name);
   const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\\sـ]/g,'').toLowerCase();
-  const groups=[
-    {title:'هجهّز محشي',desc:'مقوّر، مسلوق، أو ع التسوية',emoji:'🫑',terms:['محاشي','محشي','جاهز على الحشو','جاهز للحشو']},
-    {title:'هجهّز خضار',desc:'خضار متنضف وجاهز للطبخ',emoji:'🥬',terms:['الخضار','خضار','متنضف']},
-    {title:'عايز أطبخ',desc:'وجبات وصواني وطواجن',emoji:'🍲',terms:['الوجبات','وجبات','صواني','طواجن','بولات','الرز المعمر']},
-    {title:'أجهّز الفريزر',desc:'فراخ ولحوم جاهزة للطبخ',emoji:'❄️',terms:['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','الفريزر']}
-  ];
   let h=heroHTML();
   h+=`<section class="journey-intro"><div><span>من مطبخنا لبيتك</span><h2>النهارده ناوي تعمل إيه؟</h2><p>اختار احتياجك، ووصل للقسم المناسب من غير لف كتير في المنيو.</p></div><button type="button" data-focus-search aria-label="ابحث عن صنف">⌕ <small>دور على صنف</small></button></section>`;
+  h+='<section class="order-guide" aria-label="مواعيد الطلب"><div><b>⚡ طلب نفس اليوم</b><small>للأصناف المحددة حتى 2 ظهرًا</small></div><i></i><div><b>🗓️ باقي الأصناف</b><small>اطلبها قبلها بيوم</small></div></section>';
   h+='<section class="journey-grid" aria-label="اختار حسب احتياجك">';
-  groups.forEach(g=>{
-    const cs=L.filter(c=>g.terms.some(t=>normName(c.name).includes(normName(t))));
+  SHOP_TASKS.forEach(g=>{
+    const cs=L.filter(c=>g.sections.includes(c.name));
     if(!cs.length)return;
     const first=cs[0],names=cs.map(c=>c.name).join(' · ');
-    h+=`<button type="button" class="journey-card" data-cat="${first.id}">${first.img?`<img src="${first.img}" alt="" loading="lazy" decoding="async">`:`<span class="journey-emoji">${g.emoji}</span>`}<span class="journey-copy"><b>${g.title}</b><small>${g.desc}</small><i>${esc(names)}</i></span><span class="journey-arrow">‹</span></button>`;
+    h+=`<button type="button" class="journey-card" data-task="${g.key}">${first.img?`<img src="${first.img}" alt="" loading="lazy" decoding="async">`:`<span class="journey-emoji">${g.emoji}</span>`}<span class="journey-copy"><b>${g.title}</b><small>${g.desc}</small><i>${esc(names)}</i></span><span class="journey-arrow">‹</span></button>`;
   });
   const off=L.find(c=>c.id==='offers');
   if(off)h+=`<button type="button" class="journey-offer" data-cat="offers"><span class="journey-fire">٪</span><span><b>عايز توفر؟ شوف العروض</b><small>${fmt(off.n)} عرض متاح · اختار اللي يناسب بيتك</small></span><i>‹</i></button>`;
   h+='</section>';
-  const used=new Set(groups.flatMap(g=>g.names).map(n=>find(n)?.id).filter(Boolean));
+  const picks=BEST.map(k=>byId[k]).filter(p=>p&&!p.off&&!offerOf(p.id)).slice(0,4);
+  if(picks.length)h+=`<section class="home-picks"><div class="home-picks-head"><div><span>ابدأ من هنا</span><h2>اختيارات من المنيو</h2></div><small>أصناف مختارة من مطبخنا</small></div><div class="list">${picks.map(rowHTML).join('')}</div></section>`;
+  const used=new Set(SHOP_TASKS.flatMap(g=>g.sections).map(n=>L.find(c=>normName(c.name)===normName(n))?.id).filter(Boolean));
   h+=`<section class="all-depts" id="mnu"><div class="all-depts-head"><div><span>المنيو كاملة</span><h2>كل الأقسام في مكان واحد</h2></div><small>${fmt(L.length)} قسم</small></div><div class="dept-chips">${L.filter(c=>c.id==='offers'||!used.has(c.id)).map(c=>`<button type="button" data-cat="${c.id}"><span>${c.emo}</span>${esc(c.name)}<i>‹</i></button>`).join('')}${L.filter(c=>used.has(c.id)).map(c=>`<button type="button" data-cat="${c.id}"><span>${c.emo}</span>${esc(c.name)}<i>‹</i></button>`).join('')}</div></section>`;
   h+='<div id="bfSlot"></div><div id="revSlot"></div>';
   h+=`<div class="party"><h3 class="cfam" style="margin-top:0">🎉 عندك عزومة؟ احسبها</h3><label>عدد الضيوف <span class="pstep"><button type="button" data-pg="-1" aria-label="أقل">−</button><output id="pgN" class="num">${fmt(PG)}</output><button type="button" data-pg="1" aria-label="أكتر">+</button></span></label><p id="pgOut">${partyTxt()}</p><div class="pbtns"><button type="button" class="go" id="pgAdd">ضيف ${fmt(partyKg())} كيلو محشي مشكل مستوي</button><button type="button" class="go alt" id="pgBox">شوف بوكسات الضيافة</button></div></div>`;
@@ -1479,7 +1481,8 @@ function renderGrid(){
   const bf=$('bfBanner'),slot=$('bfSlot'),hasBf=!!document.querySelector('.hx.isbf');if(bf){if(hasBf)bf.hidden=true;else if(slot&&BF_ON)slot.replaceWith(bf)}
   {const rv=$('revs'),rs=$('revSlot');if(rv&&rs)rs.replaceWith(rv)}
   heroInit();
-}let HXT;function heroInit(){const s=$('hxs'),d=$('hxd');if(!s||!d)return;const dots=[...d.children];clearInterval(HXT);
+}
+let HXT;function heroInit(){const s=$('hxs'),d=$('hxd');if(!s||!d)return;const dots=[...d.children];clearInterval(HXT);
   const idx=()=>Math.round(Math.abs(s.scrollLeft)/s.clientWidth);
   s.onscroll=()=>{const i=idx();dots.forEach((x,j)=>x.classList.toggle('on',i===j))};
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)HXT=setInterval(()=>{if(document.body.dataset.view!=='home'||document.hidden||s.matches(':hover'))return;const n=(idx()+1)%dots.length;s.scrollTo({left:-n*s.clientWidth*(getComputedStyle(s).direction==='rtl'?1:-1),behavior:'smooth'})},4500);
@@ -1492,22 +1495,41 @@ $('cgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');if
   if(e.target.closest('#pgAdd')){T('party_calc_add',{guests:PG});setQty('p048',partyKg());toast('اتضاف '+fmt(partyKg())+' كيلو محشي مشكل');return}
   if(e.target.closest('#pgBox')){OPENG='events';openCat('offers');setTimeout(()=>{const el=$('fold-events');if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-(document.querySelector('.strip')?.offsetHeight||0)-8,behavior:'instant'})},50)}});
 function renderGridOld(){$('cgrid').innerHTML=cats().map(c=>`<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`).join('')}
+function renderTaskSuggestions(key){
+  const host=$('sections');if(!host)return;
+  const old=$('taskSuggestions');if(old)old.remove();
+  const task=SHOP_TASKS.find(t=>t.key===key);if(!task)return;
+  const source=items.filter(p=>task.sections.includes(p.section));
+  const ids=[];
+  ADDON_RULES.forEach(([matches,list])=>{if(source.some(p=>matches(p.id)))ids.push(...list)});
+  const chosen=[...new Set(ids)].filter(id=>byId[id]&&!byId[id].off&&!offerOf(id)&&!cart[id]&&!source.some(p=>p.id===id)).slice(0,3);
+  if(!chosen.length)return;
+  host.insertAdjacentHTML('afterbegin',`<section class="task-suggestions" id="taskSuggestions"><div class="task-suggest-head"><div><span>كمّل طبختك</span><h2>ممكن تحتاج معاها</h2></div><small>اقتراحات من المنيو</small></div><div class="list">${chosen.map(id=>rowHTML(byId[id])).join('')}</div></section>`);
+}
 function applyView(){const q=$('q').value.trim();const v=q?'search':VIEW;document.body.dataset.view=v;
-  document.querySelectorAll('#sections .sec').forEach(x=>x.hidden=!(v==='search'||(v==='cat'&&CUR===x.id)));
+  const task=SHOP_TASKS.find(t=>t.key===CUR);
+  document.querySelectorAll('#sections .sec').forEach(x=>{
+    const sec=x.querySelector('h2')?.textContent?.trim();
+    x.hidden=!(v==='search'||(v==='cat'&&CUR===x.id)||(v==='task'&&task?.sections.includes(sec)));
+  });
   if(v==='cat')$('offers').hidden=CUR!=='offers'||!OGROUPS.length;
+  else $('offers').hidden=true;
   {const L=cats(),i=L.findIndex(x=>x.id===CUR),cn=$('catNext');if(cn){if(v==='cat'&&i>-1&&CUR!=='offers'){const nx=L[(i+1)%L.length];cn.innerHTML=`<button type="button" class="al" data-allcats>📋 كل الأقسام</button><button type="button" class="nx" data-cat="${nx.id}">القسم اللي بعده ‹<small>${esc(nx.name)}</small></button>`;cn.hidden=false}else cn.hidden=true}}
-  const c=cats().find(c=>c.id===CUR);$('catTitle').textContent=v==='search'?'نتايج البحث':(c?c.name:'');
-  document.querySelectorAll('#strip a').forEach(a=>a.setAttribute('aria-current',v==='cat'&&a.dataset.s===CUR))}
+  const c=cats().find(c=>c.id===CUR);$('catTitle').textContent=v==='search'?'نتايج البحث':(task?task.title:(c?c.name:''));
+  document.querySelectorAll('#strip a').forEach(a=>a.setAttribute('aria-current',v==='cat'&&a.dataset.s===CUR));
+  if(v==='task')renderTaskSuggestions(CUR);else $('taskSuggestions')?.remove();
+}
 function openCat(id,push=true){VIEW='cat';CUR=id;try{const c=cats().find(c=>c.id===id);T('open_category',{category:c?c.name:id})}catch(_){}if(push)try{history.pushState({c:id},'','#c-'+id)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'});const a=document.querySelector(`#strip a[data-s="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'})}
+function openTask(key,push=true){const t=SHOP_TASKS.find(x=>x.key===key);if(!t)return;VIEW='task';CUR=key;T('open_task',{task:t.title});if(push)try{history.pushState({task:key},'','#task-'+key)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 function goHome(push=true){VIEW='home';CUR='';if($('q').value){$('q').value='';renderMenu.lastQ='';renderMenu()}if(push&&location.hash)try{history.pushState({},'',location.pathname+location.search)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
-$('cgrid').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
+$('cgrid').addEventListener('click',e=>{const t=e.target.closest('[data-task]');if(t){openTask(t.dataset.task);return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
 $('cgrid').addEventListener('click',e=>{if(e.target.closest('[data-focus-search]'))$('heroQ').click()});
 function goMenu(){goHome();setTimeout(()=>{const m=$('mnu');if(m)scrollTo({top:m.getBoundingClientRect().top+scrollY-10,behavior:'instant'})},40)}
 $('backCats').addEventListener('click',()=>goMenu());
 $('catNext').addEventListener('click',e=>{if(e.target.closest('[data-allcats]')){goMenu();return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
 if(BF_ON){$('bfBanner').hidden=false;$('bfBanner').addEventListener('click',()=>{T('bf_banner',{});OPENG='bf';openCat('offers')})}
 $('strip').addEventListener('click',e=>{const a=e.target.closest('a[data-s]');if(!a)return;e.preventDefault();openCat(a.dataset.s)},true);
-addEventListener('popstate',()=>{const m=location.hash.match(/^#c-(.+)/);if(m)openCat(m[1],false);else goHome(false)});
+addEventListener('popstate',()=>{const t=location.hash.match(/^#task-(.+)/);const m=location.hash.match(/^#c-(.+)/);if(t)openTask(t[1],false);else if(m)openCat(m[1],false);else goHome(false)});
 document.addEventListener('click',e=>{const a=e.target.closest('a[href="#offers"],a[href="#menu"]');if(!a)return;e.preventDefault();if(a.getAttribute('href')==='#offers')openCat('offers');else goHome()});
 try{const f=$('cgFoot');const fx=document.querySelector('.banner .facts');if(fx)f.appendChild(fx);const h=document.querySelector('header .how');const fb=document.querySelector('.fbcard');if(h)f.appendChild(h);if(fb)f.appendChild(fb)}catch(_){}
 document.body.insertAdjacentHTML('beforeend','<div id="zoom" hidden><button type="button" aria-label="اقفل">✕</button><figure><img alt=""><figcaption></figcaption></figure></div>');
