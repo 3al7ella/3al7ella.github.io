@@ -324,13 +324,13 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .vt small{display:block;color:var(--muted);font-weight:700;font-size:11px;line-height:1.3}
 .v-raw .vt b{color:var(--pot)}.v-done .vt b{color:var(--leaf)}
 .vp{font-weight:900;white-space:nowrap;font-size:15px}.vp small{color:var(--muted);font-size:11px;font-weight:700;margin-inline-start:2px}
-.mnote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
-.mnote>div{border-radius:14px;padding:10px 12px;display:grid;gap:2px;border:1.5px solid}
+.mnote{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.mnote>div,.mnote>.v-ready{min-width:0;border-radius:14px;padding:10px 9px;display:grid;gap:2px;border:1.5px solid;text-align:right;font:inherit;cursor:pointer}.mnote>.v-ready{background:#edf4e8;border-color:#71966b;color:inherit}.mnote>.v-ready b{color:#477447}.mnote>.v-ready i{font-style:normal;font-size:20px}.mnote>.v-ready span{font-size:13px;font-weight:700;color:var(--muted)}
 .mnote i{font-style:normal;font-size:20px}
 .mnote b{font-size:16px}.mnote span{font-size:13px;font-weight:700;color:var(--muted)}
 .mnote .v-raw{background:var(--brand-soft);border-color:var(--brand)}.mnote .v-raw b{color:var(--pot)}
 .mnote .v-done{background:var(--leaf-soft);border-color:var(--leaf)}.mnote .v-done b{color:var(--leaf)}
-@media (max-width:360px){.vt small{display:none}}@media (max-width:420px){.mnote span{font-size:12px}}
+@media (max-width:360px){.vt small{display:none}}@media (max-width:420px){.mnote span,.mnote>.v-ready span{font-size:11px}.mnote b{font-size:14px}.mnote>div,.mnote>.v-ready{padding:9px 7px}}
 
 .barhint{flex-basis:100%;text-align:center;font-weight:800;font-size:13.5px;color:var(--leaf);background:var(--leaf-soft);border-radius:12px;padding:5px 10px;margin-bottom:6px}.barhint.ok{color:#fff;background:var(--leaf)}.bar .wrap{flex-wrap:wrap}
 .addon{margin:12px 0 4px;border-top:1px dashed var(--line);padding-top:10px}.addon h4{margin:0 0 8px;font-size:16px;font-weight:900}.addon .list{display:grid;gap:8px}.addon .dot{flex-basis:56px;height:56px}
@@ -1301,7 +1301,7 @@ function rowHTML(p){const q=cart[p.id]||0;const half=HALF(p.unit);
   <div class="info"><b>${p.section==='توفير الفريزر'&&!/كرنب/.test(p.name)?'❄️ عرض فريزر ':''}${esc(p.name)}</b>${p.desc&&!/^(جديد|مميز)$/.test(p.desc)?`<small class="desc">${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج <span>/ ${esc(p.unit)}</span></span></div>
   <div class="step">${q?`<button type="button" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num" aria-live="polite">${fmt(q)}</output>`:''}<button type="button" class="add" data-d="1" aria-label="زوّد ${esc(p.name)}${half?' نص كيلو':''}">+</button></div></div>`}
 
-const MAHSHI_NOTE=`<div class="mnote"><div class="v-raw"><i>🔥</i><b>ع التسوية</b><span>محشي ملفوف ومتسبك، تحطه في الحلة وتطبخه في البيت</span></div><div class="v-done"><i>✅</i><b>مستوي</b><span>مطبوخ وجاهز، تسخّنه وتاكل على طول</span></div></div>`;
+const MAHSHI_NOTE=`<div class="mnote"><div class="v-raw"><i>🔥</i><b>ع التسوية</b><span>محشي ملفوف ومتسبك، تكمل تسويته في البيت</span></div><div class="v-done"><i>✅</i><b>مستوي</b><span>مطبوخ وجاهز، تسخّنه وتاكل على طول</span></div><button type="button" class="v-ready" data-open-ready><i>🥬</i><b>جاهز للحشو</b><span>خضار وورق مجهّز للحشو</span></button></div>`;
 function listHTML(list){const seen=new Set();return list.map(p=>{const g=PAIR_OF[p.id];if(!g)return rowHTML(p);if(seen.has(g))return '';seen.add(g);return pairHTML(PAIRS[g])}).join('')}
 function renderMenu(){const q=$('q').value.trim();const norm=s=>s.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');const nq=norm(q);
   let html='';secs.forEach((s,i)=>{const list=items.filter(p=>p.section===s&&(!q||MATCH(p.name+' '+p.section+' '+p.desc,q)));if(!list.length)return;
@@ -1314,6 +1314,7 @@ function renderMenu(){const q=$('q').value.trim();const norm=s=>s.replace(/[أإ
   $('menu').style.minHeight=q?'100vh':'';
   $('sres').hidden=!q;$('sres').textContent=q?(nItems+nOff?`لقينا ${nItems?fmt(nItems)+' صنف':''}${nItems&&nOff?' و':''}${nOff?fmt(nOff)+' عرض':''}`:'مفيش نتايج'):'';
   $('strip').innerHTML=(q||!OGROUPS.length?'':'<a href="#c-offers" data-s="offers">🔥 العروض</a>')+secs.map((s,i)=>`<a href="#c-s${i}" data-s="s${i}">${esc(s)}</a>`).join('');renderGrid();applyView()}
+document.addEventListener('click',e=>{if(e.target.closest('[data-open-ready]')){const i=secs.indexOf('جاهز على الحشو');if(i>=0){openCat('s'+i);setTimeout(()=>{const el=document.getElementById('s'+i);if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-12,behavior:'smooth'})},80)}return}});
 document.addEventListener('click',e=>{const b=e.target.closest('.row .step button, .vrow .step button');if(!b)return;const id=b.closest('[data-id]').dataset.id;const p=byId[id];const st=HALF(p.unit)?0.5:1;setQty(id,(cart[id]||0)+(+b.dataset.d)*st)});
 let menuRenderTimer;
 $('q').addEventListener('input',()=>{clearTimeout(menuRenderTimer);menuRenderTimer=setTimeout(()=>{const had=renderMenu.lastQ;renderMenu();const q=$('q').value.trim();renderMenu.lastQ=q;if(q&&!had){const t=$('offers').hidden?$('menu'):$('offers');const y=t.getBoundingClientRect().top+scrollY-($('q').closest('nav').offsetHeight)-8;if(Math.abs(y-scrollY)>40)scrollTo({top:y,behavior:'instant'})}},90);});
