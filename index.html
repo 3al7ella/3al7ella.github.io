@@ -1467,7 +1467,7 @@ function renderGrid(){
     const cs=L.filter(c=>g.sections.includes(c.name));
     if(!cs.length)return;
     const first=cs[0],names=cs.map(c=>c.name).join(' · ');
-    h+=`<button type="button" class="journey-card" data-task="${g.key}">${first.img?`<img src="${first.img}" alt="" loading="lazy" decoding="async">`:`<span class="journey-emoji">${g.emoji}</span>`}<span class="journey-copy"><b>${g.title}</b><small>${g.desc}</small><i>${esc(names)}</i></span><span class="journey-arrow">‹</span></button>`;
+    h+=`<button type="button" class="journey-card" data-task="${g.key}">${first.img?`<img src="${first.img}" alt="" loading="lazy" decoding="async">`:`<span class="journey-emoji">${g.emoji}</span>`}<span class="journey-copy"><b>${g.title}</b><small>${g.desc}</small>${g.key==='mahshi'?'<span class="journey-states"><i>ع التسوية</i><i>مستوي</i><i>جاهز للحشو</i></span>':''}<i>${esc(names)}</i></span><span class="journey-arrow">‹</span></button>`;
   });
   const off=L.find(c=>c.id==='offers');
   if(off)h+=`<button type="button" class="journey-offer" data-cat="offers"><span class="journey-fire">٪</span><span><b>عايز توفر؟ شوف العروض</b><small>${fmt(off.n)} عرض متاح · اختار اللي يناسب بيتك</small></span><i>‹</i></button>`;
