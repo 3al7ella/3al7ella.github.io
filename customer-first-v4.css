@@ -344,3 +344,41 @@ input,select,textarea{font-size:16px}
 #cgrid .bf-footnote{margin:11px 2px 0;color:#77563e;font-size:10px;font-weight:800}
 #cgrid .bf-offer:target{border-color:#d9362b;box-shadow:0 0 0 2px rgba(217,54,43,.13)}
 @media(min-width:700px){#cgrid .bf-offers{padding:20px}#cgrid .bf-offer-list{grid-template-columns:repeat(2,minmax(0,1fr))}#cgrid .bf-offer summary{min-height:74px}}
+
+
+/* Black Friday — match the approved two-column category-card browsing style */
+#cgrid .bf-offers{margin:0 0 22px;padding:16px 12px 14px;background:#F8E9D4;border:0;border-radius:22px;box-shadow:none;direction:rtl}
+#cgrid .bf-offers-head{margin-bottom:13px;text-align:right}
+#cgrid .bf-kicker{background:#D9362B;color:#fff}
+#cgrid .bf-offers-head h2{color:#713819;font-size:23px}
+#cgrid .bf-offers-head p{color:#795b46;font-size:12px}
+#cgrid .bf-quick{display:none!important}
+#cgrid .bf-offer-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+#cgrid .bf-offer{min-width:0;border:0;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 5px 15px rgba(77,39,17,.09);transition:box-shadow .18s ease}
+#cgrid .bf-offer summary{position:relative;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:7px;padding:13px 11px 12px;min-height:142px;cursor:pointer;text-align:center}
+#cgrid .bf-offer summary:after{content:'اعرفي التفاصيل  ＋';display:block;margin-top:auto;padding-top:7px;color:#D9362B;font-size:10px;font-weight:900}
+#cgrid .bf-offer[open] summary:after{content:'إخفاء التفاصيل  −'}
+#cgrid .bf-ico{width:42px;height:42px;flex-basis:42px;margin:0 auto;background:#FFF0DF;border-radius:14px;font-size:23px}
+#cgrid .bf-summary{display:flex;flex:0 0 auto;min-width:0;align-items:center;gap:4px}
+#cgrid .bf-summary b{font-size:14px;line-height:1.4;color:#6e3519}
+#cgrid .bf-summary small{font-size:10px;line-height:1.5;color:#80624e}
+#cgrid .bf-offer summary strong{align-self:center;flex:0 0 auto;border-radius:999px;background:#8D3B16;color:#fff;padding:7px 14px;font-size:16px}
+#cgrid .bf-detail{padding:12px;border-top:1px solid #f0e2d3;font-size:12px;line-height:1.85}
+#cgrid .bf-offer[open]{grid-column:1/-1;box-shadow:0 0 0 2px rgba(217,54,43,.16),0 7px 18px rgba(77,39,17,.1)}
+#cgrid .bf-offer[open] summary{display:grid;grid-template-columns:42px 1fr auto;align-items:center;text-align:right;min-height:72px;padding:10px 12px}
+#cgrid .bf-offer[open] .bf-ico{margin:0}
+#cgrid .bf-offer[open] .bf-summary{align-items:flex-start}
+#cgrid .bf-offer[open] summary:after{grid-column:1/-1;text-align:center;padding-top:2px}
+#cgrid .bf-order{min-height:44px;background:#D9362B}
+@media(min-width:700px){
+ #cgrid .bf-offers{padding:20px}
+ #cgrid .bf-offer-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+ #cgrid .bf-offer[open]{grid-column:1/-1}
+}
+@media(max-width:360px){
+ #cgrid .bf-offer-list{gap:7px}
+ #cgrid .bf-offer summary{padding:10px 7px;min-height:138px}
+ #cgrid .bf-summary b{font-size:12px}
+ #cgrid .bf-summary small{font-size:9px}
+ #cgrid .bf-offer summary strong{font-size:14px;padding:6px 10px}
+}
