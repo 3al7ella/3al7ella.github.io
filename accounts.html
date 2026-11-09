@@ -100,7 +100,15 @@ async function api(payload){const {data:{session:s}}=await sb.auth.getSession();
 function collection(c){if(!collectionCache.has(c))collectionCache.set(c,records.filter(x=>x.collection===c).map(x=>({...x.data,_id:x.record_id})));return collectionCache.get(c).slice()}
 let selectedMonth="all";
 function scopedCollection(c){return collection(c).filter(x=>selectedMonth==="all"||monthOf(x)===selectedMonth||((c==="months")&&x._id===selectedMonth));}
-function setupMonthFilter(){const keys=[...new Set(records.flatMap(r=>{const d=r.data||{};const m=String(d.date||d.month||r.record_id||"").slice(0,7);return /^\d{4}-\d{2}$/.test(m)?[m]:[]}))].sort().reverse();const sel=$("globalMonth");if(!sel)return;const latest=keys[0]||today().slice(0,7);selectedMonth=sel.value&&sel.value!=="all"?sel.value:latest;sel.innerHTML='<option value="all">كل الشهور</option>'+keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");sel.value=selectedMonth;$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";sel.onchange=()=>{selectedMonth=sel.value;if(selectedMonth!=="all"){$("laborMonth").value=selectedMonth;$("purchaseMonth").value=selectedMonth}$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";render()};}
+function setupMonthFilter(){
+ const keys=[...new Set([...records.flatMap(r=>{const d=r.data||{},m=String(d.date||d.month||r.record_id||"").slice(0,7);return /^\d{4}-\d{2}$/.test(m)?[m]:[]}),today().slice(0,7)])].sort().reverse();
+ const sel=$("globalMonth");if(!sel)return;const latest=today().slice(0,7);
+ selectedMonth=sel.value&&sel.value!=="all"?sel.value:latest;
+ sel.innerHTML='<option value="all">كل الشهور</option>'+keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
+ sel.value=selectedMonth;
+ $("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";
+ sel.onchange=()=>{selectedMonth=sel.value;if(selectedMonth!=="all"){$("laborMonth").value=selectedMonth;$("purchaseMonth").value=selectedMonth}$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";render()};
+}
 const LOCKED_MONTHS=new Set(["2026-10"]);
 function isLockedMonth(m){const key=String(m||"").slice(0,7),saved=collection("months").find(x=>x._id===key);return LOCKED_MONTHS.has(key)||!!saved?.closedAt||!!saved?.closeSummary}
 function isLockedRecord(c,id,d){return c==="months"?isLockedMonth(id):isLockedMonth(monthOf(d||{}))}
