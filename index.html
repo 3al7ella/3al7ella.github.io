@@ -211,7 +211,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .oc .pic{position:relative;aspect-ratio:16/9;max-width:100%;height:auto;background:#f7eee4;overflow:hidden}
 .oc .pic img{width:100%;height:100%;object-fit:contain;padding:8px;display:block}.oc .pic.noimg{aspect-ratio:auto;height:96px;display:grid;place-items:center;font-size:48px}
 @media (max-width:719px){.oc.big .pic{height:170px;aspect-ratio:auto}.oc.big .pic img{object-fit:contain;padding:8px}}
-.oc .badges{position:absolute;top:10px;right:10px;display:flex;gap:6px;flex-wrap:wrap}
+.oc .badges{position:relative;inset:auto;display:flex;gap:6px;flex-wrap:wrap;padding:12px 14px 0}.oc .badges:empty{display:none}
 .bdg{background:var(--ink);color:var(--bg);font-weight:900;font-size:12px;border-radius:999px;padding:3px 10px}
 .bdg.hot{background:var(--brand);color:var(--brand-ink)}
 .bdg.green{background:var(--leaf);color:#fff}
@@ -245,7 +245,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .fzhead img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;max-width:100%}
 .fzhead b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;display:block}
 .fzhead p{margin:4px 0 0;font-weight:700;color:var(--muted)}
-.fzhead .big100{font-weight:900;font-size:20px;color:var(--pot)}
+.fzhead .big100{font-weight:900;font-size:20px;color:var(--pot)}\n.fzt-emoji{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:12px;background:var(--brand-soft);font-size:22px}
 @media (max-width:460px){.fzhead{display:block}}
 
 /* picker */
@@ -1204,8 +1204,8 @@ function offerCard(o){const p=byId[o.id];const q=qtyOf(o.id);const saveAmt=o.bef
   <div class="ob"><div class="ot"><small>عرض</small><b>${esc(o.title)}</b></div>${o.tl?`<div class="tl">${esc(o.tl)}</div>`:''}
   ${o.inc.length?`<ul class="inc">${o.inc.map(x=>`<li>${x[0]?`<i class="num">${esc(x[0])}</i>`:'<i>✓</i>'}<span>${esc(x[1])}</span></li>`).join('')}</ul>`:''}
   <div class="pricebox"><div class="pv">${saveAmt?`<s class="num">لوحدهم ${fmt(o.before)} ج</s>`:''}<strong class="num">${fmt(p.price)} <span>جنيه</span></strong>${saveAmt||o.free?`<span class="save">${saveAmt?'وفّر '+fmt(saveAmt+(o.free?DELIVERY:0))+' ج':'التوصيل عليه مجاني'}</span>`:''}</div>${btn}</div></div></article>`}
-function freezerHTML(){const prices=[...new Set(FREEZER.map(p=>p.price))];return `<div class="fzhead"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
-  <div class="fz">${FREEZER.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}"><span class="fzt-emoji" aria-hidden="true">🧊</span><div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
+function freezerHTML(rows=FREEZER){const prices=[...new Set(rows.map(p=>p.price))];return `<div class="fzhead"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
+  <div class="fz">${rows.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}"><span class="fzt-emoji" aria-hidden="true">🧊</span><div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
 const GTITLE={bf:['🖤 بلاك فرايدي ع الحلة',''],storage:['🧊 عروض التخزين',''],chicken:['عروض الفراخ','<span class="free">🚚 التوصيل مجاني</span>'],mahshi:['عروض المحاشي',''],freezer:['توفير الفريزر',''],events:['المناسبات',''],meat:['عروض اللحمة',''],garlic:['عروض التوم','']};
 function renderChips(){$('ofilter').innerHTML=`<button type="button" data-g="all" aria-pressed="${OG==='all'}">كل العروض</button>`+OGROUPS.map(([g,s])=>`<button type="button" data-g="${esc(g)}" aria-pressed="${OG===g}">${esc(s)}</button>`).join('')}
 const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
@@ -1216,20 +1216,21 @@ function renderOffers(){
   $('offers').hidden=!visible;
   $('ofilter').hidden=false;
   renderChips();
+  const query=$('q').value.trim();
   const groups=OG==='all'?OGROUPS:OGROUPS.filter(([g])=>g===OG);
   let html='';
   groups.forEach(([g,label])=>{
-    const list=OFFERS.filter(o=>o.g===g);
-    const freezer=g==='storage'?FREEZER:[];
+    const list=OFFERS.filter(o=>o.g===g&&MATCH([o.title,o.tl,...o.inc.flat()].join(' '),query));
+    const freezer=g==='storage'?FREEZER.filter(p=>MATCH(p.name+' '+p.desc,query)):[];
     if(!list.length&&!freezer.length)return;
     const title=(GTITLE[g]&&GTITLE[g][0])||label;
     html+=`<section class="ogroup"><h3 class="bfh">${title}</h3>`;
-    if(freezer.length)html+=freezerHTML();
+    if(freezer.length)html+=freezerHTML(freezer);
     if(list.length)html+=`<div class="ogrid">${list.map(offerCard).join('')}</div>`;
     html+='</section>';
     window.__offHits+=list.length+freezer.length;
   });
-  $('offersBody').innerHTML=html||'<div class="empty">مفيش عروض في القسم ده حاليًا.</div>';
+  $('offersBody').innerHTML=html||'<div class="empty">مفيش عروض مطابقة للبحث ده.</div>';
 }
 $('ofilter').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;OG=b.dataset.g;renderOffers()});
 document.addEventListener('click',e=>{
@@ -1523,6 +1524,7 @@ function applyView(){const q=$('q').value.trim();const v=q?'search':VIEW;documen
     x.hidden=!(v==='search'||(v==='cat'&&CUR===x.id)||(v==='task'&&task?.sections.includes(sec)));
   });
   if(v==='cat')$('offers').hidden=CUR!=='offers'||!OGROUPS.length;
+  else if(v==='search')$('offers').hidden=!(window.__offHits>0);
   else $('offers').hidden=true;
   {const L=cats(),i=L.findIndex(x=>x.id===CUR),cn=$('catNext');if(cn){if(v==='cat'&&i>-1&&CUR!=='offers'){const nx=L[(i+1)%L.length];cn.innerHTML=`<button type="button" class="al" data-allcats>📋 كل الأقسام</button><button type="button" class="nx" data-cat="${nx.id}">القسم اللي بعده ‹<small>${esc(nx.name)}</small></button>`;cn.hidden=false}else cn.hidden=true}}
   const c=cats().find(c=>c.id===CUR);$('catTitle').textContent=v==='search'?'نتايج البحث':(task?task.title:(c?c.name:''));
@@ -1591,7 +1593,7 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
 
 /* عرض اليوم: glowing button in the header + sheet */
 (function(){const top=document.querySelector('header.hero .top');if(!top)return;
-  document.body.insertAdjacentHTML('beforeend','<div class="dealpop" id="dealPop" hidden role="dialog" aria-modal="true" aria-labelledby="dlT"><div class="dp"><button type="button" class="dpx" data-dclose aria-label="اقفل">✕</button><div class="dpimg"><img src="f-mahshi2.jpg" alt=""><span class="dpk">🔥 عرض اليوم</span></div><h3 id="dlT">عرض المحشي 3 كيلو ع التسوية</h3><ul class="dpl"><li>كيلو كرنب</li><li>كيلو ورق عنب</li><li>كيلو مشكل</li></ul><div class="dpp"><b class="num">300</b><span>جنيه</span><s class="num">390</s></div><div class="dpt">⏳ انهارده وبكره بس</div><button type="button" class="dpgo" id="dealGo">اطلب الآن</button></div></div>');
+  document.body.insertAdjacentHTML('beforeend','<div class="dealpop" id="dealPop" hidden role="dialog" aria-modal="true" aria-labelledby="dlT"><div class="dp"><button type="button" class="dpx" data-dclose aria-label="اقفل">✕</button><div class="dpk">🔥 عرض اليوم</div><h3 id="dlT">عرض المحشي 3 كيلو ع التسوية</h3><ul class="dpl"><li>كيلو كرنب</li><li>كيلو ورق عنب</li><li>كيلو مشكل</li></ul><div class="dpp"><b class="num">300</b><span>جنيه</span><s class="num">390</s></div><div class="dpt">⏳ انهارده وبكره بس</div><button type="button" class="dpgo" id="dealGo">اطلب الآن</button></div></div>');
   const P=$('dealPop');const close=()=>{P.hidden=true;document.body.classList.remove('spopen')};
   P.addEventListener('click',e=>{if(e.target===P||e.target.closest('[data-dclose]'))close()});
   $('dealGo').addEventListener('click',()=>{T('deal_add',{});setQty('p194',(cart.p194||0)+1);close();toast('اتضاف عرض اليوم للسلة 🔥')});
