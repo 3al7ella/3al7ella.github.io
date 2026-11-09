@@ -1480,8 +1480,13 @@ function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'
 function heroSlides(){return []}
 function heroHTML(){return ''}
 function railItems(names){const seen=new Set();return items.filter(p=>names.includes(p.section)&&img(p.img)&&!p.off).filter(p=>{const k=(PAIR_OF[p.id]||p.id);if(seen.has(k))return false;seen.add(k);return true}).slice(0,10)}
+function homeOfferCard(o){
+  const p=byId[o.id];if(!p)return '';
+  const saving=o.before>p.price?o.before-p.price:0;
+  const detail=o.inc.length?'<details><summary>تفاصيل العرض</summary><ul>'+o.inc.map(x=>'<li>'+esc((x[0]?x[0]+' ':'')+x[1])+'</li>').join('')+'</ul></details>':'';
+  return '<article class="home-offer-card"><b>'+esc(o.title)+'</b><small>'+esc(o.tl||'عرض بلاك فرايدي')+'</small><strong>'+fmt(p.price)+' جنيه</strong>'+(saving?'<em>بتوفّري '+fmt(saving)+' جنيه</em>':'')+detail+'<button type="button" data-ok="'+p.id+'" data-d="1">أضف للأوردر</button></article>';
+}
 function renderGrid(){
-  const L=cats();
   let h='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
   HOME_GROUPS.forEach(g=>{
     const im='<img src="'+g.image+'" alt="" width="600" height="420" loading="eager" decoding="async">';
@@ -1493,8 +1498,8 @@ function renderGrid(){
   });
   h+='</section>';
   const homeOffers=OFFERS.filter(o=>['boxes','bf','storage'].includes(o.g));
-  const offerCards=homeOffers.map(offerCard).join('');
-  const freezerCards=FREEZER.map(p=>'<article class="home-offer-card"><b>'+esc(p.name)+'</b><small>'+esc(p.desc||'عرض بلاك فرايدي')+'</small><strong>'+fmt(p.price)+' جنيه</strong><button type="button" data-ok="'+p.id+'" data-d="1">أضف للأوردر</button></article>').join('');
+  const offerCards=homeOffers.map(homeOfferCard).join('');
+  const freezerCards=FREEZER.map(p=>'<article class="home-offer-card"><b>'+esc(p.name)+'</b><small>'+esc(p.desc||'عرض بلاك فرايدي')+'</small><strong>'+fmt(p.price)+' جنيه</strong><details><summary>تفاصيل العرض</summary><p>'+esc(p.desc||p.name)+'</p></details><button type="button" data-ok="'+p.id+'" data-d="1">أضف للأوردر</button></article>').join('');
   h+='<section class="home-offers" aria-label="العروض الجديدة"><div class="home-offers-head"><h2>عروض ع الحلة 🖤</h2><small>البوكسات وبلاك فرايدي</small></div><div class="home-offer-rail">'+offerCards+freezerCards+'</div></section>';
   h+='<section class="home-after"><p class="home-every">معاك في كل بيت ❤️</p><a class="home-wa-card" href="https://wa.me/201275165496" target="_blank" rel="noopener"><b>احفظ الرقم وتابع الاستوري</b><span>01275165496</span></a></section>';
   $('cgrid').innerHTML=h;
