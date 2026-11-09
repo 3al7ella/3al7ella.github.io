@@ -108,8 +108,7 @@ function scopedCollection(c){return collection(c).filter(x=>selectedMonth==="all
 function setupMonthFilter(){
  const keys=[...new Set([...records.flatMap(r=>{const d=r.data||{},m=String(d.date||d.month||r.record_id||"").slice(0,7);return /^\d{4}-\d{2}$/.test(m)?[m]:[]}),today().slice(0,7)])].sort().reverse();
  const sel=$("globalMonth");if(!sel)return;const latest=today().slice(0,7);
- selectedMonth=(selectedMonth==="all"||keys.includes(selectedMonth))?selectedMonth:latest;
- if(!sel.dataset.ready&&!keys.includes(selectedMonth))selectedMonth=latest;
+ selectedMonth=!sel.dataset.ready?latest:((selectedMonth==="all"||keys.includes(selectedMonth))?selectedMonth:latest);
  sel.innerHTML='<option value="all">كل الشهور</option>'+keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
  sel.value=selectedMonth;sel.dataset.ready="1";
  $("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";
