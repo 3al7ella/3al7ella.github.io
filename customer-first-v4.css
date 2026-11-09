@@ -263,3 +263,84 @@ input,select,textarea{font-size:16px}
 .cart-summary-title{font-size:16px;font-weight:900;margin:14px 0 6px;color:var(--ink)}
 .delivery-hint{margin:5px 0 9px;padding:8px 11px;border-radius:10px;background:var(--brand-soft);color:var(--pot);font-size:12px;font-weight:800;line-height:1.6}
 #totals .tot.big{border-top:1px solid var(--line);padding-top:12px;margin-top:8px}
+
+
+/* Homepage direction approved 09 Nov 2026 — category colors and offer placement */
+#cgrid .home-offer{order:0;margin:0 0 1px;min-height:66px;border-radius:18px;
+  background:linear-gradient(115deg,#d9362b,#a9251b);box-shadow:0 8px 20px rgba(169,37,27,.2)}
+#cgrid .home-offer .journey-fire{background:rgba(255,255,255,.18)}
+#cgrid .home-offer>i{font-style:normal;font-size:12px;font-weight:900;white-space:nowrap}
+#cgrid .journey-intro{order:1}
+#cgrid .journey-grid{order:2}
+#cgrid .home-picks{order:3}
+#cgrid .all-depts{order:4}
+#cgrid .party{order:5}
+#cgrid .journey-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#cgrid .journey-card{border:0;box-shadow:0 7px 18px rgba(65,30,12,.11);border-radius:20px}
+#cgrid .journey-card>img{aspect-ratio:1.42/1}
+#cgrid .journey-copy{padding:11px 12px 13px;min-height:92px}
+#cgrid .journey-copy>b{font-size:18px;line-height:1.35}
+#cgrid .journey-copy>small{font-size:11px;font-weight:800}
+#cgrid .tone-veg{background:#D9362B;color:#fff}
+#cgrid .tone-veg .journey-copy>small{color:#fff0e8}
+#cgrid .tone-prepared{background:#F8E9D4;color:#60351f}
+#cgrid .tone-prepared .journey-copy>small{color:#80553b}
+#cgrid .tone-mahshi{background:#F5B51B;color:#442312}
+#cgrid .tone-mahshi .journey-copy>small{color:#5a351b}
+#cgrid .tone-meals{background:#A9251B;color:#fff}
+#cgrid .tone-meals .journey-copy>small{color:#ffe1d5}
+#cgrid .journey-subgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:7px}
+#cgrid .journey-subgrid button{display:flex;align-items:center;justify-content:center;gap:3px;
+  min-width:0;min-height:38px;padding:6px 5px;border:1.5px solid #9d6747;border-radius:11px;
+  background:#fff8ee;color:#633b24;font-family:inherit;font-size:10px;font-weight:800;line-height:1.35;cursor:pointer}
+#cgrid .journey-subgrid button i{font-style:normal;font-size:16px}
+#cgrid .tone-prepared .journey-copy{min-height:114px}
+#cgrid .tone-prepared .journey-arrow{display:none}
+#cgrid .journey-card:focus-visible{outline:3px solid #e4521b;outline-offset:3px}
+#cgrid .home-offer:focus-visible,#cgrid .journey-subgrid button:focus-visible{outline:3px solid #e4521b;outline-offset:3px}
+@media(min-width:700px){
+ #cgrid .journey-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #cgrid .journey-card>img{aspect-ratio:1.2/1}
+}
+@media(max-width:390px){
+ #cgrid .journey-grid{gap:8px}
+ #cgrid .journey-copy{padding:9px;min-height:86px}
+ #cgrid .journey-copy>b{font-size:15px}
+ #cgrid .tone-prepared .journey-copy{min-height:108px}
+ #cgrid .journey-subgrid{gap:4px}
+ #cgrid .journey-subgrid button{font-size:9px;padding:5px 3px}
+ #cgrid .home-offer>i{font-size:10px}
+}
+
+
+/* Black Friday offers hub — compact navigation and expandable offer details */
+#cgrid .bf-offers{margin:0 0 22px;padding:16px 13px 14px;background:#fff8ed;border:1px solid #f1dfca;border-radius:22px;box-shadow:0 8px 24px rgba(77,39,17,.08);direction:rtl}
+#cgrid .bf-offers-head{text-align:right;margin-bottom:12px}
+#cgrid .bf-kicker{display:inline-flex;padding:5px 10px;border-radius:999px;background:#d9362b;color:#fff;font-size:11px;font-weight:900}
+#cgrid .bf-offers-head h2{margin:8px 0 4px;color:#713819;font-size:23px;line-height:1.3}
+#cgrid .bf-offers-head p{margin:0;color:#795b46;font-size:12px;font-weight:700;line-height:1.6}
+#cgrid .bf-quick{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:thin;scroll-snap-type:x proximity}
+#cgrid .bf-quick a{flex:0 0 auto;scroll-snap-align:start;text-decoration:none;border:1px solid #ead5bf;border-radius:999px;background:#fff;color:#6b3a20;padding:8px 11px;font-size:11px;font-weight:900;white-space:nowrap}
+#cgrid .bf-offer-list{display:grid;gap:8px}
+#cgrid .bf-offer{border:1px solid #ead9c8;border-radius:15px;background:#fff;overflow:hidden;scroll-margin-top:80px}
+#cgrid .bf-offer summary{list-style:none;display:flex;align-items:center;gap:9px;padding:11px 10px;cursor:pointer;min-height:62px}
+#cgrid .bf-offer summary::-webkit-details-marker{display:none}
+#cgrid .bf-ico{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;background:#fff0df;border-radius:12px;font-size:20px}
+#cgrid .bf-summary{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+#cgrid .bf-summary b{color:#6e3519;font-size:14px}
+#cgrid .bf-summary small{color:#80624e;font-size:10px;font-weight:700}
+#cgrid .bf-offer summary strong{flex:0 0 auto;border-radius:10px;background:#8d3b16;color:#fff;padding:7px 9px;font-size:13px;white-space:nowrap}
+#cgrid .bf-offer summary:after{content:'＋';color:#d94320;font-size:19px;font-weight:900;margin-right:2px}
+#cgrid .bf-offer[open] summary:after{content:'−'}
+#cgrid .bf-detail{padding:0 13px 13px;color:#503728;font-size:12px;font-weight:700;line-height:1.8}
+#cgrid .bf-detail p{margin:5px 0 9px}
+#cgrid .bf-items{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 10px}
+#cgrid .bf-items span{padding:5px 9px;border-radius:999px;background:#fff1e3;color:#75401f;font-size:11px;font-weight:800}
+#cgrid .bf-price-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0e5d9}
+#cgrid .bf-price-row b{color:#9e321c;white-space:nowrap}
+#cgrid .bf-detail ul{margin:5px 0 10px;padding-right:20px}
+#cgrid .bf-detail li{padding:1px 0}
+#cgrid .bf-order{display:flex;justify-content:center;align-items:center;min-height:42px;margin-top:10px;border-radius:12px;background:#d9362b;color:#fff;text-decoration:none;font-size:12px;font-weight:900;padding:8px 12px}
+#cgrid .bf-footnote{margin:11px 2px 0;color:#77563e;font-size:10px;font-weight:800}
+#cgrid .bf-offer:target{border-color:#d9362b;box-shadow:0 0 0 2px rgba(217,54,43,.13)}
+@media(min-width:700px){#cgrid .bf-offers{padding:20px}#cgrid .bf-offer-list{grid-template-columns:repeat(2,minmax(0,1fr))}#cgrid .bf-offer summary{min-height:74px}}
