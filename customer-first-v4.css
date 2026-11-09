@@ -428,3 +428,27 @@ main.wrap{gap:12px!important;padding-top:0!important}
  #cgrid .journey-copy{min-height:90px;padding:8px 6px 10px!important}
  #cgrid .tone-prepared .journey-copy{min-height:112px}
 }
+
+
+/* Final mobile usability pass — preserve menu data, original photos, logo and checkout */
+html,body{max-width:100%;overflow-x:clip}
+#cgrid .journey-card{min-height:0;min-width:0}
+#cgrid .journey-card>img{width:100%;aspect-ratio:1.22/1;object-fit:cover;object-position:center}
+#cgrid .journey-copy{flex:1 0 auto}
+#cgrid .journey-subgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#cgrid .journey-subgrid button{display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:44px;padding:7px 5px;border:1px solid rgba(255,255,255,.55);border-radius:12px;background:rgba(255,255,255,.82);color:#713819;font-weight:900;line-height:1.35}
+#cgrid .journey-subgrid button i{font-style:normal;font-size:18px}
+#cgrid .journey-card:focus-visible,#cgrid .journey-subgrid button:focus-visible{outline:3px solid #713819;outline-offset:3px}
+#cgrid .journey-card:not(.tone-prepared){cursor:pointer}
+.bnav{padding-bottom:env(safe-area-inset-bottom,0px)!important}
+.bnav [data-bn]{min-height:52px}
+@media(max-width:360px){
+  #cgrid .journey-copy>b{font-size:15px!important}
+  #cgrid .journey-copy>small{font-size:10px!important}
+  #cgrid .journey-subgrid{gap:5px}
+  #cgrid .journey-subgrid button{font-size:9px!important;padding-inline:3px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
