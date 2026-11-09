@@ -4,15 +4,15 @@ from PIL import Image
 import io, re, json, subprocess
 
 ROOT=Path(".")
-MAX_BYTES=80*1024
+MAX_BYTES=79000
 MAX_WIDTH=800
-EXTS={".jpg",".jpeg",".png"}
+EXTS={".jpg",".jpeg",".png",".webp"}
 SKIP={".git","node_modules",".github"}
 assets=[]
 for p in ROOT.rglob("*"):
     if not p.is_file() or p.suffix.lower() not in EXTS or any(x in SKIP for x in p.parts):
         continue
-    out=p.with_suffix(".webp")
+    out=p if p.suffix.lower()==".webp" else p.with_suffix(".webp")
     with Image.open(p) as im:
         im.load()
         has_alpha=("A" in im.getbands()) or ("transparency" in im.info)
@@ -52,7 +52,8 @@ for f in ROOT.rglob("*"):
     if s!=old: f.write_text(s,encoding="utf-8")
 
 for a in assets:
-    Path(a["from"]).unlink()
+    if Path(a["from"]) != Path(a["to"]):
+        Path(a["from"]).unlink()
 report={"converted":len(assets),"total_bytes":sum(x["bytes"] for x in assets),"largest_bytes":max((x["bytes"] for x in assets),default=0),"assets":assets}
 Path("image-optimization-report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
 print(json.dumps({k:report[k] for k in ("converted","total_bytes","largest_bytes")},ensure_ascii=False))
