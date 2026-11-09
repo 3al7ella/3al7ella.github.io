@@ -684,3 +684,15 @@ img{height:auto;}
   #cgrid .journey-card>img{aspect-ratio:1.6/1}
   #cgrid .journey-copy{min-height:100px}
 }
+
+/* Preserve the fixed mobile cart/navigation bar after homepage stylesheet consolidation */
+.bnav{grid-template-columns:1fr 1.3fr 1fr!important;z-index:1000}
+.bnav [data-bn="home"]{order:0}
+.bnav [data-bn="cart"]{order:1}
+.bnav [data-bn="menu"]{order:2}
+@media(min-width:600px){
+  #cgrid .journey-grid{gap:16px}
+  #cgrid .journey-card>img{aspect-ratio:1.6/1}
+  #cgrid .journey-copy>b{font-size:22px}
+  #cgrid .journey-copy>small{font-size:13px}
+}
