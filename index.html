@@ -1417,7 +1417,6 @@ function renderGrid(){
    let h=heroHTML();
    h+=`
 `;
-   h+=`<section class="journey-intro"><div><span>من مطبخنا لبيتك</span><h2>اختار إنت محتاج إيه؟</h2><p>أقسام واضحة توصّلك لطلبك بسرعة ومن غير لف كتير.</p></div><button type="button" data-focus-search aria-label="ابحث عن صنف">⌕ <small>دور على صنف</small></button></section>`;
    h+='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
    HOME_GROUPS.forEach(g=>{
      const c=L.find(x=>x.name===g.imageSection);
@@ -1443,7 +1442,6 @@ function renderGrid(){
 
    h+='<div id="revSlot"></div>';
 
-   h+=`<div class="party"><h3 class="cfam" style="margin-top:0">🎉 عندك عزومة؟ احسبها</h3><label>عدد الضيوف <span class="pstep"><button type="button" data-pg="-1" aria-label="أقل">−</button><output id="pgN" class="num">${fmt(PG)}</output><button type="button" data-pg="1" aria-label="أكتر">+</button></span></label><p id="pgOut">${partyTxt()}</p><div class="pbtns"><button type="button" class="go" id="pgAdd">ضيف ${fmt(partyKg())} كيلو محشي مشكل مستوي</button><button type="button" class="go alt" id="pgBox">شوف بوكسات الضيافة</button></div></div>`;
    $('cgrid').innerHTML=h;
    const bf=$('bfBanner');if(bf)bf.hidden=true;
    {const rv=$('revs'),rs=$('revSlot');if(rv&&rs)rs.replaceWith(rv)}
