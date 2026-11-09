@@ -1287,7 +1287,7 @@ function renderMenu(){const q=$('q').value.trim();const norm=s=>s.replace(/[أإ
   $('sections').innerHTML=html||(nOff?'':`<div class="empty">مفيش صنف بالاسم ده. جرّب كلمة تانية، أو <a href="https://wa.me/201275165496?text=${encodeURIComponent('عاوز أسأل على: '+q)}" target="_blank" rel="noopener">اسألنا على واتساب</a>.</div>`);
   $('menu').style.minHeight=q?'100vh':'';
   $('sres').hidden=!q;$('sres').textContent=q?(nItems+nOff?`لقينا ${nItems?fmt(nItems)+' صنف':''}${nItems&&nOff?' و':''}${nOff?fmt(nOff)+' عرض':''}`:'مفيش نتايج'):'';
-  $('strip').innerHTML=(q||!OGROUPS.length?'':'<a href="#c-offers" data-s="offers">🔥 العروض</a>')+secs.map((s,i)=>`<a href="#c-s${i}" data-s="s${i}">${esc(s)}</a>`).join('');renderGrid();applyView()}
+  $('strip').innerHTML=secs.map((s,i)=>`<a href="#c-s${i}" data-s="s${i}">${esc(s)}</a>`).join('');renderGrid();applyView()}
 document.addEventListener('click',e=>{if(e.target.closest('[data-open-ready]')){const i=secs.indexOf('جاهز على الحشو');if(i>=0){openCat('s'+i);setTimeout(()=>{const el=document.getElementById('s'+i);if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-12,behavior:'smooth'})},80)}return}});
 document.addEventListener('click',e=>{const b=e.target.closest('.row .step button, .vrow .step button');if(!b)return;const id=b.closest('[data-id]').dataset.id;const p=byId[id];const st=HALF(p.unit)?0.5:1;setQty(id,(cart[id]||0)+(+b.dataset.d)*st)});
 let menuRenderTimer;
