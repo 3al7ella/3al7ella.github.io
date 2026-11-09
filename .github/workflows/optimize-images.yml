@@ -1,0 +1,51 @@
+name: Optimize storefront images
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'site-bundle.css'
+      - 'tools/optimize_images.py'
+      - '.github/workflows/optimize-images.yml'
+      - '*.jpg'
+      - '*.jpeg'
+      - '*.png'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: image-optimization-main
+  cancel-in-progress: false
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install Pillow
+      - name: Convert all raster images to optimized WebP
+        run: python tools/optimize_images.py
+      - name: Commit optimized images and updated references
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No image changes required."
+          else
+            git commit -m "Optimize storefront images to WebP under 80KB"
+            git push
+          fi
+      - name: Report image sizes
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("image-optimization-report.json"))
+          print(f"Converted: {d['converted']} | total: {d['total_bytes']} bytes | largest: {d['largest_bytes']} bytes")
+          for x in d['assets']:
+              print(f"{x['to']}: {x['bytes']} bytes ({x['width']}x{x['height']})")
+          PY
