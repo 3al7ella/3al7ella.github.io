@@ -38,7 +38,18 @@ jobs:
             echo "No image changes required."
           else
             git commit -m "Optimize storefront images to WebP under 80KB"
-            git push
+            for attempt in 1 2 3; do
+              if git push origin HEAD:main; then exit 0; fi
+              echo "Remote changed during conversion; refreshing and retrying ($attempt/3)."
+              git fetch origin main
+              git reset --hard origin/main
+              python tools/optimize_images.py
+              git add -A
+              if git diff --cached --quiet; then echo "Images already optimized on main."; exit 0; fi
+              git commit -m "Optimize storefront images to WebP under 80KB"
+            done
+            echo "Could not push optimized images after 3 attempts."
+            exit 1
           fi
       - name: Report image sizes
         run: |
