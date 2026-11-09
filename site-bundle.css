@@ -677,3 +677,9 @@ img{height:auto;}
   #sections .row .desc,
   #sections .row .info small{font-size:13px!important}
 }
+
+#cgrid .tone-meat{background:#65351f;color:#fff}
+#cgrid .tone-meat .journey-copy>small{color:#f7dfc9}
+#cgrid .tone-offers{background:#ed4a0a;color:#fff}
+#cgrid .tone-offers .journey-copy>small{color:#fff0d8}
+#cgrid .tone-offers .journey-emoji{background:transparent;color:#fff}
