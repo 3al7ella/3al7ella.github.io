@@ -1000,7 +1000,7 @@ body.spopen{overflow:hidden}
 
 
 </style>
-<link rel="stylesheet" href="site-bundle.css?v=20261109-1">
+<link rel="stylesheet" href="site-bundle.css?v=20261109-2">
 </head>
 <body>
 
@@ -1486,7 +1486,7 @@ function renderGrid(){
   HOME_GROUPS.forEach(g=>{
     const im='<img src="'+g.image+'" alt="" width="600" height="420" loading="eager" decoding="async">';
     if(g.key==='prepared'){
-      h+='<article class="journey-card tone-prepared prepared-home">'+im+'<span class="journey-copy"><b>المصنعات</b><small>'+g.desc+'</small></span><span class="prepared-actions"><button type="button" data-task="prepared-chicken">مصنعات فراخ</button><button type="button" data-task="prepared-meat">مصنعات لحوم</button></span></article>';
+      h+='<article class="journey-card tone-prepared prepared-home">'+im+'<span class="journey-copy"><b>المصنعات</b><small>'+g.desc+'</small></span><button type="button" class="journey-enter" data-task="prepared">ادخل القسم</button><span class="prepared-actions"><button type="button" data-task="prepared-chicken">مصنعات فراخ</button><button type="button" data-task="prepared-meat">مصنعات لحوم</button></span></article>';
     }else{
       h+='<button type="button" class="journey-card tone-'+g.tone+'" data-task="'+g.task+'">'+im+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small></span><span class="journey-enter">ادخل القسم</span></button>';
     }
