@@ -1234,33 +1234,7 @@ const GTITLE={bf:['🖤 بلاك فرايدي ع الحلة',''],chicken:['عر�
 function renderChips(){$('ofilter').innerHTML=`<button type="button" data-g="all" aria-pressed="${OG==='all'}">كل العروض</button>`+OGROUPS.map(([g,s])=>`<button type="button" data-g="${esc(g)}" aria-pressed="${OG===g}">${esc(s)}</button>`).join('')}
 const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
 const MATCH=(txt,q)=>{const t=NORM(txt);return NORM(q).split(' ').filter(Boolean).every(w=>t.includes(w)||t.includes(w.replace(/^ال/,'')))};
-function renderOffers(){const q=$('q').value.trim();
-  if(q){const hit=OFFERS.filter(o=>o.g!=='freezer'&&MATCH(o.title+' '+o.tl+' '+JSON.stringify(o.inc),q)).concat(FREEZER.filter(p=>MATCH(p.name+' '+p.desc,q)).map(p=>offerOf(p.id)||null).filter(Boolean));
-    $('ofilter').hidden=true;$('offers').hidden=!hit.length;$('offersBody').innerHTML=hit.length?`<div class="ogroup"><h3>عروض فيها «${esc(q)}»</h3><div class="ogrid">${hit.map(offerCard).join('')}</div></div>`:'';window.__offHits=hit.length;return}
-  $('ofilter').hidden=true;$('offers').hidden=!OGROUPS.length;
-  $('offersBody').innerHTML=OGROUPS.map(([g,s])=>{const [t]=GTITLE[g]||[s];const list=g==='freezer'?FREEZER:OFFERS.filter(o=>o.g===g).map(o=>byId[o.id]);const n=list.length;if(!n)return '';
-    const from=Math.min(...list.map(p=>p.price));const inCart=list.reduce((a,p)=>a+Object.keys(cart).filter(k=>(k===p.id||k.startsWith(p.id+'::'))&&cart[k]>0).length,0);const open=OPENG===g;
-    const body=g==='bf'?bfBody():g==='freezer'?freezerHTML():`<div class="ogrid">${OFFERS.filter(o=>o.g===g).map(offerCard).join('')}</div>`;
-    return `<div class="folder${open?' open':''}" id="fold-${g}"><button type="button" class="fhead" data-fold="${g}" aria-expanded="${open}"><span class="femo" aria-hidden="true">${FEMO[g]||'🎁'}</span><span class="ft"><b>${esc(t)}</b><small>${esc(FSUB[g]||'')}</small><span class="fmeta"><span>${fmt(n)} ${n>2&&n<11?'عروض':'عرض'} · من ${fmt(from)} ج</span>${g==='chicken'?'<span class="free">🚚 توصيل مجاني</span>':''}${inCart?`<span class="incart">✓ ${fmt(inCart)} في السلة</span>`:''}</span></span><i class="fchev" aria-hidden="true">${open?'▴':'▾'}</i></button>${open?`<div class="fbody">${body}</div>`:''}</div>`}).join('');return;
-  $('offersBody').innerHTML=OGROUPS.filter(([g])=>OG==='all'||OG===g).map(([g,s])=>{const [t,x]=GTITLE[g]||[s,''];const hasFree=OFFERS.some(o=>o.g===g&&o.free);
-    return `<div class="ogroup"><h3>${esc(t)} ${g==='chicken'||hasFree?'<span class="free">🚚 التوصيل مجاني</span>':x}</h3>${g==='freezer'?freezerHTML():`<div class="ogrid">${OFFERS.filter(o=>o.g===g).map(offerCard).join('')}</div>`}</div>`}).join('')}
-let OPENG='garlic',OPENSUB=null;
-function bfSubs(){const card=id=>{const o=offerOf(id);return o?`<div class="ogrid">${offerCard(o)}</div>`:''};const P=id=>byId[id];
-  const frz=()=>{const sv=FREEZER;FREEZER=FREEZER.filter(p=>!/كرنب/.test(p.name));const h=freezerHTML();FREEZER=sv;return h};
-  return [
-   ['frz','🧊','عروض الفريزر','كل صنف 4 أكياس × 400 جرام','بـ100 ج',()=>frz(),FREEZER.some(p=>!/كرنب/.test(p.name))],
-   ['store','🥬','عروض التخزين','4 كيلو كرنب مسلوق · كيلو ورق عنب مسلوق','بـ200 ج',()=>card('p193')+(P('p150')?`<div class="list" style="margin-top:10px">${rowHTML(P('p150'))}</div>`:''),!!(offerOf('p193')||P('p150'))],
-   ['save','🔥','عرض التوفير','كل اللي محتاجاه لطبخة محشي','120 بدل 150',()=>card('p190'),!!offerOf('p190')],
-   ['bag','🛍️','شنطة طبيخ الأسبوع','7 أصناف · كل كيس 400 جرام','190 ج',()=>P('p080')?`<div class="list">${rowHTML(P('p080'))}</div>`:'',!!P('p080')],
-   ['mahshi','🫑','عرض المحشي','3 كيلو ع التسوية · اختاري 3 أصناف','349 بدل 390',()=>card('p191'),!!offerOf('p191')],
-   ['mix','🍗','تشكيلة المصنعات','بانيه + شاورما فراخ + كفتة رز','399 بدل 450',()=>card('p192'),!!offerOf('p192')]].filter(x=>x[6])}
-function bfBody(){return `<p class="bfintro">اختاري العرض اللي يناسبك 👇</p>`+bfSubs().map(([id,e,t,sub,pr,fn])=>{const o=OPENSUB===id;return `<div class="sub${o?' open':''}" id="sub-${id}"><button type="button" class="shead" data-sub="${id}" aria-expanded="${o}"><span class="semo" aria-hidden="true">${e}</span><span class="st"><b>${t}</b><small>${sub}</small></span><span class="spr">${pr}</span><i class="fchev" aria-hidden="true">${o?'▴':'▾'}</i></button>${o?`<div class="sbody">${fn()}</div>`:''}</div>`}).join('')}const FEMO={garlic:'🧄',bf:'🖤',chicken:'🍗',mahshi:'🫑',freezer:'❄️',events:'🎉',meat:'🥩'};
-const FSUB={garlic:'توم بلدي متقشر ومفروم .. كيلو بـ 150 و4 كيلو بـ 450',meat:'لحمة بلدي متبلة .. مشكل للشوي والتحمير',bf:'لحد 30 نوفمبر · محشي ومصنعات وتخزين وفريزر بـ100',chicken:'تشكيلات فراخ متبلة بسعر أوفر',mahshi:'محشي بالكيلو، تختار أصنافك',freezer:'4 أكياس خضار متنضف بـ 100 ج',events:'بوكسات لضيوفك · أقل طلب 10 · قبلها بيوم'};
-$('offersBody').addEventListener('click',e=>{const sb=e.target.closest('[data-sub]');if(sb){const id=sb.dataset.sub;OPENSUB=OPENSUB===id?null:id;if(OPENSUB)T('open_bf_sub',{sub:id});renderOffers();if(OPENSUB){const el=$('sub-'+id);scrollTo({top:el.getBoundingClientRect().top+scrollY-(document.querySelector('.strip')?.offsetHeight||0)-8,behavior:'instant'})}return}const b=e.target.closest('[data-fold]');if(!b)return;const g=b.dataset.fold;OPENG=OPENG===g?null:g;if(OPENG)T('open_offer_folder',{group:g});renderOffers();if(OPENG){const el=$('fold-'+g);const top=el.getBoundingClientRect().top+scrollY-(document.querySelector('.strip')?.offsetHeight||0)-8;scrollTo({top,behavior:'instant'})}});
-$('ofilter').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;OG=b.dataset.g;renderChips();renderOffers()});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-ok]');if(!b)return;const id=b.dataset.ok;const eo=offerOf(id);if(eo&&eo.ebox&&!cart[id]&&+b.dataset.d>0){setQty(id,10);toast('اتضاف 10 بوكسات، زوّدي أو قللي براحتك');return}setQty(id,(cart[id]||0)+(+b.dataset.d));if(+b.dataset.d>0)toast('اتضاف للأوردر')});
-
-/* ---------- picker ---------- */
+function renderOffers(){window.__offHits=0;$('ofilter').hidden=true;$('offers').hidden=true;$('offersBody').innerHTML='';}/* ---------- picker ---------- */
 let PK=null;
 function openPick(id){const o=offerOf(id);if(!o)return;PK={o,sel:[],style:'ع التسوية',ch:'',meat:''};$('pickTitle').textContent='عرض '+o.title;drawPick();$('pick').hidden=false;document.body.style.overflow='hidden'}
 function drawPick(){const {o}=PK;let h='';const pr=byId[o.id].price;
@@ -1439,7 +1413,7 @@ function showAgain(){let L=null;try{L=JSON.parse(localStorage.getItem('alhella-l
   $('againBtn').onclick=()=>{ks.forEach(k=>cart[k]=L.cart[k]);save();refresh();$('again').hidden=true;openSheet()}}
 
 let VIEW='home',CUR='';
-function cats(){const L=[];if(OGROUPS.length){const ps=OFFERS.map(o=>byId[o.id].price);L.push({id:'offers',name:'العروض والبوكسات',emo:'🔥',img:img('pane'),n:OFFERS.length+FREEZER.length,from:Math.min(...ps,...FREEZER.map(p=>p.price))})}
+function cats(){const L=[];if(false&&OGROUPS.length){const ps=OFFERS.map(o=>byId[o.id].price);L.push({id:'offers',name:'العروض والبوكسات',emo:'🔥',img:img('pane'),n:OFFERS.length+FREEZER.length,from:Math.min(...ps,...FREEZER.map(p=>p.price))})}
   secs.forEach((x,i)=>{const its=items.filter(p=>p.section===x);if(!its.length)return;L.push({id:'s'+i,name:x,emo:SEC_EMO[x]||'🍽️',img:img(secImg[x]),n:its.length,from:Math.min(...its.map(p=>p.price))})});return L}
 const FAM=[['🫑 محاشي وخضار',['المحاشي','جاهز على الحشو','الخضار المتنضف']],['🍗 فراخ ولحوم جاهزة للطبخ',['فراخ متبلة','مصنعات الفراخ','مصنعات اللحمة','الحمام والبط','المقبلات']],['🍽️ أكل مطبوخ جاهز',['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر','مخللات وصوصات']]];
 const BEST=['p044','p046','p056','p150','p145','p144'];
@@ -1458,19 +1432,14 @@ const HOME_GROUPS=[
  {key:'meals',title:'الوجبات',desc:'وجبات وأطباق من مطبخنا',emoji:'🍲',imageSection:'الوجبات',tone:'meals'}
 ];
 function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
-function heroSlides(){const order=BF_ON&&OFFERS.some(o=>o.g==='bf'&&wide(o.img))?['bf']:['chicken','mahshi','events'];const NEWO=['p208','p203','p204'];const out=OFFERS.filter(o=>NEWO.includes(o.id)&&wide(o.img));order.forEach(g=>OFFERS.filter(o=>o.g===g&&wide(o.img)&&!NEWO.includes(o.id)).forEach(o=>out.push(o)));return out.slice(0,8)}
-function heroHTML(){const S=heroSlides();if(!S.length)return '';
-  const bfh=S.some(o=>o.g==='bf')?`<div class="hsh"><h2>${S[0].g==='bf'?'🖤 عروض بلاك فرايدي':'🔥 عروض ع الحلة'}</h2><button type="button" class="hall" data-bfall>عرض الكل</button></div>`:'';
-  return `<section class="hx${bfh?' isbf':''}" aria-label="العروض">${bfh}<div class="hxs" id="hxs">${S.map((o,i)=>{const pr=byId[o.id].price;const b=o.before>pr?o.before:0;const bf=o.g==='bf';
-    return `<button type="button" class="hxc${bf?' bf':''}" data-og="${o.g}" data-oid="${o.id}" aria-label="${esc(o.title)} بـ ${fmt(pr)} جنيه"><img src="${wide(o.img)}" alt="" ${i?'loading="lazy" decoding="async"':'fetchpriority="high"'}><span class="hxt">${bf?'<i class="hxk">بلاك فرايدي</i>':(o.badges[0]?`<i class="hxk">${esc(o.badges[0][1])}</i>`:'')}<b>${esc(o.title)}</b>${o.tl?`<small>${esc(o.tl)}</small>`:''}<em class="hxgo">اطلب دلوقتي</em></span><span class="hxp"><b class="num">${fmt(pr)}</b><small>جنيه</small>${b?`<s class="num">${fmt(b)}</s>`:''}</span></button>`}).join('')}</div><div class="hxd" id="hxd">${S.map((_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div></section>`}
+function heroSlides(){return []}
+function heroHTML(){return ''}
 function railItems(names){const seen=new Set();return items.filter(p=>names.includes(p.section)&&img(p.img)&&!p.off).filter(p=>{const k=(PAIR_OF[p.id]||p.id);if(seen.has(k))return false;seen.add(k);return true}).slice(0,10)}
 function renderGrid(){
    const L=cats();
    {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
    const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\sـ]/g,'').toLowerCase();
    let h=heroHTML();
-   const off=L.find(c=>c.id==='offers');
-   if(off)h+=`<button type="button" class="journey-offer home-offer" data-cat="offers"><span class="journey-fire">٪</span><span><b>🔥 عروض ع الحلة</b><small>${fmt(off.n)} عرض متاح · اختار العرض اللي يناسب بيتك</small></span><i>شوف العروض ‹</i></button>`;
    h+=`<section class="journey-intro"><div><span>من مطبخنا لبيتك</span><h2>اختار إنت محتاج إيه؟</h2><p>أقسام واضحة توصّلك لطلبك بسرعة ومن غير لف كتير.</p></div><button type="button" data-focus-search aria-label="ابحث عن صنف">⌕ <small>دور على صنف</small></button></section>`;
    h+='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
    HOME_GROUPS.forEach(g=>{
