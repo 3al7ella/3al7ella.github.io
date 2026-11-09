@@ -452,3 +452,21 @@ html,body{max-width:100%;overflow-x:clip}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* New prepared-food bundles — 2026-11 */
+#cgrid .box-bundles{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;direction:rtl;align-items:stretch}
+#cgrid .box-bundle{min-width:0;background:#fff;border-radius:18px;padding:13px 12px 12px;box-shadow:0 5px 16px rgba(92,45,15,.09);display:flex;flex-direction:column;border:1px solid #f0dfcc}
+#cgrid .box-month{grid-column:1/-1;background:linear-gradient(135deg,#fff 0%,#fff8ef 100%);border:2px solid #e9b37d}
+#cgrid .box-bundle-top{display:flex;justify-content:space-between;align-items:center;gap:7px;flex-wrap:wrap;color:#713819;font-weight:950;font-size:15px}
+#cgrid .box-bundle-top small{background:#fff0df;color:#d04420;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:950}
+#cgrid .box-bundle h3{font-size:21px;color:#713819;margin:8px 0 10px}
+#cgrid .box-bundle ul{padding:0 18px 0 0;margin:10px 0;color:#49382c;font-size:12px;line-height:1.85;font-weight:800;flex:1}
+#cgrid .box-month .box-bundle-items{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+#cgrid .box-month .box-bundle-items ul{margin:6px 0}
+#cgrid .box-bundle li::marker{color:#e87519}
+#cgrid .box-gift{background:#e83d1b;color:#fff;border-radius:10px;text-align:center;padding:7px 6px;margin:8px 0;font-weight:950;font-size:12px}
+#cgrid .box-bundle-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px}
+#cgrid .box-bundle-foot b{background:#87380f;color:#fff;border-radius:12px;padding:7px 11px;font-size:20px;white-space:nowrap}
+#cgrid .box-bundle-foot a{background:#e63b19;color:#fff;text-decoration:none;border-radius:11px;padding:9px 10px;font-size:11px;font-weight:950;white-space:nowrap}
+@media(max-width:699px){#cgrid .box-bundles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#cgrid .box-month{grid-column:1/-1}#cgrid .box-bundle{padding:10px 9px;border-radius:15px}#cgrid .box-bundle-top{font-size:13px}#cgrid .box-bundle-top small{font-size:10px}#cgrid .box-bundle ul{font-size:11px;line-height:1.75;padding-right:15px}#cgrid .box-bundle-foot b{font-size:17px;padding:7px 9px}#cgrid .box-bundle-foot a{font-size:10px;padding:8px 7px}#cgrid .box-month h3{font-size:19px}}
+@media(max-width:380px){#cgrid .box-bundles{grid-template-columns:1fr}#cgrid .box-month{grid-column:auto}#cgrid .box-month .box-bundle-items{grid-template-columns:1fr 1fr}}
