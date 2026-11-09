@@ -134,11 +134,11 @@ function renderStaffAttendance(){
  }).join("")||'<p class="muted">لا توجد موظفات نشطات.</p>';
 }
 function renderLaborInsights(){
- const all=currentLabor(), m=$("laborMonth").value||today().slice(0,7), rows=all.filter(x=>monthOf(x)===m);
- const total=rows.reduce((s,x)=>s+(Number(x.amount)||0),0), paid=rows.filter(x=>x.paid!==false).reduce((s,x)=>s+(Number(x.amount)||0),0), due=rows.filter(x=>x.paid===false).reduce((s,x)=>s+(Number(x.amount)||0),0);
- $("lmTotal").textContent=money(total);$("lmCount").textContent=rows.length;$("lmPaid").textContent=money(paid);$("lmDue").textContent=money(due);
+ const all=currentLabor(), m=$("laborMonth").value||today().slice(0,7), rows=all.filter(x=>monthOf(x)===m), auto=autoPayrollForMonth(m);
+ const total=rows.reduce((s,x)=>s+(Number(x.amount)||0),0)+auto.total, paid=rows.filter(x=>x.paid!==false).reduce((s,x)=>s+(Number(x.amount)||0),0), due=rows.filter(x=>x.paid===false).reduce((s,x)=>s+(Number(x.amount)||0),0);
+ $("lmTotal").textContent=money(total);$("lmCount").textContent=rows.length+" + استحقاق تلقائي";$("lmPaid").textContent=money(paid);$("lmDue").textContent=money(due);
  const months=collection("months"), saved=months.find(x=>x._id===m), closed=saved?.laborClose;
- $("laborCloseStatus").textContent=closed?"قفلة محفوظة بتاريخ "+(closed.closedAt||"") +" · إجمالي "+money(closed.total)+" · "+closed.count+" حركة. أي تعديل لاحق على حركات الشهر سيظهر كفرق عن القفلة.":"الشهر لم يتم تقفيله بعد. اضغط «حفظ قفلة الشهر» لحفظ ملخصه.";
+ $("laborCloseStatus").textContent=(closed?"قفلة محفوظة بتاريخ "+(closed.closedAt||"") +" · إجمالي "+money(closed.total)+" · "+closed.count+" حركة. ":"الشهر لم يتم تقفيله بعد. ")+ "الاستحقاق التلقائي المتبقي غير المكرر: "+money(auto.total)+". يتم خصم الغياب الذي تم الإبلاغ عنه فقط.";
  const keys=[...new Set([...all.map(monthOf),...months.map(x=>x._id)].filter(Boolean))].sort().reverse();
  $("laborMonthCompare").innerHTML=keys.map(k=>{const a=all.filter(x=>monthOf(x)===k),v=a.reduce((s,x)=>s+Math.abs(Number(x.amount)||0),0),cl=months.find(x=>x._id===k)?.laborClose;return '<div class="item"><div><b>'+esc(k)+'</b><div class="muted">'+a.length+' حركة عمالة (بدون المندوبين)'+(cl?' · توجد قفلة قديمة للمقارنة':' · مفتوح')+'</div></div><b>'+money(v)+'</b></div>'}).join("")||'<p class="muted">لا توجد بيانات عمالة.</p>';
 }
@@ -278,6 +278,35 @@ function renderBusinessIntel(){
  alerts.push("ترتيب المناطق والمنتجات مبني على عدد الأوردرات/الكميات المسجلة، وليس على الربحية.");
  $("biAlerts").innerHTML=alerts.map(t=>'<div class="item"><span>'+esc(t)+'</span></div>').join("");
 }
+function autoPayrollForMonth(month){
+ const staff=collection("staff").find(x=>x._id==="main"),workers=(staff?.workers||[]).filter(w=>w.active&&w.pay!=="order");
+ const absences=collection("attendance"),recorded=currentLabor().filter(x=>monthOf(x)===month);
+ const [yy,mm]=month.split("-").map(Number),monthStart=month+"-01",monthEnd=new Date(yy,mm,0).getDate(),todayStr=today(),end=monthEnd===new Date().getDate()&&month===todayStr.slice(0,7)?todayStr:(month<todayStr.slice(0,7)?month+"-"+String(monthEnd).padStart(2,"0"):todayStr);
+ let total=0,details=[];
+ for(const w of workers){
+  const start=[monthStart,"2026-11-01",w.from||"0000-01-01"].sort().reverse()[0];
+  if(start>end||(w.until&&w.until<start))continue;
+  const rate=Number(w.rate)||0,monthly=({ "w-ummmohamed":4000,"w-maha":2500,"w-new1101":3000,"w-asmaa":1500,"w-haneen":1000 })[w.id];
+  const daily=w.id==="w-hamza"?150:(monthly?monthly/30:rate);
+  let days=0;
+  for(let d=new Date(start+"T12:00:00");d<=new Date(end+"T12:00:00");d.setDate(d.getDate()+1)){
+   const key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+   if(!absences.some(a=>a.worker===w.id&&a.date===key&&a.status==="absent"))days++;
+  }
+  const earned=Math.round(days*daily*100)/100;
+  const already=recorded.filter(x=>String(x.name||x.worker||"")===w.name).reduce((s,x)=>s+Math.max(0,Number(x.amount)||0),0);
+  const remaining=Math.max(0,Math.round((earned-already)*100)/100);
+  total+=remaining;
+  details.push({name:w.name,days,earned,already,remaining});
+ }
+ return {total:Math.round(total*100)/100,details};
+}
+function autoPayrollForSelection(){
+ if(selectedMonth!=="all")return autoPayrollForMonth(selectedMonth);
+ const keys=[...new Set(records.map(r=>String(r.data?.date||r.data?.month||"").slice(0,7)).filter(m=>/^2026-\d{2}$/.test(m)&&m>="2026-11"))];
+ return keys.reduce((a,m)=>{const x=autoPayrollForMonth(m);a.total+=x.total;a.details.push(...x.details.map(d=>({...d,month:m})));return a;},{total:0,details:[]});
+}
+
 function render(){
  setupMonthFilter();
  const orders=scopedCollection("orders").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
@@ -287,7 +316,7 @@ function render(){
  const validOrders=orders.filter(x=>orderStatusLabel(x)!=="ملغي"), sales=validOrders.reduce((s,x)=>s+(Number(x.total)||0),0), exp=expenses.filter(x=>!x.excluded).reduce((s,x)=>s+(Number(x.amount)||0),0);
  const collected=validOrders.reduce((s,x)=>s+effectiveCollectedAmount(x),0);
  const receivables=validOrders.reduce((s,x)=>s+Math.max(0,(Number(x.total)||0)-effectiveCollectedAmount(x)),0);
- const laborCost=scopedCollection("labor").filter(x=>!isCourierLabor(x)&&x.inProfit!==false).reduce((s,x)=>s+(Number(x.amount)||0),0);
+ const recordedLabor=scopedCollection("labor").filter(x=>!isCourierLabor(x)&&x.inProfit!==false).reduce((s,x)=>s+(Number(x.amount)||0),0), payrollAuto=autoPayrollForSelection(), laborCost=recordedLabor+payrollAuto.total;
  let deliveryCost=0,deliveryUnknown=0;validOrders.forEach(x=>{const known=Number(x.deliveryCost);if(Number.isFinite(known)&&x.deliveryCost!==null&&x.deliveryCost!==undefined)deliveryCost+=known;else{const area=deliveryAreaOf(x);if(area==="wardian")deliveryCost+=30;else if(area==="outside")deliveryCost+=75;else deliveryUnknown++;}});
  renderDeliveryWeekly(orders);
  renderDailyOrders();
