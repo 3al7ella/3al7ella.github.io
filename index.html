@@ -1451,10 +1451,12 @@ const SHOP_TASKS=[
  {key:'meals',title:'الوجبات',desc:'أكل بيتي ووجبات وصواني جاهزة',emoji:'🍲',sections:['الوجبات','صواني الفرن','طواجن وطبيخ','بولات وشوربة','الرز المعمر']}
 ];
 const HOME_GROUPS=[
- {key:'veg',title:'الخضار',desc:'متنقي · متجهز · جاهز للطبخ',emoji:'🥬',imageSection:'الخضار المتنضف',tone:'veg'},
- {key:'prepared',title:'المصنعات',desc:'فراخ ولحوم · تجهيزات متبلة',emoji:'🍗',imageSection:'مصنعات الفراخ',tone:'prepared'},
- {key:'mahshi',title:'المحاشي',desc:'مقور · مسلوق · ع التسوية · مستوي',emoji:'🫑',imageSection:'المحاشي',tone:'mahshi'},
- {key:'meals',title:'الوجبات',desc:'وجبات وأطباق من مطبخنا',emoji:'🍲',imageSection:'الوجبات',tone:'meals'}
+ {key:'veg',title:'الخضار المتنضف',desc:'مغسول ومتقطع وجاهز للطبخ',emoji:'🥬',imageSection:'الخضار المتنضف',tone:'veg',task:'veg'},
+ {key:'prepared-chicken',title:'مصنعات الفراخ',desc:'تتبيلات وتجهيزات جاهزة',emoji:'🍗',imageSection:'مصنعات الفراخ',tone:'prepared',task:'prepared-chicken'},
+ {key:'prepared-meat',title:'مصنعات اللحوم',desc:'كفتة وبرجر وتجهيزات بلدي',emoji:'🥩',imageSection:'مصنعات اللحمة',tone:'meat',task:'prepared-meat'},
+ {key:'mahshi',title:'المحاشي',desc:'مقور · مسلوق · ع التسوية · مستوي',emoji:'🫑',imageSection:'المحاشي',tone:'mahshi',task:'mahshi'},
+ {key:'meals',title:'الوجبات',desc:'أكل بيتي جاهز من مطبخنا',emoji:'🍲',imageSection:'الوجبات',tone:'meals',task:'meals'},
+ {key:'offers',title:'عروض التخزين والبوكسات',desc:'وفّري في تجهيزات الفريزر والبيت',emoji:'🎁',imageSection:'',tone:'offers',cat:'offers'}
 ];
 function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" width="400" height="400" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
 function heroSlides(){return []}
@@ -1463,98 +1465,25 @@ function railItems(names){const seen=new Set();return items.filter(p=>names.incl
 function renderGrid(){
    const L=cats();
    {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
-   const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\sـ]/g,'').toLowerCase();
-   let h=heroHTML();
-   h+=`
-`;
-   h+='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
+   let h='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
    HOME_GROUPS.forEach(g=>{
-     const c=L.find(x=>x.name===g.imageSection);
-     const image=c?.img?'<img src="'+c.img+'" alt="'+esc(g.title)+' من ع الحلة" width="600" height="420" loading="lazy" decoding="async" sizes="(max-width: 600px) 48vw, 25vw">':'<span class="journey-emoji">'+g.emoji+'</span>';
-     let inner='';
-     if(g.key==='prepared')inner='<span class="journey-subgrid"><button type="button" data-task="prepared-chicken">🍗 مصنعات فراخ <i>‹</i></button><button type="button" data-task="prepared-meat">🥩 مصنعات لحوم <i>‹</i></button></span>';
-     if(g.key==='prepared')h+='<div class="journey-card tone-'+g.tone+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small>'+inner+'</span></div>';
-     else h+='<button type="button" class="journey-card tone-'+g.tone+'" data-task="'+g.key+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small></span><span class="journey-arrow">‹</span></button>';
+     const c=g.imageSection?L.find(x=>x.name===g.imageSection):null;
+     const image=c?.img?'<img src="'+c.img+'" alt="" width="600" height="420" loading="lazy" decoding="async" sizes="(max-width:600px) 48vw, 25vw">':'<span class="journey-emoji">'+g.emoji+'</span>';
+     const action=g.cat?'data-cat="'+g.cat+'"':'data-task="'+g.task+'"';
+     h+='<button type="button" class="journey-card tone-'+g.tone+'" '+action+'>'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small></span><span class="journey-arrow">‹</span></button>';
    });
    h+='</section>';
-   h+=`<section class="bf-offers" id="black-friday" aria-labelledby="bfOffersTitle">
-    <div class="bf-offers-head"><span class="bf-kicker">🔥 عروض #ع_الحلة</span><h2 id="bfOffersTitle">بوكسات المصنعات</h2><p>اختاري البوكس المناسب لاحتياجات بيتك، وشوفي المكونات والسعر والتوفير قبل الطلب.</p></div>
-    <div class="box-bundles" aria-label="بوكسات ع الحلة الجديدة">
-     <article class="box-bundle box-month">
-      
-      <div class="box-bundle-top"><span>⭐ أكبر بوكس للتجهيز</span><small>توفير 530 ج</small></div><h3>بوكس ع الحلة الشهري</h3>
-      <p class="box-benefit">تشكيلة كبيرة من الفراخ والمصنعات، عشان تجهزي احتياجات البيت وتقللي مشاوير الشراء.</p>
-      <details class="box-details"><summary>عرض تفاصيل البوكس · 11 صنف</summary><div class="box-bundle-items"><ul><li>3 فراخ شرقي كبيرة</li><li>2 كيلو شاورما فراخ</li><li>2 كيلو بانيه</li><li>2 كيلو شيش طاووق</li><li>1½ كيلو استربس</li><li>1 كيلو بانيه شوي</li></ul><ul><li>1 كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو زنجر</li><li>½ كيلو ناجتس</li></ul></div></details>
-      <div class="box-bundle-top"><span>🚚 التوصيل مجاني</span><small>بدل 4830 ج</small></div><div class="box-bundle-foot"><b>4300 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس ع الحلة الشهري بـ4300 جنيه من ع الحلة')}">اطلب البوكس</a></div>
-     </article>
-     <article class="box-bundle">
-      
-      <div class="box-bundle-top"><span>🗓️ تجهيز أسبوعين · 🚚 توصيل مجاني</span><small>توفير 255 ج</small></div><h3>بوكس الأسبوعين</h3><p class="box-benefit">تنويع بين الفراخ المتبلة والمصنعات، مع هدية أوراك روستو.</p>
-      <details class="box-details"><summary>عرض تفاصيل البوكس · 10 أصناف</summary><ul><li>1 كيلو أوراك تندوري</li><li>1 فرخة شرقي وسط</li><li>1 كيلو زنجر</li><li>1 كيلو شيش طاووق</li><li>½ كيلو بانيه</li><li>½ كيلو ناجتس</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو بانيه شوي</li></ul></details>
-      <div class="box-gift">🎁 هدية ½ كيلو أوراك روستو</div><div class="box-bundle-foot"><b>1980 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس الأسبوعين بـ1980 جنيه من ع الحلة')}">اطلب البوكس</a></div>
-     </article>
-     <article class="box-bundle">
-      
-      <div class="box-bundle-top"><span>🎒 تجهيزات المدرسة · 🚚 توصيل مجاني</span><small>توفير 195 ج</small></div><h3>شنطة المدرسة</h3><p class="box-benefit">اختيارات متنوعة تساعدك تجهزي ساندوتشات ووجبات الأولاد.</p>
-      <details class="box-details"><summary>عرض تفاصيل الشنطة · 5 أصناف</summary><ul><li>½ كيلو شاورما فراخ</li><li>½ كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو استربس</li><li>½ كيلو ناجتس</li></ul></details>
-      <div class="box-gift">🎁 هدية ½ كيلو أوراك</div><div class="box-bundle-foot"><b>850 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب شنطة المدرسة بـ850 جنيه من ع الحلة')}">اطلب الشنطة</a></div>
-     </article>
-     <article class="box-bundle">
-      
-      <div class="box-bundle-top"><span>🚀 تشكيلة متنوعة · 🚚 توصيل مجاني</span><small>توفير 240 ج</small></div><h3>عرض الصاروخ</h3><p class="box-benefit">تشكيلة تجمع البانيه المشوي والشيش طاووق والبرجر والكفتة والأوراك.</p>
-      <ul><li>1 كيلو بانيه شوي</li><li>1 كيلو شيش طاووق</li><li>½ كيلو برجر فراخ</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو أوراك روستو</li><li>½ كيلو أوراك تندوري</li><li>½ كيلو دبابيس</li></ul>
-      <div class="box-gift">🎁 هدية ½ كيلو أوراك</div><div class="box-bundle-foot"><b>1250 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب عرض الصاروخ بـ1250 جنيه من ع الحلة')}">اطلب العرض</a></div>
-     </article>
-    </div>
-    <section class="storage-home" id="storage-home" aria-labelledby="storageHomeTitle">
-      <div class="storage-home-head"><span>🧊 عروض التخزين والتوفير</span><h2 id="storageHomeTitle">جهّزي فريزرك ووفّري وقتك</h2><p>عروض الخضار وتجهيزات الطبخ واضحة قدامك، اختاري اللي ناقص بيتك.</p></div>
-      <div class="storage-home-grid">
-        <article class="storage-home-card storage-main-card">
-          <div class="storage-card-top"><b>⭐ عرض التوفير</b><span>بدل 150 جنيه</span></div>
-          <h3>تجهيزات المحشي والطبخ</h3>
-          <p>كيلو كوسة مقورة + كيلو باذنجان مقور + نصف كيلو ملوخية فريش + ربع كيلو فلفل جاهز + خضرة جاهزة + كيس صلصة متسبكة.</p>
-          <div class="storage-card-foot"><strong>120 جنيه</strong><button type="button" data-ok="p190" data-d="1">أضف للسلة</button></div>
-        </article>
-        <article class="storage-home-card storage-main-card">
-          <div class="storage-card-top"><b>🛍️ شنطة طبيخ الأسبوع</b><span>7 أكياس</span></div>
-          <h3>أسبوع كامل من تجهيزات الفريزر</h3>
-          <p>7 أكياس × 400 جم: ملوخية + سبانخ + فاصوليا + قلقاس + بسلة مفصصة بالجزر + بصل مفروم + صلصة.</p>
-          <div class="storage-card-foot"><strong>200 جنيه</strong><button type="button" data-ok="p080" data-d="1">أضف للسلة</button></div>
-        </article>
-      </div>
-      <div class="storage-more-title"><b>وعروض تخزين تانية</b><small>اختاري وزوّدي للسلة مباشرة</small></div>
-      <div class="storage-mini-grid">
-        <article class="storage-mini-card"><b>🫘 فاصوليا خضرا</b><small>4 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p143" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🥔 قلقاس</b><small>4 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p144" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🥬 سبانخ</b><small>4 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p145" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🍅 صلصة</b><small>5 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p146" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🧅 بصل مفروم</b><small>4 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p147" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🌿 ملوخية</b><small>4 أكياس × 400 جم</small><strong>100 ج</strong><button type="button" data-ok="p148" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🥬 كرنب مسلوق</b><small>4 كيلو متقطع</small><strong>200 ج</strong><button type="button" data-ok="p150" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🍃 ورق عنب مسلوق</b><small>كيلو جاهز للف</small><strong>200 ج</strong><button type="button" data-ok="p193" data-d="1">أضف</button></article>
-        <article class="storage-mini-card"><b>🍲 محشي ع التسوية</b><small>3 كيلو · 3 أصناف من اختيارك</small><strong>349 ج</strong><button type="button" data-pick="p191">اختاري 3 أصناف</button></article>
-      </div>
-      <p class="storage-home-note">كل عرض ظاهر بسعره ومكوناته. راجعي السلة قبل إرسال الطلب على واتساب.</p>
-    </section>
-    <p class="bf-footnote">قبل تأكيد الأوردر، اسألينا على تفاصيل التجهيز وطريقة التسوية والتوافر. كل زر هيفتح واتساب برسالة جاهزة بالبوكس اللي اخترتيه.</p>
-   </section>`;
-
-   h+='<div id="revSlot"></div>';
-
+   const cards=OFFERS.map(o=>{
+     const p=byId[o.id];if(!p)return '';
+     const saving=o.before>p.price?o.before-p.price:0;
+     const contents=o.inc.length?'<ul class="home-offer-items">'+o.inc.map(x=>'<li>'+esc([x[0],x[1]].filter(Boolean).join(' '))+'</li>').join('')+'</ul>':(o.tl?'<p>'+esc(o.tl)+'</p>':'<p>تفاصيل العرض متاحة عند فتحه.</p>');
+     const action=o.pick||o.box?'<button type="button" data-pick="'+o.id+'">اختاري الأصناف</button>':'<button type="button" data-ok="'+o.id+'" data-d="1">أضيفي للسلة</button>';
+     return '<article class="home-offer-card"><div class="home-offer-top"><b>'+esc(o.title)+'</b>'+(o.free?'<span>توصيل مجاني</span>':'')+'</div><strong class="home-offer-price">'+fmt(p.price)+' ج</strong>'+(saving?'<small class="home-offer-save">بتوفّري '+fmt(saving)+' ج</small>':(o.tl?'<small class="home-offer-save">'+esc(o.tl.split(/[·•]/)[0])+'</small>':''))+'<details class="home-offer-details"><summary>تفاصيل</summary>'+contents+action+'</details></article>';
+   }).join('');
+   const freezer=FREEZER.map(p=>'<article class="home-offer-card"><div class="home-offer-top"><b>'+esc(p.name)+'</b><span>تخزين</span></div><strong class="home-offer-price">'+fmt(p.price)+' ج</strong><small class="home-offer-save">'+esc(p.desc||'تجهيزات الفريزر')+'</small><details class="home-offer-details"><summary>تفاصيل</summary><p>'+esc(p.desc||p.name)+'</p><button type="button" data-ok="'+p.id+'" data-d="1">أضيفي للسلة</button></details></article>').join('');
+   h+='<section class="home-offers" aria-labelledby="homeOffersTitle"><div class="home-offers-head"><div><span>🔥 عروض ع الحلة</span><h2 id="homeOffersTitle">اختاري عرضك ووفّري</h2></div><button type="button" data-cat="offers">كل العروض ‹</button></div><div class="home-offer-rail">'+cards+freezer+'</div></section>';
    $('cgrid').innerHTML=h;
-   const bf=$('bfBanner');if(bf)bf.hidden=true;
-   {const rv=$('revs'),rs=$('revSlot');if(rv&&rs)rs.replaceWith(rv)}
-   heroInit();
 }
-let HXT;function heroInit(){const s=$('hxs'),d=$('hxd');if(!s||!d)return;const dots=[...d.children];clearInterval(HXT);
-  const idx=()=>Math.round(Math.abs(s.scrollLeft)/s.clientWidth);
-  s.onscroll=()=>{const i=idx();dots.forEach((x,j)=>x.classList.toggle('on',i===j))};
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)HXT=setInterval(()=>{if(document.body.dataset.view!=='home'||document.hidden||s.matches(':hover'))return;const n=(idx()+1)%dots.length;s.scrollTo({left:-n*s.clientWidth*(getComputedStyle(s).direction==='rtl'?1:-1),behavior:'smooth'})},4500);
-  s.addEventListener('touchstart',()=>clearInterval(HXT),{once:true,passive:true})}
-$('cgrid').addEventListener('toggle',e=>{const d=e.target;if(!d.matches('.bf-offer')||!d.open)return;document.querySelectorAll('.bf-offer[open]').forEach(x=>{if(x!==d)x.open=false})},true);
-$('cgrid').addEventListener('click',e=>{if(e.target.closest('[data-bn-go]')){const c=cats().find(c=>c.id!=='offers');if(c)openCat(c.id);return}if(e.target.closest('[data-bfall]')){T('bf_banner',{from:'hero'});OPENG='bf';OPENSUB=null;openCat('offers');return}const c=e.target.closest('.hxc');if(!c)return;T('hero_offer',{offer:c.dataset.oid});const id=c.dataset.oid,g=c.dataset.og;OPENG=g;const BFS={p191:'mahshi',p192:'mix',p190:'save',p193:'store'};if(g==='bf'&&BFS[id])OPENSUB=BFS[id];openCat('offers');try{renderOffers()}catch(_){}
-  setTimeout(()=>{const t=document.querySelector(`#offers [data-pick="${id}"],#offers [data-ok="${id}"]`);const el=(t&&(t.closest('.ogrid>*')||t))||$('fold-'+g);if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-(document.querySelector('.strip')?.offsetHeight||0)-10,behavior:'instant'})},80)});
-let PG=10;const partyKg=()=>Math.max(1,Math.ceil(PG/4));
 function partyTxt(){return `لـ <b class="num">${fmt(PG)}</b> ضيف محتاج تقريبًا <b class="num">${fmt(partyKg())} كيلو محشي</b> (ربع كيلو للفرد لو جنب أكل تاني)، أو <b class="num">${fmt(Math.max(10,PG))}</b> بوكس ضيافة.`}
 $('cgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');if(b){PG=Math.min(200,Math.max(2,PG+(+b.dataset.pg)*(PG>=20?5:1)));$('pgN').textContent=fmt(PG);$('pgOut').innerHTML=partyTxt();$('pgAdd').textContent='ضيف '+fmt(partyKg())+' كيلو محشي مشكل مستوي';return}
   if(e.target.closest('#pgAdd')){T('party_calc_add',{guests:PG});setQty('p048',partyKg());toast('اتضاف '+fmt(partyKg())+' كيلو محشي مشكل');return}
