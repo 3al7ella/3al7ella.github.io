@@ -87,6 +87,29 @@ a{color:inherit}
 .wapill b{display:flex;align-items:center;gap:6px;font-size:19px;font-weight:900;letter-spacing:.3px}
 .wapill b svg{width:24px;height:24px;fill:#fff;background:#25D366;border-radius:50%;padding:3px}
 .wapill small{font-weight:800;font-size:11.5px;color:#FFE08A}
+/* reviews */
+.rvs{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 16px 10px;margin:0 -16px}
+.rvs::-webkit-scrollbar{display:none}
+.rv{flex:0 0 58%;max-width:240px;scroll-snap-align:start;background:#fff;border-radius:20px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column}
+.rv.img{flex-basis:74%;max-width:300px;align-self:flex-start}
+.rv .vb{position:relative;aspect-ratio:9/16;background:#2A1A12}
+.rv.img .vb{aspect-ratio:auto;background:#F6E9DC;padding:8px 8px 0}
+.rv video,.rv .vb img{width:100%;height:100%;object-fit:cover;display:block}
+.rv.img .vb img{height:auto;object-fit:contain;border-radius:12px}
+.rv .play{position:absolute;inset:0;border:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.45));display:grid;place-items:center}
+.rv .play span{width:62px;height:62px;border-radius:50%;background:rgba(232,57,4,.92);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.rv .play svg{width:26px;height:26px;fill:#fff;margin-left:4px}
+.rv p{margin:0;padding:9px 12px 11px;font-weight:900;font-size:13.5px;line-height:1.4;color:var(--brown)}
+.rv p small{display:block;color:#F2A81C;font-size:13px;letter-spacing:1px}
+.rvmore{flex:0 0 40%;max-width:170px;align-self:stretch;border:2px dashed #F0B98F;background:#FFF1E2;box-shadow:none;justify-content:center;align-items:center;gap:4px;color:var(--brown)}
+.rvmore b{font-weight:900;font-size:36px;color:var(--org);line-height:1}
+.rvmore span{font-weight:900;font-size:14px;padding:0 10px;text-align:center}
+.rvgrid{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.rvgrid .rv{flex:none;max-width:none;width:100%}
+.rvgrid .rv:first-child{width:72%;align-self:center}
+.rvcta{display:flex;flex-direction:column;align-items:center;margin-top:6px;background:#FFF1E2;border:1.5px dashed #F0B98F;border-radius:16px;padding:10px;text-decoration:none;color:var(--brown)}
+.rvcta b{font-weight:900;font-size:15px}
+.rvcta span{font-weight:800;font-size:13px;color:var(--org)}
 /* offers folders */
 .folders{display:flex;flex-direction:column;gap:22px;padding-top:12px}
 .fold{position:relative;display:flex;flex-direction:column;border:0;padding:0;text-align:right;background:#fff;border-radius:0 22px 22px 22px;box-shadow:0 10px 24px rgba(90,30,10,.14);color:var(--ink)}
@@ -298,6 +321,11 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
   <div class="sech"><h2>عروض ع الحلة 🔥</h2></div>
   <div class="folders" id="folders"></div>
  </section>
+ <section class="sec" id="reviews">
+  <div class="sech"><h2>آراء زباينا ❤️</h2><button type="button" class="more" id="rvAll" data-rvall hidden></button></div>
+  <div class="rvs" id="rvs"></div>
+  <a class="rvcta" href="https://wa.me/201275165496?text=%D8%B9%D8%A7%D9%88%D8%B2%20%D8%A3%D8%A8%D8%B9%D8%AA%20%D9%81%D9%8A%D8%AF%D9%8A%D9%88%20%D8%B1%D8%A3%D9%8A%D9%8A%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D8%AF%D8%B1%20%F0%9F%8E%A5" target="_blank" rel="noopener"><b>🎥 صوّري فيديو لأوردرك</b><span>وخدي خصم 50 ج على الأوردر اللي بعده</span></a>
+ </section>
  <section class="sec">
   <div class="trust"><div><i>🚚</i>توصيل لكل إسكندرية</div><div><i>🎁</i>توصيل مجاني من <span class="num" id="freeTxt">1000</span> ج</div><div><i>💳</i>كاش · إنستاباي · محفظة</div></div>
  </section>
@@ -488,6 +516,7 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
   if(r.ofs.length)h+=`<p class="gtitle">العروض</p>`+r.ofs.map(o=>itemHTML(byId[o.id])).join('');
   if(r.its.length)h+=(r.ofs.length?`<p class="gtitle">الأصناف</p>`:'')+listHTML(r.its);
   if(!h)h=`<div class="empty">مفيش صنف بالاسم ده 🤔<br>جرّب كلمة تانية، أو <a href="https://wa.me/${PHONE}?text=${encodeURIComponent('عاوز أسأل على: '+q)}" target="_blank" rel="noopener">اسألنا على واتساب</a></div>`}
+ else if(VIEW==='reviews'){$('vTitle').textContent='آراء زباينا ❤️';$('vTitle').classList.remove('long');C.innerHTML='';h=`<p class="fsub">${REVIEWS.length} رأي حقيقي من زباينا على الواتساب</p><div class="rvgrid">${REVIEWS.map(rvCard).join('')}</div>`}
  else if(VIEW==='offers'){const f=FOLDERS.find(x=>x.k===FOLD)||FOLDERS[0];const T1=$('vTitle');T1.textContent=f.title;T1.classList.toggle('long',f.title.length>18);
   C.innerHTML=FOLDERS.filter(x=>OFFERS.some(o=>x.gs.includes(o.g))).map(x=>`<button type="button" data-fold="${x.k}" aria-pressed="${x.k===f.k}">${x.k==='cheap'?'💸 أرخص سعر':'❄️ التفريزات البيتي'}</button>`).join('');
   h=`<p class="fsub">${esc(f.sub)}</p>`+(f.k==='box'?boxHTML(f):cheapHTML(f))}
@@ -505,7 +534,7 @@ document.addEventListener('click',e=>{const s=e.target.closest('[data-sub][data-
 $('back').addEventListener('click',()=>{if(history.state&&history.state.v&&history.length>1)history.back();else goHome()});
 
 window.addEventListener('popstate',e=>{const s=e.state||{};if(!$('sheet').hidden){closeSheet(true)}if(!$('osheet').hidden){closeOffer(true)}
- if(s.v==='cat')openCat(s.k,s.s||0,false);else if(s.v==='offers')openOffers(false,s.f);else goHome(false)});
+ if(s.v==='cat')openCat(s.k,s.s||0,false);else if(s.v==='offers')openOffers(false,s.f);else if(s.v==='reviews')openReviews(false);else goHome(false)});
 document.querySelectorAll('.nav [data-nav]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.nav;if(n==='home'){goHome();scrollTo({top:0,behavior:'smooth'})}else if(n==='offers')openOffers();else openSheet()}));
 let qT;$('q').addEventListener('input',()=>{clearTimeout(qT);qT=setTimeout(()=>{const q=$('q').value.trim();$('qClr').hidden=!q;if(q){if(VIEW!=='search'){show('search')}else renderList()}else goHome(false)},150)});
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('q').blur();const q=$('q').value.trim();if(q)T('search',{search_term:q})}});
@@ -598,14 +627,46 @@ function bar(){const n=count();const b=$('cbar');b.hidden=!n;document.body.class
  $('cbHint').textContent=!n?'':isFree()?'🎉 توصيلك مجاني':'فاضلك '+fmt(FREE_OVER-s)+' ج والتوصيل يبقى مجاني';
  const nb=$('nBadge');nb.hidden=!n;nb.textContent=n;if(n>lastN){b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}lastN=n}
 $('cbar').addEventListener('click',openSheet);
-function renderHome(){renderCats();renderRail();showAgain()}
+/* reviews: add videos (rev-N.mp4 + rev-N.webp poster) or screenshots (rv-N.webp) here */
+const REVIEWS=[
+ {t:'video',src:'rev-1.mp4',poster:'rev-1.webp',cap:'رأي صاحبة الأوردر بعد ما وصلها'},
+ {t:'img',src:'rv-2.webp',cap:'عن المحشي'},
+ {t:'img',src:'rv-17.webp',cap:'مواعيد ونضافة وتغليف'},
+ {t:'img',src:'rv-9.webp',cap:'أول مرة تطلب معانا'},
+ {t:'img',src:'rv-6.webp',cap:'عن عرض اليوم والمحاشي والبانيه'},
+ {t:'img',src:'rv-15.webp',cap:'عن الخضار والمصداقية'},
+ {t:'img',src:'rv-18.webp',cap:'عن الممبار'},
+ {t:'img',src:'rv-1.webp',cap:'عن البصارة والملوخية'},
+ {t:'img',src:'rv-3.webp',cap:'عن الممبار والملوخية'},
+ {t:'img',src:'rv-10.webp',cap:'أول تجربة للخضار'},
+ {t:'img',src:'rv-14.webp',cap:'بعد ما الأوردر وصل'},
+ {t:'img',src:'rv-7.webp',cap:'عن عرض الصلصة'},
+ {t:'img',src:'rv-12.webp',cap:'عن السبانخ'},
+ {t:'img',src:'rv-4.webp',cap:'عن النضافة وكيس الملوخية الهدية'},
+ {t:'img',src:'rv-11.webp',cap:'عن الأكل والنضافة'},
+ {t:'img',src:'rv-13.webp',cap:'عن الشغل'},
+ {t:'img',src:'rv-16.webp',cap:'بعد ما جربت الحاجات'},
+ {t:'img',src:'rv-8.webp',cap:'عن كيس الطماطم'},
+ {t:'img',src:'rv-5.webp',cap:'من زبونة دايمة معانا'}
+];
+const RV_HOME=8;
+function rvCard(r,i){return r.t==='video'?`<article class="rv"><div class="vb"><video preload="none" playsinline poster="${r.poster}" src="${r.src}" data-rv="${i}"></video><button type="button" class="play" data-play="${i}" aria-label="شغّل الفيديو"><span><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span></button></div><p>${esc(r.cap||'')}</p></article>`
+  :`<article class="rv img"><div class="vb"><img src="${r.src}" alt="${esc(r.cap||'ريفيو زبون')}" loading="lazy" decoding="async"></div>${r.cap?`<p>${esc(r.cap)}</p>`:''}</article>`}
+function renderReviews(){const el=$('rvs');if(!REVIEWS.length){$('reviews').hidden=true;return}
+ const more=REVIEWS.length-RV_HOME;$('rvAll').textContent=`كل الآراء (${REVIEWS.length})`;$('rvAll').hidden=more<=0;
+ el.innerHTML=REVIEWS.slice(0,RV_HOME).map(rvCard).join('')+(more>0?`<button type="button" class="rv rvmore" data-rvall><b>+${more}</b><span>شوف كل آراء زباينا</span></button>`:'')}
+function openReviews(push=true){document.querySelectorAll('.rv video').forEach(x=>x.pause());$('q').value='';$('qClr').hidden=true;show('reviews');scrollTo({top:0});if(push)history.pushState({v:'reviews'},'','#reviews');T('open_reviews',{})}
+document.addEventListener('click',e=>{if(e.target.closest('[data-rvall]'))openReviews()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-play]');if(!b)return;const v=b.parentElement.querySelector('video');document.querySelectorAll('.rv video').forEach(x=>{if(x!==v)x.pause()});b.remove();v.controls=true;v.play().catch(()=>{});T('review_play',{n:b.dataset.play})});
+document.addEventListener('play',e=>{if(e.target.matches&&e.target.matches('.rv video'))document.querySelectorAll('.rv video').forEach(x=>{if(x!==e.target)x.pause()})},true);
+function renderHome(){renderCats();renderRail();renderReviews();showAgain()}
 function refresh(){if(VIEW==='home'){renderRail();showAgain()}else renderList();bar()}
 
 /* ---------- start ---------- */
 const SRC=(location.search.match(/[?&]src=([\w-]+)/)||[])[1]||'';if(SRC)T('visit_source',{source:SRC});
 let STARTED=false;
 function start(rows){window.__BASE=rows;const first=!STARTED;STARTED=true;build(applyOv(rows));clean();save();
- if(first){const h=location.hash;const m=h.match(/^#c-(\w+)/);if(m&&CATS.find(c=>c.key===m[1])){CUR=m[1];show('cat');history.replaceState({v:'cat',k:CUR,s:0},'')}else if(/^#offers/.test(h)){const fm=h.match(/^#offers-(\w+)/);if(fm&&FOLDERS.find(x=>x.k===fm[1]))FOLD=fm[1];show('offers');history.replaceState({v:'offers',f:FOLD},'')}else{show('home');history.replaceState({v:'home'},'')}}
+ if(first){const h=location.hash;const m=h.match(/^#c-(\w+)/);if(m&&CATS.find(c=>c.key===m[1])){CUR=m[1];show('cat');history.replaceState({v:'cat',k:CUR,s:0},'')}else if(h==='#reviews'){show('reviews');history.replaceState({v:'reviews'},'')}else if(/^#offers/.test(h)){const fm=h.match(/^#offers-(\w+)/);if(fm&&FOLDERS.find(x=>x.k===fm[1]))FOLD=fm[1];show('offers');history.replaceState({v:'offers',f:FOLD},'')}else{show('home');history.replaceState({v:'home'},'')}}
  else{if(VIEW==='home')renderHome();else renderList()}
  bar();if(!$('sheet').hidden&&STEP===1)drawSheet();if(first)setTimeout(doReorder,60)}
 function doReorder(){if(!/[?&]reorder=1/.test(location.search))return;let R=[];try{R=JSON.parse(localStorage.getItem('alhella-reorder')||'[]');localStorage.removeItem('alhella-reorder')}catch(_){}if(!R.length)return;let n=0,miss=[];
