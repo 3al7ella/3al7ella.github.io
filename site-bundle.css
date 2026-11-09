@@ -705,3 +705,43 @@ header.hero>.sbox .search{display:flex!important}
 header.hero>.sbox .search input{display:block!important;width:100%;min-height:48px;border:1px solid #e7c7b1;border-radius:14px;background:var(--paper);padding:11px 14px;font-size:16px;font-weight:700}
 header.hero>.sbox .sres{padding:6px 8px;font-size:13px}
 #heroQ{display:none!important}
+
+/* 2026-11-09 approved home refresh */
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.ribbon,.top-social,.hero .herosearch,.hero .banner,.hero .leadtime,.hero .gal,.hero .how,.trust-strip{display:none!important}
+.hero{padding:12px 12px 0!important;margin:0 auto!important}
+.hero .top{direction:ltr;display:flex;justify-content:flex-start;align-items:center;min-height:72px}
+.hero .brand{direction:rtl;margin:0 auto 0 0;gap:10px}
+.hero .brand img{width:76px;height:76px;object-fit:contain}
+.hero .brand>div,.hero .wa-chip{display:none!important}
+.brand-slogan{display:flex;flex-direction:column;align-items:center;gap:4px;margin:0 auto 14px;max-width:320px;text-align:center}
+.brand-slogan b{display:inline-block;color:#fff;font-weight:1000;font-size:21px;padding:7px 28px 9px;background:linear-gradient(174deg,transparent 4%,#B5161E 8%,#B5161E 89%,transparent 95%);transform:rotate(-1deg);border-radius:8px 3px 10px 5px;box-shadow:5px 2px 0 #8f1018}
+.brand-slogan small{font-size:14px;font-weight:900;color:#713321;letter-spacing:.2px}
+#cgrid{padding:0 12px 20px!important;margin:0 auto!important;max-width:760px}
+.journey-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.journey-card{display:flex;flex-direction:column;align-items:stretch;position:relative;overflow:hidden;min-width:0;padding:0;border:1px solid #ead8c7;border-radius:18px;background:#fff;box-shadow:0 4px 13px #55200e12;text-align:right;color:#281710;cursor:pointer}
+.journey-card>img{display:block;width:100%;height:clamp(112px,34vw,170px);object-fit:cover}
+.journey-copy{display:flex;flex-direction:column;gap:4px;padding:10px 10px 6px;background:#fbf0df;min-height:78px}
+.journey-copy b{font-size:17px;font-weight:1000;line-height:1.2;color:#391c12}
+.journey-copy small{font-size:11.5px;font-weight:800;line-height:1.55;color:#674738}
+.journey-enter{display:block;text-align:center;margin:0 10px 10px;padding:8px 6px;border-radius:10px;background:#a81720;color:#fff;font-size:13px;font-weight:900}
+.tone-veg{background:#a91d26}.tone-veg .journey-copy{background:#a91d26}.tone-veg .journey-copy b,.tone-veg .journey-copy small{color:#fff}.tone-veg .journey-enter{background:#fff;color:#9e1821}
+.tone-prepared{background:#f3e6d2}.tone-prepared .journey-copy{background:#f3e6d2}
+.tone-mahshi{background:#f2ca4b}.tone-mahshi .journey-copy{background:#f2ca4b}
+.tone-meals{background:#75151d}.tone-meals .journey-copy{background:#75151d}.tone-meals .journey-copy b,.tone-meals .journey-copy small{color:#fff}.tone-meals .journey-enter{background:#fff;color:#75151d}
+.prepared-home .journey-copy{min-height:68px}
+.prepared-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 9px 10px;background:#f3e6d2}
+.prepared-actions button{border:0;border-radius:9px;padding:8px 4px;background:#9f1d25;color:white;font-size:11.5px;font-weight:900}
+.home-after{padding:14px 2px 8px;text-align:center}
+.fruit-home{border:1.5px solid #e8c7a9;border-radius:13px;padding:9px 24px;background:#fff6e9;color:#74321f;font-weight:900;font-size:15px}
+.home-every{margin:12px 0 10px;color:#6b3925;font-size:17px;font-weight:1000}
+.home-wa-card{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;text-decoration:none;border-radius:15px;padding:13px 12px;background:#b51620;color:#fff;font-weight:1000;box-shadow:0 5px 14px #9f142022}
+.home-wa-card b{font-size:15px}.home-wa-card span{font-size:14px;direction:ltr}
+.home-offers{display:none!important}
+#offers{padding-top:8px}
+#offers .ogroup{margin-bottom:18px}
+#offers .bfh{font-size:19px;font-weight:1000}
+#offers .oc{border-radius:17px}
+.bnav{grid-template-columns:1fr 1.3fr 1fr!important;z-index:1000}
+.bnav [data-bn="home"]{order:0}.bnav [data-bn="cart"]{order:1}.bnav [data-bn="menu"]{order:2}
+@media(min-width:600px){.journey-grid{gap:16px}.journey-card>img{height:190px}.journey-copy b{font-size:19px}.journey-copy small{font-size:13px}}
