@@ -642,6 +642,29 @@ footer{border-top:1px solid #ecd8c6}
  .step button{width:29px;height:29px}
 }
 @media(prefers-reduced-motion:reduce){.row,.wa-chip{transition:none}}
+
+/* Compact offer bundles: mobile-first cards with expandable item lists */
+.bf-offers{margin:18px 0 24px;padding:14px;background:var(--c-soft);border:1px solid var(--c-line);border-radius:20px}
+.bf-offers-head{margin-bottom:12px}.bf-offers-head h2{margin:4px 0;font-size:20px}.bf-offers-head p{margin:4px 0;font-size:12px;line-height:1.6;color:var(--muted)}
+.box-bundles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+.box-bundle{min-width:0;padding:12px;background:var(--card,#fff);border:1px solid var(--c-line);border-radius:16px;box-shadow:0 3px 12px #87350d0d;display:flex;flex-direction:column;gap:7px}
+.box-bundle.box-month{grid-column:1/-1}
+.box-bundle-top{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;line-height:1.4;color:var(--c-brown)}
+.box-bundle-top small{white-space:nowrap;font-size:10px;background:var(--c-soft);padding:4px 7px;border-radius:20px}
+.box-bundle h3{font-size:16px;line-height:1.35;margin:0;color:var(--c-burnt)}
+.box-benefit{font-size:11px;line-height:1.55;margin:0;color:var(--muted)}
+.box-bundle ul{margin:0;padding:0 18px 0 0;font-size:11px;line-height:1.65}
+.box-bundle-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.box-details{border-top:1px solid var(--c-line);padding-top:7px}
+.box-details summary{cursor:pointer;font-size:12px;font-weight:800;color:var(--c-brown);list-style:none}
+.box-details summary::-webkit-details-marker{display:none}
+.box-details summary:after{content:' ＋';color:var(--c-orange)}
+.box-details[open] summary:after{content:' −'}
+.box-gift{font-size:11px;font-weight:800;background:#fff4dc;border-radius:9px;padding:7px}
+.box-bundle-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:7px;border-top:1px solid var(--c-line)}
+.box-bundle-foot b{font-size:20px;color:var(--c-burnt)}
+.box-bundle-foot a{background:var(--c-burnt);color:#fff;text-decoration:none;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:900;white-space:nowrap}
+@media(max-width:430px){.box-bundles{grid-template-columns:1fr}.box-bundle.box-month{grid-column:auto}.box-bundle{padding:11px}.box-bundle h3{font-size:15px}}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPB6MMGYDX"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-EPB6MMGYDX');</script>
@@ -1460,19 +1483,19 @@ function renderGrid(){
       
       <div class="box-bundle-top"><span>⭐ أكبر بوكس للتجهيز</span><small>توفير 530 ج</small></div><h3>بوكس ع الحلة الشهري</h3>
       <p class="box-benefit">تشكيلة كبيرة من الفراخ والمصنعات، عشان تجهزي احتياجات البيت وتقللي مشاوير الشراء.</p>
-      <div class="box-bundle-items"><ul><li>3 فراخ شرقي كبيرة</li><li>2 كيلو شاورما فراخ</li><li>2 كيلو بانيه</li><li>2 كيلو شيش طاووق</li><li>1½ كيلو استربس</li><li>1 كيلو بانيه شوي</li></ul><ul><li>1 كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو زنجر</li><li>½ كيلو ناجتس</li></ul></div>
+      <details class="box-details"><summary>عرض تفاصيل البوكس · 11 صنف</summary><div class="box-bundle-items"><ul><li>3 فراخ شرقي كبيرة</li><li>2 كيلو شاورما فراخ</li><li>2 كيلو بانيه</li><li>2 كيلو شيش طاووق</li><li>1½ كيلو استربس</li><li>1 كيلو بانيه شوي</li></ul><ul><li>1 كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو زنجر</li><li>½ كيلو ناجتس</li></ul></div></details>
       <div class="box-bundle-top"><span>🚚 التوصيل مجاني</span><small>بدل 4830 ج</small></div><div class="box-bundle-foot"><b>4300 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس ع الحلة الشهري بـ4300 جنيه من ع الحلة')}">اطلب البوكس</a></div>
      </article>
      <article class="box-bundle">
       
       <div class="box-bundle-top"><span>🗓️ تجهيز أسبوعين · 🚚 توصيل مجاني</span><small>توفير 255 ج</small></div><h3>بوكس الأسبوعين</h3><p class="box-benefit">تنويع بين الفراخ المتبلة والمصنعات، مع هدية أوراك روستو.</p>
-      <ul><li>1 كيلو أوراك تندوري</li><li>1 فرخة شرقي وسط</li><li>1 كيلو زنجر</li><li>1 كيلو شيش طاووق</li><li>½ كيلو بانيه</li><li>½ كيلو ناجتس</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو بانيه شوي</li></ul>
+      <details class="box-details"><summary>عرض تفاصيل البوكس · 10 أصناف</summary><ul><li>1 كيلو أوراك تندوري</li><li>1 فرخة شرقي وسط</li><li>1 كيلو زنجر</li><li>1 كيلو شيش طاووق</li><li>½ كيلو بانيه</li><li>½ كيلو ناجتس</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو بانيه شوي</li></ul></details>
       <div class="box-gift">🎁 هدية ½ كيلو أوراك روستو</div><div class="box-bundle-foot"><b>1980 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس الأسبوعين بـ1980 جنيه من ع الحلة')}">اطلب البوكس</a></div>
      </article>
      <article class="box-bundle">
       
       <div class="box-bundle-top"><span>🎒 تجهيزات المدرسة · 🚚 توصيل مجاني</span><small>توفير 195 ج</small></div><h3>شنطة المدرسة</h3><p class="box-benefit">اختيارات متنوعة تساعدك تجهزي ساندوتشات ووجبات الأولاد.</p>
-      <ul><li>½ كيلو شاورما فراخ</li><li>½ كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو استربس</li><li>½ كيلو ناجتس</li></ul>
+      <details class="box-details"><summary>عرض تفاصيل الشنطة · 5 أصناف</summary><ul><li>½ كيلو شاورما فراخ</li><li>½ كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو استربس</li><li>½ كيلو ناجتس</li></ul></details>
       <div class="box-gift">🎁 هدية ½ كيلو أوراك</div><div class="box-bundle-foot"><b>850 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب شنطة المدرسة بـ850 جنيه من ع الحلة')}">اطلب الشنطة</a></div>
      </article>
      <article class="box-bundle">
@@ -1531,7 +1554,7 @@ function applyView(){const q=$('q').value.trim();const v=q?'search':VIEW;documen
   document.querySelectorAll('#strip a').forEach(a=>a.setAttribute('aria-current',v==='cat'&&a.dataset.s===CUR));
   if(v==='task')renderTaskSuggestions(CUR);else $('taskSuggestions')?.remove();
 }
-function openCat(id,push=true){VIEW='cat';CUR=id;try{const c=cats().find(c=>c.id===id);T('open_category',{category:c?c.name:id})}catch(_){}if(push)try{history.pushState({c:id},'','#c-'+id)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'});const a=document.querySelector(`#strip a[data-s="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'})}
+function openCat(id,push=true){VIEW='cat';CUR=id;try{const c=cats().find(c=>c.id===id);T('open_category',{category:c?c.name:id})}catch(_){}if(push)try{history.pushState({c:id},'','#c-'+id)}catch(_){}applyView();if(id==='offers')renderOffers();scrollTo({top:0,behavior:'instant'});const a=document.querySelector(`#strip a[data-s="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'})}
 function openTask(key,push=true){const t=SHOP_TASKS.find(x=>x.key===key);if(!t)return;VIEW='task';CUR=key;T('open_task',{task:t.title});if(push)try{history.pushState({task:key},'','#task-'+key)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 function goHome(push=true){VIEW='home';CUR='';if($('q').value){$('q').value='';renderMenu.lastQ='';renderMenu()}if(push&&location.hash)try{history.pushState({},'',location.pathname+location.search)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 $('cgrid').addEventListener('click',e=>{const t=e.target.closest('[data-task]');if(t){openTask(t.dataset.task);return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
