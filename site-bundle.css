@@ -683,3 +683,18 @@ img{height:auto;}
 #cgrid .tone-offers{background:#ed4a0a;color:#fff}
 #cgrid .tone-offers .journey-copy>small{color:#fff0d8}
 #cgrid .tone-offers .journey-emoji{background:transparent;color:#fff}
+
+
+/* Final home sequence: categories directly after search, offers below */
+#cgrid{display:flex!important;flex-direction:column!important}
+#cgrid .journey-grid{order:1!important}
+#cgrid .home-offers{order:2!important}
+#cgrid #bfBanner,.bfbanner{display:none!important}
+@media(max-width:699px){
+  #cgrid .journey-card{position:relative;display:flex!important;flex-direction:row!important;align-items:center!important;padding:10px!important;gap:8px!important;min-height:116px!important}
+  #cgrid .journey-card>img{width:50px!important;height:50px!important;flex:0 0 50px!important}
+  #cgrid .journey-copy{flex:1 1 auto!important;width:auto!important;min-width:0!important;padding:0!important;min-height:0!important}
+  #cgrid .journey-copy>b{font-size:14.5px!important;line-height:1.3!important}
+  #cgrid .journey-copy>small{font-size:13px!important;line-height:1.35!important}
+  #cgrid .journey-arrow{display:none!important}
+}
