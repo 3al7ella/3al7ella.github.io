@@ -1478,7 +1478,8 @@ function renderGrid(){
      const image=c?.img?'<img src="'+c.img+'" alt="" loading="lazy" decoding="async">':'<span class="journey-emoji">'+g.emoji+'</span>';
      let inner='';
      if(g.key==='prepared')inner='<span class="journey-subgrid"><button type="button" data-task="prepared-chicken">🍗 مصنعات فراخ <i>‹</i></button><button type="button" data-task="prepared-meat">🥩 مصنعات لحوم <i>‹</i></button></span>';
-     h+='<button type="button" class="journey-card tone-'+g.tone+'" data-task="'+g.key+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small>'+inner+'</span><span class="journey-arrow">‹</span></button>';
+     if(g.key==='prepared')h+='<div class="journey-card tone-'+g.tone+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small>'+inner+'</span></div>';
+     else h+='<button type="button" class="journey-card tone-'+g.tone+'" data-task="'+g.key+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small></span><span class="journey-arrow">‹</span></button>';
    });
    h+='</section>';
    const picks=BEST.map(k=>byId[k]).filter(p=>p&&!p.off&&!offerOf(p.id)).slice(0,4);
