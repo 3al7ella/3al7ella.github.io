@@ -332,7 +332,7 @@ function autoPayrollForSelection(){
 function render(){
  setupMonthFilter();
  const orders=scopedCollection("orders").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
- const expenses=scopedCollection("expenses").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+ const expenses=scopedCollection("expenses").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||String(b._id||"").localeCompare(String(a._id||"")));
  const moves=scopedCollection("stockMoves").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  const stock=collection("stockItems");
  const validOrders=orders.filter(x=>orderStatusLabel(x)!=="ملغي"), sales=validOrders.reduce((s,x)=>s+(Number(x.total)||0),0), exp=expenses.filter(x=>!x.excluded).reduce((s,x)=>s+(Number(x.amount)||0),0);
