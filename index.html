@@ -1575,6 +1575,11 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
 
 
 
+/* Keep the real menu search field visible directly under the brand header */
+(function(){
+ const nav=document.querySelector('nav.strip'), box=nav&&nav.querySelector('.sbox'), hero=document.querySelector('header.hero');
+ if(box&&hero&&!box.dataset.homeSearch){box.dataset.homeSearch='1';const top=hero.querySelector('.top');if(top)top.insertAdjacentElement('afterend',box);}
+})();
 /* عرض اليوم: glowing button in the header + sheet */
 (function(){const top=document.querySelector('header.hero .top');if(!top)return;
   document.body.insertAdjacentHTML('beforeend','<div class="dealpop" id="dealPop" hidden role="dialog" aria-modal="true" aria-labelledby="dlT"><div class="dp"><button type="button" class="dpx" data-dclose aria-label="اقفل">✕</button><div class="dpk">🔥 عرض اليوم</div><h3 id="dlT">عرض المحشي 3 كيلو ع التسوية</h3><ul class="dpl"><li>كيلو كرنب</li><li>كيلو ورق عنب</li><li>كيلو مشكل</li></ul><div class="dpp"><b class="num">300</b><span>جنيه</span><s class="num">390</s></div><div class="dpt">⏳ انهارده وبكره بس</div><button type="button" class="dpgo" id="dealGo">اطلب الآن</button></div></div>');
