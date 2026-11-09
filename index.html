@@ -1467,7 +1467,7 @@ function railItems(names){const seen=new Set();return items.filter(p=>names.incl
 function renderGrid(){
    const L=cats();
    {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
-   const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\\sـ]/g,'').toLowerCase();
+   const normName=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\sـ]/g,'').toLowerCase();
    let h=heroHTML();
    const off=L.find(c=>c.id==='offers');
    if(off)h+=`<button type="button" class="journey-offer home-offer" data-cat="offers"><span class="journey-fire">٪</span><span><b>🔥 عروض ع الحلة</b><small>${fmt(off.n)} عرض متاح · اختار العرض اللي يناسب بيتك</small></span><i>شوف العروض ‹</i></button>`;
