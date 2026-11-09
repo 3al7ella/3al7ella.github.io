@@ -1420,7 +1420,7 @@ function renderGrid(){
    h+='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
    HOME_GROUPS.forEach(g=>{
      const c=L.find(x=>x.name===g.imageSection);
-     const image=c?.img?'<img src="'+c.img+'" alt="" loading="lazy" decoding="async">':'<span class="journey-emoji">'+g.emoji+'</span>';
+     const image=c?.img?'<img src="'+c.img+'" alt="'+esc(g.title)+' من ع الحلة" loading="eager" fetchpriority="high" decoding="async" sizes="(max-width: 600px) 48vw, 25vw">':'<span class="journey-emoji">'+g.emoji+'</span>';
      let inner='';
      if(g.key==='prepared')inner='<span class="journey-subgrid"><button type="button" data-task="prepared-chicken">🍗 مصنعات فراخ <i>‹</i></button><button type="button" data-task="prepared-meat">🥩 مصنعات لحوم <i>‹</i></button></span>';
      if(g.key==='prepared')h+='<div class="journey-card tone-'+g.tone+'">'+image+'<span class="journey-copy"><b>'+g.title+'</b><small>'+g.desc+'</small>'+inner+'</span></div>';
