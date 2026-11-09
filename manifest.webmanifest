@@ -13,9 +13,9 @@
   "theme_color": "#E4521B",
   "icons": [
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512.webp",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any maskable"
     }
   ]
