@@ -1,6 +1,399 @@
 {
-  "converted": 0,
-  "total_bytes": 0,
-  "largest_bytes": 0,
-  "assets": []
+  "converted": 49,
+  "total_bytes": 3113950,
+  "largest_bytes": 78858,
+  "assets": [
+    {
+      "from": "f-peppercore.webp",
+      "to": "f-peppercore.webp",
+      "bytes": 57032,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-lentil.webp",
+      "to": "f-lentil.webp",
+      "bytes": 48234,
+      "width": 498,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-potstuffed.webp",
+      "to": "f-potstuffed.webp",
+      "bytes": 76392,
+      "width": 480,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-garlic.webp",
+      "to": "f-garlic.webp",
+      "bytes": 33946,
+      "width": 720,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-galash.webp",
+      "to": "f-galash.webp",
+      "bytes": 61664,
+      "width": 582,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-rice.webp",
+      "to": "f-rice.webp",
+      "bytes": 76616,
+      "width": 706,
+      "height": 720,
+      "quality": 79
+    },
+    {
+      "from": "f-beans.webp",
+      "to": "f-beans.webp",
+      "bytes": 67112,
+      "width": 720,
+      "height": 701,
+      "quality": 84
+    },
+    {
+      "from": "f-bechamel.webp",
+      "to": "f-bechamel.webp",
+      "bytes": 76288,
+      "width": 720,
+      "height": 712,
+      "quality": 79
+    },
+    {
+      "from": "f-beansbags.webp",
+      "to": "f-beansbags.webp",
+      "bytes": 78218,
+      "width": 656,
+      "height": 720,
+      "quality": 69
+    },
+    {
+      "from": "f-koftapane.webp",
+      "to": "f-koftapane.webp",
+      "bytes": 72772,
+      "width": 577,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-mombarclean.webp",
+      "to": "f-mombarclean.webp",
+      "bytes": 39158,
+      "width": 594,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-chkofta.webp",
+      "to": "f-chkofta.webp",
+      "bytes": 72436,
+      "width": 448,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "og.webp",
+      "to": "og.webp",
+      "bytes": 72818,
+      "width": 800,
+      "height": 420,
+      "quality": 84
+    },
+    {
+      "from": "f-cauli-fried.webp",
+      "to": "f-cauli-fried.webp",
+      "bytes": 36514,
+      "width": 640,
+      "height": 421,
+      "quality": 84
+    },
+    {
+      "from": "f-onion.webp",
+      "to": "f-onion.webp",
+      "bytes": 53986,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "offers.webp",
+      "to": "offers.webp",
+      "bytes": 77264,
+      "width": 800,
+      "height": 667,
+      "quality": 39
+    },
+    {
+      "from": "f-herbs.webp",
+      "to": "f-herbs.webp",
+      "bytes": 75534,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-greenchili.webp",
+      "to": "f-greenchili.webp",
+      "bytes": 64896,
+      "width": 541,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-grapeboiled.webp",
+      "to": "f-grapeboiled.webp",
+      "bytes": 61786,
+      "width": 405,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-kofta.webp",
+      "to": "f-kofta.webp",
+      "bytes": 70936,
+      "width": 720,
+      "height": 711,
+      "quality": 79
+    },
+    {
+      "from": "f-mix.webp",
+      "to": "f-mix.webp",
+      "bytes": 78748,
+      "width": 623,
+      "height": 720,
+      "quality": 49
+    },
+    {
+      "from": "f-potraw.webp",
+      "to": "f-potraw.webp",
+      "bytes": 78190,
+      "width": 720,
+      "height": 720,
+      "quality": 79
+    },
+    {
+      "from": "f-shawarma.webp",
+      "to": "f-shawarma.webp",
+      "bytes": 72768,
+      "width": 430,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-lesan.webp",
+      "to": "f-lesan.webp",
+      "bytes": 69086,
+      "width": 532,
+      "height": 640,
+      "quality": 79
+    },
+    {
+      "from": "f-cauli-boiled.webp",
+      "to": "f-cauli-boiled.webp",
+      "bytes": 26364,
+      "width": 480,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-eggplantcore.webp",
+      "to": "f-eggplantcore.webp",
+      "bytes": 66294,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-grape.webp",
+      "to": "f-grape.webp",
+      "bytes": 77982,
+      "width": 649,
+      "height": 720,
+      "quality": 64
+    },
+    {
+      "from": "thumbs2.webp",
+      "to": "thumbs2.webp",
+      "bytes": 78858,
+      "width": 480,
+      "height": 720,
+      "quality": 49
+    },
+    {
+      "from": "logo.webp",
+      "to": "logo.webp",
+      "bytes": 10832,
+      "width": 220,
+      "height": 219,
+      "quality": 84
+    },
+    {
+      "from": "meal.webp",
+      "to": "meal.webp",
+      "bytes": 73230,
+      "width": 720,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-koftarice.webp",
+      "to": "f-koftarice.webp",
+      "bytes": 61250,
+      "width": 544,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-bessara.webp",
+      "to": "f-bessara.webp",
+      "bytes": 55534,
+      "width": 498,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-pane.webp",
+      "to": "f-pane.webp",
+      "bytes": 76210,
+      "width": 719,
+      "height": 716,
+      "quality": 79
+    },
+    {
+      "from": "icon-512.webp",
+      "to": "icon-512.webp",
+      "bytes": 10672,
+      "width": 512,
+      "height": 512,
+      "quality": 84
+    },
+    {
+      "from": "f-shish.webp",
+      "to": "f-shish.webp",
+      "bytes": 78412,
+      "width": 720,
+      "height": 720,
+      "quality": 64
+    },
+    {
+      "from": "f-garlicminced.webp",
+      "to": "f-garlicminced.webp",
+      "bytes": 30166,
+      "width": 720,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-grapepack.webp",
+      "to": "f-grapepack.webp",
+      "bytes": 77016,
+      "width": 595,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-mombarstuffed.webp",
+      "to": "f-mombarstuffed.webp",
+      "bytes": 77396,
+      "width": 720,
+      "height": 540,
+      "quality": 84
+    },
+    {
+      "from": "f-pigeon.webp",
+      "to": "f-pigeon.webp",
+      "bytes": 73586,
+      "width": 612,
+      "height": 640,
+      "quality": 84
+    },
+    {
+      "from": "f-sausage.webp",
+      "to": "f-sausage.webp",
+      "bytes": 78800,
+      "width": 720,
+      "height": 717,
+      "quality": 84
+    },
+    {
+      "from": "f-molokhia.webp",
+      "to": "f-molokhia.webp",
+      "bytes": 77870,
+      "width": 640,
+      "height": 615,
+      "quality": 84
+    },
+    {
+      "from": "f-taro.webp",
+      "to": "f-taro.webp",
+      "bytes": 43918,
+      "width": 718,
+      "height": 462,
+      "quality": 84
+    },
+    {
+      "from": "cover.webp",
+      "to": "cover.webp",
+      "bytes": 77534,
+      "width": 800,
+      "height": 280,
+      "quality": 84
+    },
+    {
+      "from": "f-zinger.webp",
+      "to": "f-zinger.webp",
+      "bytes": 73984,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-cabbage.webp",
+      "to": "f-cabbage.webp",
+      "bytes": 28374,
+      "width": 576,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-cabbagerolls.webp",
+      "to": "f-cabbagerolls.webp",
+      "bytes": 70998,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-chburger.webp",
+      "to": "f-chburger.webp",
+      "bytes": 67668,
+      "width": 540,
+      "height": 720,
+      "quality": 84
+    },
+    {
+      "from": "f-mahshi2.webp",
+      "to": "f-mahshi2.webp",
+      "bytes": 77290,
+      "width": 675,
+      "height": 720,
+      "quality": 34
+    },
+    {
+      "from": "f-zucchinicore.webp",
+      "to": "f-zucchinicore.webp",
+      "bytes": 71318,
+      "width": 720,
+      "height": 540,
+      "quality": 84
+    }
+  ]
 }
