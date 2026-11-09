@@ -1464,7 +1464,7 @@ function heroHTML(){return ''}
 function railItems(names){const seen=new Set();return items.filter(p=>names.includes(p.section)&&img(p.img)&&!p.off).filter(p=>{const k=(PAIR_OF[p.id]||p.id);if(seen.has(k))return false;seen.add(k);return true}).slice(0,10)}
 function renderGrid(){
    const L=cats();
-   {const m=document.querySelector('main');['revs','bfBanner'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
+   {const m=document.querySelector('main');['revs'].forEach(id=>{const n=$(id);if(n&&n.closest('#cgrid')&&m)m.appendChild(n)})}
    let h='<section class="journey-grid" aria-label="الأقسام الرئيسية">';
    HOME_GROUPS.forEach(g=>{
      const c=g.imageSection?L.find(x=>x.name===g.imageSection):null;
@@ -1483,6 +1483,7 @@ function renderGrid(){
    const freezer=FREEZER.map(p=>'<article class="home-offer-card"><div class="home-offer-top"><b>'+esc(p.name)+'</b><span>تخزين</span></div><strong class="home-offer-price">'+fmt(p.price)+' ج</strong><small class="home-offer-save">'+esc(p.desc||'تجهيزات الفريزر')+'</small><details class="home-offer-details"><summary>تفاصيل</summary><p>'+esc(p.desc||p.name)+'</p><button type="button" data-ok="'+p.id+'" data-d="1">أضيفي للسلة</button></details></article>').join('');
    h+='<section class="home-offers" aria-labelledby="homeOffersTitle"><div class="home-offers-head"><div><span>🔥 عروض ع الحلة</span><h2 id="homeOffersTitle">اختاري عرضك ووفّري</h2></div><button type="button" data-cat="offers">كل العروض ‹</button></div><div class="home-offer-rail">'+cards+freezer+'</div></section>';
    $('cgrid').innerHTML=h;
+   const bfb=$('bfBanner');if(bfb)$('cgrid').appendChild(bfb);
 }
 function partyTxt(){return `لـ <b class="num">${fmt(PG)}</b> ضيف محتاج تقريبًا <b class="num">${fmt(partyKg())} كيلو محشي</b> (ربع كيلو للفرد لو جنب أكل تاني)، أو <b class="num">${fmt(Math.max(10,PG))}</b> بوكس ضيافة.`}
 $('cgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');if(b){PG=Math.min(200,Math.max(2,PG+(+b.dataset.pg)*(PG>=20?5:1)));$('pgN').textContent=fmt(PG);$('pgOut').innerHTML=partyTxt();$('pgAdd').textContent='ضيف '+fmt(partyKg())+' كيلو محشي مشكل مستوي';return}
