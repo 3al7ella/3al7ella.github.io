@@ -103,7 +103,7 @@ function scopedCollection(c){return collection(c).filter(x=>selectedMonth==="all
 function setupMonthFilter(){
  const keys=[...new Set([...records.flatMap(r=>{const d=r.data||{},m=String(d.date||d.month||r.record_id||"").slice(0,7);return /^\d{4}-\d{2}$/.test(m)?[m]:[]}),today().slice(0,7)])].sort().reverse();
  const sel=$("globalMonth");if(!sel)return;const latest=today().slice(0,7);
- selectedMonth=sel.value&&sel.value!=="all"?sel.value:latest;
+ selectedMonth=sel.value!==undefined&&sel.value!==""?sel.value:latest;
  sel.innerHTML='<option value="all">كل الشهور</option>'+keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
  sel.value=selectedMonth;
  $("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";
@@ -340,8 +340,8 @@ const recordedLabor=scopedCollection("labor").filter(x=>!isCourierLabor(x)&&x.in
  let deliveryCost=0,deliveryUnknown=0;validOrders.forEach(x=>{const known=Number(x.deliveryCost);if(Number.isFinite(known)&&x.deliveryCost!==null&&x.deliveryCost!==undefined)deliveryCost+=known;else{const area=deliveryAreaOf(x);if(area==="wardian")deliveryCost+=30;else if(area==="outside")deliveryCost+=75;else deliveryUnknown++;}});
  renderDeliveryWeekly(orders);
  renderDailyOrders();
- $("sales").textContent=money(sales);$("mainSalesValue").textContent=money(sales);$("mainExpensesValue").textContent=money(exp);$("mainProfitValue").textContent="قيد المطابقة";$("ordersCount").textContent=validOrders.length;$("expensesTotal").textContent=money(exp);$("laborTotalHome").textContent=money(laborCost);$("deliveryCostHome").textContent=money(deliveryCost);$("movesCount").textContent=moves.length;
- $("financeNotes").textContent="التوصيل محسوب من التكلفة المسجلة، أو 30 جنيه للورديان و75 جنيه خارجها حسب إعداد الأوردر. "+(deliveryUnknown?"يوجد "+deliveryUnknown+" أوردر بعنوان غير محدد لم تُقدّر تكلفة توصيله. ":"")+"صافي الربح النهائي لا يظهر قبل مطابقة تكلفة الأصناف المباعة والجرد والعمالة.";
+ const selectedMonthRecord=collection("months").find(x=>x._id===selectedMonth),lastClosedForCard=collection("months").filter(x=>x.closeSummary&&Number.isFinite(Number(x.closeSummary.net))).sort((a,b)=>String(b._id).localeCompare(String(a._id)))[0];$("sales").textContent=money(sales);$("mainSalesValue").textContent=money(sales);$("mainExpensesValue").textContent=money(exp);$("mainProfitValue").textContent=selectedMonth==="all"?(lastClosedForCard?"آخر قفلة "+money(lastClosedForCard.closeSummary.net):"بانتظار الجرد"):selectedMonthRecord?.closeSummary?money(selectedMonthRecord.closeSummary.net):"بانتظار الجرد";$("ordersCount").textContent=validOrders.length;$("expensesTotal").textContent=money(exp);$("laborTotalHome").textContent=money(laborCost);$("deliveryCostHome").textContent=money(deliveryCost);$("movesCount").textContent=moves.length;
+ $("financeNotes").textContent="التوصيل محسوب من التكلفة المسجلة، أو 30 جنيه للورديان و75 جنيه خارجها حسب إعداد الأوردر. "+(deliveryUnknown?"يوجد "+deliveryUnknown+" أوردر بعنوان غير محدد لم تُقدّر تكلفة توصيله. ":"")+(selectedMonthRecord?.closeSummary?"الربح المعروض هو ربح الشهر المقفول والمعتمد.":"ربح الشهر المفتوح لن يظهر كرقم نهائي قبل إدخال الجرد الفعلي ومطابقة تكلفة الأصناف والعمالة؛ لن نعرض فرق المبيعات والمصروفات على أنه مكسب.");
 const expenseGroups={};expenses.filter(x=>!x.excluded).forEach(x=>{const k=x.category||"غير مصنف";expenseGroups[k]=(expenseGroups[k]||0)+(Number(x.amount)||0)});
  const expenseHtml=Object.entries(expenseGroups).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<div class="item"><b>'+esc(k)+'</b><b>'+money(v)+'</b></div>').join("")||'<p class="muted">لا توجد مصروفات.</p>';
 $("financeDetails").innerHTML='<details><summary>تفصيل المصروفات حسب البند</summary>'+expenseHtml+'</details><details><summary>مراجعة تكلفة التوصيل</summary><p class="muted">التكلفة المحسوبة: '+money(deliveryCost)+' · أوردرات بعناوين غير محددة: '+deliveryUnknown+'.</p></details>';
@@ -350,7 +350,7 @@ $("financeDetails").innerHTML='<details><summary>تفصيل المصروفات �
  $("recentOrders").innerHTML=orders.slice(0,6).map(x=>item(x.customer||"عميل",x.date+" · "+(x.details||""),money(x.total))).join("")||'<p class="muted">لا توجد أوردرات بعد.</p>';
  $("ordersList").innerHTML=orders.map(x=>recordItem(x,"orders",x.customer||"عميل",x.date+" · "+(x.method||"") ,money(x.total))).join("")||'<p class="muted">لا توجد بيانات.</p>';
  $("ordersLabel").textContent=orders.length+" أوردر";
- $("expensesList").innerHTML=expenses.slice(0,100).map(x=>recordItem(x,"expenses",x.item||x.category||"مصروف",x.date+" · "+(x.supplier||x.category||""),money(x.amount))).join("")||'<p class="muted">لا توجد مصروفات.</p>';
+ $("expensesList").innerHTML=expenses.map(x=>recordItem(x,"expenses",x.item||x.category||"مصروف",x.date+" · "+(x.supplier||x.category||""),money(x.amount))).join("")||'<p class="muted">لا توجد مصروفات.</p>';
  renderStockDashboard();
  $("movesList").innerHTML=collection("stockMoves").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,80).map(x=>recordItem(x,"stockMoves",x.name||x.item||"حركة",x.date+" · "+stockMoveLabel(x.type),String(x.qty??"")+" "+(x.unit||""))).join("")||'<p class="muted">لا توجد حركات.</p>';
  const monthSum=m=>orders.filter(x=>String(x.date||"").startsWith(m)).reduce((s,x)=>s+(Number(x.total)||0),0);
