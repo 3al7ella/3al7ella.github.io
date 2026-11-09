@@ -659,6 +659,13 @@ img{height:auto;}
 #cgrid .home-offer-card>small{font-size:12px;line-height:1.45;color:#806d60}
 #cgrid .home-offer-card>strong{font-size:20px;color:#87350d}
 #cgrid .home-offer-card button{margin-top:auto;border:0;border-radius:9px;padding:9px;background:#a81720;color:#fff;font-size:13px;font-weight:900}
+#cgrid .home-offer-card>em{font-size:13px;font-style:normal;font-weight:900;color:#187447}
+#cgrid .home-offer-card details{margin-top:auto;border-top:1px solid #ead8c7;padding-top:6px}
+#cgrid .home-offer-card details summary{list-style:none;cursor:pointer;text-align:center;border-radius:8px;background:#fbf0df;color:#87350d;padding:7px;font-size:13px;font-weight:900}
+#cgrid .home-offer-card details summary::-webkit-details-marker{display:none}
+#cgrid .home-offer-card details p,#cgrid .home-offer-card details ul{margin:7px 0 0;padding-inline-start:18px;font-size:13px;line-height:1.5;max-height:100px;overflow:auto}
+#cgrid .home-offer-card details[open] summary{background:#a81720;color:#fff}
+#cgrid .home-offer-rail>.oc{display:none}
 #cgrid .home-after{padding:10px 2px 8px;text-align:center}
 #cgrid .home-every{margin:0 0 10px;color:#6b3925;font-size:17px;font-weight:1000}
 #cgrid .home-wa-card{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;text-decoration:none;border-radius:15px;padding:13px 12px;background:#b51620;color:#fff;font-weight:1000;box-shadow:0 5px 14px #9f142022}
