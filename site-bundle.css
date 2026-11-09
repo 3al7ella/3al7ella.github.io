@@ -698,3 +698,10 @@ img{height:auto;}
   #cgrid .journey-copy>small{font-size:13px!important;line-height:1.35!important}
   #cgrid .journey-arrow{display:none!important}
 }
+
+/* Search bar is a permanent, easy-to-find entry point below the brand */
+header.hero>.sbox{display:block!important;width:min(100% - 28px,1120px);margin:8px auto 0;padding:0!important}
+header.hero>.sbox .search{display:flex!important}
+header.hero>.sbox .search input{display:block!important;width:100%;min-height:48px;border:1px solid #e7c7b1;border-radius:14px;background:var(--paper);padding:11px 14px;font-size:16px;font-weight:700}
+header.hero>.sbox .sres{padding:6px 8px;font-size:13px}
+#heroQ{display:none!important}
