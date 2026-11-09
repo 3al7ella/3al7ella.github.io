@@ -1226,7 +1226,7 @@ const save=()=>{try{localStorage.setItem('alhella-cart',JSON.stringify(cart))}ca
 const pidOf=k=>k.split('::')[0];const optOf=k=>k.split('::')[1]||'';
 const clean=()=>Object.keys(cart).forEach(k=>{if(!byId[pidOf(k)]||!(cart[k]>0))delete cart[k]});
 const qtyOf=id=>Object.entries(cart).filter(([k])=>pidOf(k)===id).reduce((a,[,q])=>a+q,0);
-const up5=v=>Math.ceil(v/5-1e-9)*5;
+const up5=v=>Math.ceil(v/5-1e-9)*5;const lineTotal=(p,q)=>p&&p.isOffer?p.price*q:up5((p?p.price:0)*q);
 const sub=()=>Object.entries(cart).reduce((a,[k,q])=>{const p=byId[pidOf(k)];return a+(p?(p.isOffer?p.price*q:up5(p.price*q)):0)},0);
 const freeDel=()=>Object.keys(cart).some(k=>FREE_DEL.has(pidOf(k)));
 const isFree=()=>!!Object.keys(cart).length&&(freeDel()||sub()>=FREE_OVER);const delivery=()=>0;
@@ -1250,7 +1250,7 @@ function offerCard(o){const p=byId[o.id];const q=qtyOf(o.id);const saveAmt=o.bef
   <div class="pricebox"><div class="pv">${saveAmt?`<s class="num">لوحدهم ${fmt(o.before)} ج</s>`:''}<strong class="num">${fmt(p.price)} <span>جنيه</span></strong>${saveAmt||o.free?`<span class="save">${saveAmt?'وفّر '+fmt(saveAmt+(o.free?DELIVERY:0))+' ج':'التوصيل عليه مجاني'}</span>`:''}</div>${btn}</div></div></article>`}
 function freezerHTML(rows=FREEZER){const prices=[...new Set(rows.map(p=>p.price))];return `<div class="fzhead"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
   <div class="fz">${rows.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}"><span class="fzt-emoji" aria-hidden="true">🧊</span><div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
-const GTITLE={boxes:['🎁 بوكسات ع الحلة',''],bf:['🖤 بلاك فرايدي ع الحلة',''],storage:['🧊 عروض التخزين',''],freezer:['🧊 عروض الفريزر',''],chicken:['عروض الفراخ','<span class="free">🚚 التوصيل مجاني</span>'],mahshi:['عروض المحاشي',''],freezer:['توفير الفريزر',''],events:['المناسبات',''],meat:['عروض اللحمة',''],garlic:['عروض التوم','']};
+const GTITLE={boxes:['🎁 بوكسات ع الحلة',''],bf:['🖤 بلاك فرايدي ع الحلة',''],storage:['🧊 عروض التخزين',''],freezer:['🧊 عروض الفريزر',''],chicken:['عروض الفراخ','<span class="free">🚚 التوصيل مجاني</span>'],mahshi:['عروض المحاشي',''],events:['المناسبات',''],meat:['عروض اللحمة',''],garlic:['عروض التوم','']};
 function renderChips(){$('ofilter').innerHTML=`<button type="button" data-g="all" aria-pressed="${OG==='all'}">كل العروض</button>`+OGROUPS.map(([g,s])=>`<button type="button" data-g="${esc(g)}" aria-pressed="${OG===g}">${esc(s)}</button>`).join('')}
 const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
 const MATCH=(txt,q)=>{const t=NORM(txt);return NORM(q).split(' ').filter(Boolean).every(w=>t.includes(w)||t.includes(w.replace(/^ال/,'')))};
@@ -1416,7 +1416,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
     'موعد التسليم: يتم تأكيده على واتساب. الأصناف المحددة متاحة لنفس اليوم حتى 2 ظهرًا، وباقي الأصناف قبلها بيوم',
     '━━━━━━━━━━━━━━━━━━',
     '*تفاصيل الأصناف*',
-    ...ent.map(([k,q],i)=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return (i+1)+'. '+lineName(k)+'\n   '+fmtE(q)+u+' × '+fmtE(p.price)+' ج = '+fmtE(up5(p.price*q))+' ج'}),
+    ...ent.map(([k,q],i)=>{const p=byId[pidOf(k)];const u=offerOf(p.id)||p.name.startsWith(p.unit)?'':' '+p.unit;return (i+1)+'. '+lineName(k)+'\n   '+fmtE(q)+u+' × '+fmtE(p.price)+' ج = '+fmtE(lineTotal(p,q))+' ج'}),
     '━━━━━━━━━━━━━━━━━━',
     'قيمة الأصناف: '+fmtE(s)+' ج',
     'التوصيل: '+(isFree()?(freeDel()?'مجاني (مع العرض)':'مجاني (لأن الأوردر فوق '+FREE_OVER+' ج)'):delFee()+' ج'),
@@ -1430,7 +1430,7 @@ $('orderForm').addEventListener('submit',e=>{e.preventDefault();const ent=Object
     'شكرًا لثقتكم في ع الحلة ❤️'
   ].filter(Boolean).join('\n').trim();
   try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
-  let oid='';try{if(window.FB){oid=FB.newId();const its=ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:(offerOf(p.id)||p.name.startsWith(p.unit))?'':p.unit,price:p.price,total:up5(p.price*q)}});FB.save(oid,{name,phone,area,addr,when:$('fWhen').value,pay,note:((WEEKLY()?'🔁 اشتراك أسبوعي — كل '+WDAY()+'. ':'')+($('fRef')&&$('fRef').value.trim()?'🎁 مرشّحة من: '+$('fRef').value.trim()+'. ':'')+$('fNote').value.trim()).trim(),weekly:WEEKLY(),deliveryEst:delFee(),items:its,sub:s,delivery:delFee(),deliveryFree:isFree(),total:s+delFee(),src:'site'}).catch(()=>{});}}catch(_){oid=''}
+  let oid='';try{if(window.FB){oid=FB.newId();const its=ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:(offerOf(p.id)||p.name.startsWith(p.unit))?'':p.unit,price:p.price,total:lineTotal(p,q)}});FB.save(oid,{name,phone,area,addr,when:$('fWhen').value,pay,note:((WEEKLY()?'🔁 اشتراك أسبوعي — كل '+WDAY()+'. ':'')+($('fRef')&&$('fRef').value.trim()?'🎁 مرشّحة من: '+$('fRef').value.trim()+'. ':'')+$('fNote').value.trim()).trim(),weekly:WEEKLY(),deliveryEst:delFee(),items:its,sub:s,delivery:delFee(),deliveryFree:isFree(),total:s+delFee(),src:'site'}).catch(()=>{});}}catch(_){oid=''}
   const T=t;
   try{gtag('event','purchase',{transaction_id:oid||String(Date.now()),currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});if(WEEKLY())gtag('event','weekly_subscribe',{});const za=$('fArea').value.trim();if(za)gtag('event','order_area',{area:za})}catch(_){}
   lastText=T;const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(T);$('waLink').href=url;$('orderText').textContent=T;$('orderForm').hidden=true;$('done').hidden=false;
