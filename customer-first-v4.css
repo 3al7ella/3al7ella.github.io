@@ -507,3 +507,29 @@ html,body{max-width:100%;overflow-x:clip}
 @media(min-width:760px){
   #cgrid .journey-card>img{height:190px!important;padding:7px!important}
 }
+
+/* Homepage clarity: keep meat bundles and freezer-storage deals as two separate, visible destinations */
+.storage-home{margin:22px 0 8px;padding:15px;background:#fff8ef;border:1.5px solid #f1dfce;border-radius:20px;scroll-margin-top:76px}
+.storage-home-head{margin-bottom:12px}
+.storage-home-head>span{display:inline-block;background:#e9f5e8;color:#28623a;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900}
+.storage-home-head h2{margin:8px 0 4px;color:#87350d;font-size:21px;line-height:1.35}
+.storage-home-head p{margin:0;color:#765b4a;font-size:13px;line-height:1.6}
+.storage-home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.storage-home-card{min-width:0;background:#fff;border:1px solid #f0dfcf;border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.storage-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:12px;color:#87350d}
+.storage-card-top span{font-size:10px;background:#fff0dc;border-radius:20px;padding:4px 7px;white-space:nowrap}
+.storage-home-card h3{margin:0;color:#87350d;font-size:16px;line-height:1.4}
+.storage-home-card p{margin:0;color:#4c3b31;font-size:12px;line-height:1.7}
+.storage-card-foot{margin-top:auto;padding-top:8px;border-top:1px solid #f0e5db;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.storage-card-foot strong{font-size:20px;color:#87350d;white-space:nowrap}
+.storage-card-foot button,.storage-mini-card button{border:0;border-radius:10px;background:#e83904;color:#fff;font-weight:900;padding:9px 11px;font-size:12px}
+.storage-more-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:16px 0 9px;color:#87350d}
+.storage-more-title b{font-size:15px}.storage-more-title small{font-size:11px;color:#806d60}
+.storage-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.storage-mini-card{min-width:0;background:#fff;border:1px solid #f0dfcf;border-radius:12px;padding:9px 7px;display:flex;flex-direction:column;gap:5px}
+.storage-mini-card b{font-size:12px;line-height:1.4;color:#4b3327}
+.storage-mini-card small{font-size:10px;line-height:1.4;color:#806d60;min-height:27px}
+.storage-mini-card strong{font-size:16px;color:#87350d}
+.storage-mini-card button{width:100%;padding:7px 5px}
+.storage-home-note{margin:10px 0 0;color:#806d60;font-size:11px;line-height:1.5}
+@media(max-width:430px){.storage-home{padding:11px}.storage-home-grid{grid-template-columns:1fr}.storage-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.storage-home-head h2{font-size:19px}}
