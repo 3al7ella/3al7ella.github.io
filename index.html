@@ -973,23 +973,6 @@ body.spopen{overflow:hidden}
 .fbfollow{justify-content:center;min-width:min(82%,260px)}
 @media(max-width:720px){.hero{padding-top:12px}.banner{grid-template-columns:1fr;gap:14px}.fbcard{order:-1}.fbcover{aspect-ratio:1200/430}.banner h1{font-size:clamp(36px,10vw,48px)}.banner p{font-size:15px}.facts{gap:7px}.fact{font-size:12px}.ctas{display:grid;grid-template-columns:1.3fr 1fr}.ctas .go{justify-content:center;padding:12px 10px;font-size:15px}.leadtime{margin-top:12px}}
 
-/* Fresh fruit shop — always visible, separate from the home-food cart */
-.fruit-shop{display:block;width:100%;margin:12px 0 20px;padding:14px;border:1px solid #f0d5c2;border-radius:18px;background:#fffaf5;box-shadow:0 3px 12px rgba(120,50,10,.045)}
-.fruit-shop #fruitMenuPanel{display:block!important}
-.fruit-head{text-align:center;margin-bottom:12px}.fruit-kicker{display:inline-flex;padding:4px 11px;border-radius:999px;background:#e5f2e5;color:#28683a;font-size:11px;font-weight:900}
-.fruit-head h2{margin:7px 0 2px;color:#9f3516;font-size:23px;font-weight:900}.fruit-head p{margin:0;color:#73594b;font-size:13px;line-height:1.7}
-.fruit-note{padding:10px 12px;margin:12px 0;border-radius:13px;background:#fff8e9;border:1px solid #f0dfbd;color:#705338;font-size:11px;line-height:1.7}.fruit-note b{display:block;color:#9c481d;margin-top:3px}
-.fruit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.fruit-item{min-width:0;padding:11px 10px;border:1px solid #efdfd1;border-radius:15px;background:#fff;display:flex;flex-direction:column;gap:7px}
-.fruit-item-top{display:flex;align-items:center;gap:8px}.fruit-emoji{width:35px;height:35px;flex:none;display:grid;place-items:center;border-radius:11px;background:#fff2e8;font-size:21px}
-.fruit-name{font-size:13px;font-weight:900;color:#39251b;line-height:1.4}.fruit-unit{font-size:10px;color:#8a7567}
-.fruit-price{font-size:16px;font-weight:900;color:#b83a12}.fruit-price small{font-size:10px;color:#806b5e;font-weight:700}
-.fruit-step{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto}.fruit-step button{width:30px;height:30px;border:0;border-radius:9px;background:#fce5d8;color:#a43c16;font-size:19px;font-weight:900;cursor:pointer}.fruit-step button:disabled{opacity:.35;cursor:default}.fruit-qty{min-width:54px;text-align:center;font-size:11px;font-weight:800;color:#4a3529}
-.fruit-selected{margin-top:12px;padding:12px;border:1px solid #efd6c5;border-radius:15px;background:#fffaf5}.fruit-selected-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#68422e;font-size:13px}.fruit-selected-head button,.fruit-remove{border:0;background:transparent;color:#a94320;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.fruit-selected-line{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:7px;padding:9px 0;border-top:1px solid #f2e5db;font-size:12px}.fruit-selected-line b{color:#493326}.fruit-selected-line small{display:block;color:#8a7567;font-size:10px;margin-top:2px}.fruit-line-total{font-weight:900;color:#a93815;white-space:nowrap}.fruit-mini-step{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #ead7c9;border-radius:9px;padding:2px}.fruit-mini-step button{width:25px;height:25px;border:0;border-radius:6px;background:#fff1e7;color:#a94320;font-size:16px;font-weight:900;cursor:pointer}.fruit-mini-step output{min-width:34px;text-align:center;font-size:10px;font-weight:800}.fruit-remove{padding:5px}.fruit-checkout{margin-top:12px;padding:12px;border-radius:15px;background:#fff;border:1px solid #f0d8c8}.fruit-total{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#654735}.fruit-total b{font-size:19px;color:#a93815}.fruit-checkout>small{display:block;margin:3px 0 10px;color:#806f62;font-size:10px;line-height:1.6}
-#fruitOrder{width:100%;border:0;border-radius:12px;padding:12px;background:#277443;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer}
-#fruitOrder:disabled{background:#b9b2aa;cursor:not-allowed}
-@media(min-width:650px){.fruit-shop{padding:20px}.fruit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.fruit-item{padding:13px}.fruit-head h2{font-size:26px}}
-@media(prefers-reduced-motion:no-preference){.fruit-item{transition:border-color .15s,transform .15s}.fruit-item:has(.fruit-qty:not(:empty)){border-color:#e5b99f}.fruit-step button:active{transform:scale(.94)}}
 
 </style>
 <link rel="stylesheet" href="customer-first-v4.css">
@@ -1076,14 +1059,6 @@ body.spopen{overflow:hidden}
   </div>
 
 
-  <section class="fruit-shop" id="fruitShop" aria-labelledby="fruitTitle">
-  <div id="fruitMenuPanel">
-  <div class="fruit-head"><div class="fruit-kicker">🍎 قسم مستقل</div><h2 id="fruitTitle">فاكهة طازة للبيت</h2><p>اختار الفاكهة اللي محتاجها، واطلبها لوحدها من غير ما تضيف أكل.</p></div>
-  <div class="fruit-note">الأصناف غير المتاحة حاليًا مش هنضيفها للمنيو، والإضافة هتكون حسب توافرها في السوق.<b>الأسعار متغيرة حسب سعر السوق، والسعر النهائي بيتأكد على واتساب.</b></div>
-  <div class="fruit-grid" id="fruitGrid"></div>
-  <div class="fruit-selected" id="fruitSelected" hidden><div class="fruit-selected-head"><b>سلتك 🍎</b><button type="button" id="fruitClear">فضّي السلة</button></div><div id="fruitSelectedLines"></div></div>
-  <div class="fruit-checkout"><div class="fruit-total"><span>إجمالي تقريبي</span><b id="fruitTotal">0 جنيه</b></div><small>الحساب تقديري حسب الكميات المختارة، والسعر النهائي يتأكد قبل تأكيد الطلب.</small><button type="button" id="fruitOrder" disabled>اختار فاكهتك واطلب على واتساب</button></div>
-</section>
 </main>
 
 
@@ -1584,84 +1559,6 @@ if(SHEET_CSV&&/^https:\/\//.test(SHEET_CSV)){fetch(SHEET_CSV+(SHEET_CSV.includes
       $('hDeal').addEventListener('click',()=>{T('deal_open',{});P.hidden=false;document.body.classList.add('spopen')})}
     if(!on&&b)b.remove()};
   sync();setInterval(sync,60000)})();
-
-/* Independent fresh-fruit order: separate from the food menu/cart */
-(function(){
-  const products=[
-    {id:'orange',name:'برتقال',price:30,emoji:'🍊'},
-    {id:'guava',name:'جوافة',price:40,emoji:'🍐'},
-    {id:'banana',name:'موز بلدي',price:50,emoji:'🍌'},
-    {id:'pomegranate',name:'رمان',price:40,emoji:'❤️'},
-    {id:'persimmon',name:'كاكا',price:50,emoji:'🟠'},
-    {id:'golden-apple',name:'تفاح جولدن',price:85,emoji:'🍏'},
-    {id:'imported-apple',name:'تفاح مستورد',price:100,emoji:'🍎'},
-    {id:'zaghloul-dates',name:'بلح زغلول',price:35,emoji:'🌴'},
-    {id:'siwi-dates',name:'بلح سيوي',price:80,emoji:'🌴'}
-  ];
-  const quantities={};
-  const grid=document.getElementById('fruitGrid');
-  const total=document.getElementById('fruitTotal');
-  const order=document.getElementById('fruitOrder');
-  const selected=document.getElementById('fruitSelected');
-  const selectedLines=document.getElementById('fruitSelectedLines');
-  const clear=document.getElementById('fruitClear');
-  if(!grid||!total||!order||!selected||!selectedLines||!clear)return;
-  const fmt=n=>new Intl.NumberFormat('ar-EG',{maximumFractionDigits:2}).format(n);
-  const qtyText=q=>q===0.5?'نصف كجم':fmt(q)+' كجم';
-  function update(){
-    let sum=0,count=0,units=0;
-    const chosen=products.filter(p=>(quantities[p.id]||0)>0);
-    products.forEach(p=>{
-      const q=quantities[p.id]||0;
-      sum+=q*p.price;
-      if(q){count++;units+=q}
-      const card=grid.querySelector('[data-fruit="'+p.id+'"]');
-      const label=card.querySelector('[data-fruit-qty]');
-      label.textContent=q?qtyText(q):'لم تختار';
-      card.querySelector('[data-fruit-change="-0.5"]').disabled=q<=0;
-      card.classList.toggle('is-selected',q>0);
-    });
-    selected.hidden=!chosen.length;
-    selectedLines.innerHTML=chosen.map(p=>{
-      const q=quantities[p.id],line=q*p.price;
-      return '<div class="fruit-selected-line" data-selected-fruit="'+p.id+'"><div><b>'+p.name+'</b><small>'+fmt(p.price)+' جنيه / كجم</small></div><div class="fruit-mini-step"><button type="button" data-fruit-summary-change="-0.5" data-id="'+p.id+'" aria-label="تقليل '+p.name+'">−</button><output>'+qtyText(q)+'</output><button type="button" data-fruit-summary-change="0.5" data-id="'+p.id+'" aria-label="زيادة '+p.name+'">+</button></div><span class="fruit-line-total">'+fmt(line)+' ج</span><button type="button" class="fruit-remove" data-fruit-remove="'+p.id+'" aria-label="حذف '+p.name+'">✕</button></div>';
-    }).join('');
-    total.textContent=fmt(sum)+' جنيه';
-    order.disabled=count===0;
-    order.textContent=count?'إرسال طلب الفاكهة على واتساب · '+fmt(count)+' أصناف':'اختار فاكهتك واطلب على واتساب';
-    order.dataset.total=String(sum);
-    order.dataset.count=String(count);
-    order.dataset.units=String(units);
-  }
-  grid.innerHTML=products.map(p=>'<article class="fruit-item" data-fruit="'+p.id+'"><div class="fruit-item-top"><span class="fruit-emoji" aria-hidden="true">'+p.emoji+'</span><div><div class="fruit-name">'+p.name+'</div><div class="fruit-unit">سعر الكيلو</div></div></div><div class="fruit-price">'+fmt(p.price)+' <small>جنيه / كجم</small></div><div class="fruit-step"><button type="button" data-fruit-change="-0.5" aria-label="تقليل '+p.name+'">−</button><span class="fruit-qty" data-fruit-qty>لم تختار</span><button type="button" data-fruit-change="0.5" aria-label="زيادة '+p.name+'">+</button></div></article>').join('');
-  grid.addEventListener('click',e=>{
-    const b=e.target.closest('[data-fruit-change]');if(!b)return;
-    const card=b.closest('[data-fruit]');const id=card.dataset.fruit;
-    quantities[id]=Math.max(0,Math.round(((quantities[id]||0)+Number(b.dataset.fruitChange))*2)/2);
-    update();
-  });
-  selectedLines.addEventListener('click',e=>{
-    const remove=e.target.closest('[data-fruit-remove]');
-    if(remove){quantities[remove.dataset.fruitRemove]=0;update();return;}
-    const change=e.target.closest('[data-fruit-summary-change]');
-    if(change){
-      const id=change.dataset.id;
-      quantities[id]=Math.max(0,Math.round(((quantities[id]||0)+Number(change.dataset.fruitSummaryChange))*2)/2);
-      update();
-    }
-  });
-  clear.addEventListener('click',()=>{
-    products.forEach(p=>quantities[p.id]=0);update();
-  });
-  order.addEventListener('click',()=>{
-    const chosen=products.filter(p=>(quantities[p.id]||0)>0);if(!chosen.length)return;
-    const lines=chosen.map(p=>'• '+p.name+': '+qtyText(quantities[p.id])+' × '+fmt(p.price)+' جنيه = '+fmt(quantities[p.id]*p.price)+' جنيه');
-    const sum=chosen.reduce((a,p)=>a+quantities[p.id]*p.price,0);
-    const msg='طلب فاكهة مستقل من موقع ع الحلة 🍎\n\n'+lines.join('\n')+'\n\nالإجمالي التقريبي: '+fmt(sum)+' جنيه\nالأسعار متغيرة حسب سعر السوق، برجاء تأكيد التوافر والسعر النهائي والتوصيل على واتساب.\n\nالاسم:\nالعنوان:';
-    window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');
-  });
-  update();
-})();
 
 </script>
 
