@@ -1207,7 +1207,7 @@ function build(rows){byId={};items=[];secs=[];secImg={};OFFERS=[];FREEZER=[];FRE
   const storefrontRows=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim())).concat(NEW_OFFERS);
   storefrontRows.forEach(r=>{const id=String(r[0]||'').trim();const type=String(r[1]||'').trim();const name=String(r[3]||'').trim();const price=num(r[5]);
     if(!id||!name||!(price>0)||!yes(r[6]))return;if(!BF_ON&&String(r[2]).trim()==='بلاك فرايدي')return;
-    const sec=String(r[2]||'أخرى').trim()||'أخرى';const p={id,name,price,section:sec,unit:String(r[4]||'').trim()||'وحدة',img:String(r[7]||'').trim(),desc:String(r[8]||'').trim(),isOffer:type==='عرض'||type==='بوكس'};byId[id]=p;
+    const sec=String(r[2]||'أخرى').trim()||'أخرى';if(/فاكهة|فاكهه|فواكه/.test(sec))return;const p={id,name,price,section:sec,unit:String(r[4]||'').trim()||'وحدة',img:String(r[7]||'').trim(),desc:String(r[8]||'').trim(),isOffer:type==='عرض'||type==='بوكس'};byId[id]=p;
     if(type==='عرض'){if(sec==='عرض اليوم'&&!DEAL_ON())return;const g=GROUPS[sec]||sec;if(sec!=='عرض اليوم'&&!OGROUPS.find(x=>x[0]===g))OGROUPS.push([g,sec]);
       if(g==='freezer'){FREEZER.push(p);return}
       const pick=(id==='p165'||id==='p166'||/^محشي\s*\d/.test(name))?(num(name)||3):0;const box=id==='p142';const bfk=sec==='بلاك فرايدي';const ebox=['p174','p175','p176'].includes(id);
@@ -1474,7 +1474,7 @@ const HOME_GROUPS=[
  {key:'veg',title:'الخضار',desc:'خضار وتجهيزات المطبخ · متنقي · متجهز · جاهز للطبخ',image:'f-beans.webp',tone:'veg',task:'veg'},
  {key:'prepared',title:'المصنعات',desc:'فراخ ولحوم · تجهيزات متبلة وجاهزة للتسوية',image:'f-shawarma.webp',tone:'prepared'},
  {key:'mahshi',title:'المحاشي',desc:'محشي صح مخدوم · مقور · مسلوق · ع التسوية · مستوي',image:'f-grape.webp',tone:'mahshi',task:'mahshi'},
- {key:'meals',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',image:'meal.webp',tone:'meals',task:'meals'}
+ {key:'meals',title:'الوجبات',desc:'وجبات وأطباق جاهزة من مطبخنا',image:'meal.webp',tone:'meals',task:'meals'}
 ];
 function tileHTML(c){return `<button type="button" class="ctile${c.id==='offers'?' hot':''}" data-cat="${c.id}">${c.img?`<img src="${c.img}" alt="" width="400" height="400" loading="lazy" decoding="async">`:`<span class="cemo" aria-hidden="true">${c.emo}</span>`}<span class="ct"><b>${c.id==='offers'?'🔥 ':''}${esc(c.name)}</b><small>${fmt(c.n)} ${c.id==='offers'?'عرض':'صنف'} · من ${fmt(c.from)} ج</small></span><i aria-hidden="true">‹</i></button>`}
 function heroSlides(){return []}
@@ -1492,8 +1492,11 @@ function renderGrid(){
     }
   });
   h+='</section>';
-  const fruit=L.find(c=>/فاكهة|فاكهه/.test(c.name));
-  h+='<section class="home-after"><button type="button" class="fruit-home" '+(fruit?'data-cat="'+fruit.id+'"':'data-task="fruit"')+'>🍎 الفاكهة</button><p class="home-every">معاك في كل بيت ❤️</p><a class="home-wa-card" href="https://wa.me/201275165496" target="_blank" rel="noopener"><b>احفظ الرقم وتابع الاستوري</b><span>01275165496</span></a></section>';
+  const homeOffers=OFFERS.filter(o=>['boxes','bf','storage'].includes(o.g));
+  const offerCards=homeOffers.map(offerCard).join('');
+  const freezerCards=FREEZER.map(p=>'<article class="home-offer-card"><b>'+esc(p.name)+'</b><small>'+esc(p.desc||'عرض بلاك فرايدي')+'</small><strong>'+fmt(p.price)+' جنيه</strong><button type="button" data-ok="'+p.id+'" data-d="1">أضف للأوردر</button></article>').join('');
+  h+='<section class="home-offers" aria-label="العروض الجديدة"><div class="home-offers-head"><h2>عروض ع الحلة 🖤</h2><small>البوكسات وبلاك فرايدي</small></div><div class="home-offer-rail">'+offerCards+freezerCards+'</div></section>';
+  h+='<section class="home-after"><p class="home-every">معاك في كل بيت ❤️</p><a class="home-wa-card" href="https://wa.me/201275165496" target="_blank" rel="noopener"><b>احفظ الرقم وتابع الاستوري</b><span>01275165496</span></a></section>';
   $('cgrid').innerHTML=h;
   const bfb=$('bfBanner');if(bfb)bfb.hidden=true;
 }
@@ -1528,7 +1531,7 @@ function applyView(){const q=$('q').value.trim();const v=q?'search':VIEW;documen
   if(v==='task')renderTaskSuggestions(CUR);else $('taskSuggestions')?.remove();
 }
 function openCat(id,push=true){VIEW='cat';CUR=id;try{const c=cats().find(c=>c.id===id);T('open_category',{category:c?c.name:id})}catch(_){}if(push)try{history.pushState({c:id},'','#c-'+id)}catch(_){}applyView();if(id==='offers')renderOffers();scrollTo({top:0,behavior:'instant'});const a=document.querySelector(`#strip a[data-s="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'})}
-function openTask(key,push=true){const t=SHOP_TASKS.find(x=>x.key===key);if(!t){if(key==='fruit'){const c=cats().find(x=>/فاكهة|فاكهه/.test(x.name));if(c)openCat(c.id,push);else toast('قسم الفاكهة هيتضاف قريبًا');}return;}VIEW='task';CUR=key;T('open_task',{task:t.title});if(push)try{history.pushState({task:key},'','#task-'+key)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
+function openTask(key,push=true){const t=SHOP_TASKS.find(x=>x.key===key);if(!t)return;VIEW='task';CUR=key;T('open_task',{task:t.title});if(push)try{history.pushState({task:key},'','#task-'+key)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 function goHome(push=true){VIEW='home';CUR='';if($('q').value){$('q').value='';renderMenu.lastQ='';renderMenu()}if(push&&location.hash)try{history.pushState({},'',location.pathname+location.search)}catch(_){}applyView();scrollTo({top:0,behavior:'instant'})}
 $('cgrid').addEventListener('click',e=>{const t=e.target.closest('[data-task]');if(t){openTask(t.dataset.task);return}const b=e.target.closest('[data-cat]');if(b)openCat(b.dataset.cat)});
 $('cgrid').addEventListener('click',e=>{if(e.target.closest('[data-focus-search]')){const q=$('q');document.body.classList.add('qopen');if($('hSearch'))$('hSearch').click();else{q.focus();}setTimeout(()=>{q.focus();const n=q.closest('nav');if(n)scrollTo({top:Math.max(0,n.getBoundingClientRect().top+scrollY-4),behavior:'smooth'});},60)}});
