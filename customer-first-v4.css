@@ -382,3 +382,49 @@ input,select,textarea{font-size:16px}
  #cgrid .bf-summary small{font-size:9px}
  #cgrid .bf-offer summary strong{font-size:14px;padding:6px 10px}
 }
+
+
+/* Homepage visual alignment with the approved reference */
+.ribbon,.top-social{display:none!important}
+header.hero{padding:0!important;margin:0 auto 12px!important}
+header.hero .top{display:flex!important;align-items:center;justify-content:space-between;gap:10px;
+  min-height:94px;padding:9px 15px!important;border:0!important;border-radius:0 0 20px 20px!important;
+  background:#D9362B!important;box-shadow:0 5px 16px rgba(100,35,12,.16)!important}
+header.hero .brand img{width:76px!important;height:76px!important;flex:0 0 76px}
+header.hero .brand b,header.hero .brand small{display:none!important}
+header.hero .top:after{content:"أكل بيتي حقيقي\A محاشي · خضار · وجبات";white-space:pre-line;
+  flex:1;text-align:right;color:#fff;font-size:clamp(17px,4.5vw,27px);font-weight:950;line-height:1.4}
+header.hero .wa-chip{width:44px;height:44px;flex:0 0 44px;background:#fff!important;color:#236B38!important}
+header.hero .herosearch{display:none!important}
+header.hero .banner{display:none!important}
+main.wrap{gap:12px!important;padding-top:0!important}
+#cgrid{gap:14px!important}
+#cgrid .journey-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
+#cgrid .journey-card{display:flex;flex-direction:column;align-items:stretch;overflow:hidden;min-width:0;
+  padding:0!important;border-radius:20px!important}
+#cgrid .journey-card>img{display:block;width:100%;height:auto;aspect-ratio:1.22/1!important;object-fit:cover}
+#cgrid .journey-copy{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:104px;padding:10px 9px 12px!important;text-align:center}
+#cgrid .journey-copy>b{font-size:clamp(16px,4.3vw,21px)!important;font-weight:950}
+#cgrid .journey-copy>small{font-size:clamp(10px,2.8vw,13px)!important;line-height:1.5}
+#cgrid .tone-prepared .journey-copy{min-height:122px}
+#cgrid .journey-subgrid{width:100%;margin-top:8px}
+#cgrid .journey-subgrid button{min-height:39px;font-size:clamp(9px,2.3vw,12px)}
+#cgrid .journey-arrow{display:none!important}
+#cgrid .bf-offers{margin-top:5px}
+@media(min-width:700px){
+ header.hero .top{min-height:112px}
+ header.hero .brand img{width:90px!important;height:90px!important;flex-basis:90px}
+ #cgrid .journey-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important}
+ #cgrid .journey-card>img{aspect-ratio:1.45/1!important}
+ #cgrid .journey-copy{min-height:118px}
+}
+@media(max-width:390px){
+ header.hero .top{min-height:78px;padding:7px 10px!important;gap:7px}
+ header.hero .brand img{width:60px!important;height:60px!important;flex-basis:60px}
+ header.hero .wa-chip{width:38px;height:38px;flex-basis:38px}
+ header.hero .top:after{font-size:16px}
+ #cgrid .journey-grid{gap:8px!important}
+ #cgrid .journey-copy{min-height:90px;padding:8px 6px 10px!important}
+ #cgrid .tone-prepared .journey-copy{min-height:112px}
+}
