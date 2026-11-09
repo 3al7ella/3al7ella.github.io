@@ -659,3 +659,21 @@ img{height:auto;}
 .journey-card,.home-offer-card{font-size:13px}
 .journey-card *,.home-offer-card *{min-width:0}
 @media(min-width:700px){.journey-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px}.home-offer-card{flex-basis:220px}}
+
+
+/* Readability floor requested for mobile storefront text */
+@media(max-width:699px){
+  #cgrid .journey-copy>small,
+  #cgrid .home-offer-card small,
+  #cgrid .home-offer-details summary,
+  #cgrid .home-offer-details p,
+  #cgrid .home-offer-items,
+  #cgrid .home-offer-details button,
+  #cgrid .home-offer-top span,
+  #cgrid .home-offer-save{font-size:13px!important}
+  #cgrid .journey-copy>b{font-size:15px!important}
+  #cgrid .journey-card{min-height:126px!important}
+  #sections .sec .hint,
+  #sections .row .desc,
+  #sections .row .info small{font-size:13px!important}
+}
