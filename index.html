@@ -206,8 +206,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .ogroup>h3 .free{background:var(--leaf-soft);color:var(--leaf);border-radius:999px;padding:2px 10px;font-size:13px}
 .ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .oc{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);min-width:0}
-.oc.big{grid-column:1/-1}
-@media (min-width:720px){.oc.big{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:stretch}.oc.big .pic{aspect-ratio:auto;height:220px;min-height:0;align-self:center;margin:12px;border-radius:16px;overflow:hidden}}
+.oc.big{grid-column:1/-1;display:flex}
+@media (min-width:720px){.oc.big{display:flex}}
 .oc .pic{position:relative;aspect-ratio:16/9;max-width:100%;height:auto;background:#f7eee4;overflow:hidden}
 .oc .pic img{width:100%;height:100%;object-fit:contain;padding:8px;display:block}.oc .pic.noimg{aspect-ratio:auto;height:96px;display:grid;place-items:center;font-size:48px}
 @media (max-width:719px){.oc.big .pic{height:170px;aspect-ratio:auto}.oc.big .pic img{object-fit:contain;padding:8px}}
@@ -241,12 +241,12 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .fzt.on{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset}
 .fzt .info b{font-size:15px}
 .fzt .info small{display:block}
-.fzhead{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;background:var(--brand-soft);border-radius:20px;padding:12px;margin-bottom:10px}
+.fzhead{display:block;background:var(--brand-soft);border-radius:20px;padding:16px;margin-bottom:10px}
 .fzhead img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;max-width:100%}
 .fzhead b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;display:block}
 .fzhead p{margin:4px 0 0;font-weight:700;color:var(--muted)}
 .fzhead .big100{font-weight:900;font-size:20px;color:var(--pot)}
-@media (max-width:460px){.fzhead{grid-template-columns:96px 1fr}}
+@media (max-width:460px){.fzhead{display:block}}
 
 /* picker */
 .pk{display:flex;flex-direction:column;gap:12px}
@@ -1200,12 +1200,12 @@ function offerCard(o){const p=byId[o.id];const q=qtyOf(o.id);const saveAmt=o.bef
   const bd=[...o.badges,...(o.free?[['green','توصيل مجاني']]:[])].map(([c,t])=>`<span class="bdg ${c}">${esc(t)}</span>`).join('');
   const btn=o.pick||o.box?`<button type="button" class="addo${q?' added':''}" data-pick="${o.id}">${q?'اتضاف · ضيف تاني':(o.box?'اختار الحشوات':'اختار الأصناف')}</button>`
     :(q?`<div class="ostep"><button type="button" data-ok="${o.id}" data-d="-1" aria-label="قلّل">−</button><output class="num">${fmt(q)}</output><button type="button" data-ok="${o.id}" data-d="1" aria-label="زوّد">+</button></div>`:`<button type="button" class="addo" data-ok="${o.id}" data-d="1">أضف للأوردر</button>`);
-  return `<article class="oc${o.big?' big':''}"><div class="pic${wide(o.img)?'':' noimg'}">${wide(o.img)?`<img src="${wide(o.img)}" alt="عرض ${esc(o.title)}" loading="lazy" decoding="async">`:`<span aria-hidden="true">🍃</span>`}<div class="badges">${bd}</div></div>
+  return `<article class="oc${o.big?' big':''}"><div class="badges">${bd}</div>
   <div class="ob"><div class="ot"><small>عرض</small><b>${esc(o.title)}</b></div>${o.tl?`<div class="tl">${esc(o.tl)}</div>`:''}
   ${o.inc.length?`<ul class="inc">${o.inc.map(x=>`<li>${x[0]?`<i class="num">${esc(x[0])}</i>`:'<i>✓</i>'}<span>${esc(x[1])}</span></li>`).join('')}</ul>`:''}
   <div class="pricebox"><div class="pv">${saveAmt?`<s class="num">لوحدهم ${fmt(o.before)} ج</s>`:''}<strong class="num">${fmt(p.price)} <span>جنيه</span></strong>${saveAmt||o.free?`<span class="save">${saveAmt?'وفّر '+fmt(saveAmt+(o.free?DELIVERY:0))+' ج':'التوصيل عليه مجاني'}</span>`:''}</div>${btn}</div></div></article>`}
-function freezerHTML(){const prices=[...new Set(FREEZER.map(p=>p.price))];return `<div class="fzhead"><img src="${TH.cabbagebags}" alt="خضار مجهز في أكياس" loading="lazy" decoding="async"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
-  <div class="fz">${FREEZER.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}">${thumb(p)}<div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
+function freezerHTML(){const prices=[...new Set(FREEZER.map(p=>p.price))];return `<div class="fzhead"><div><b>توفير الفريزر</b><p>جهّزي خضارك .. ووفّري وقتك ومجهودك. الأوزان قبل التنضيف.</p>${prices.length?`<span class="big100 num">العروض من ${fmt(Math.min(...prices))} جنيه</span>`:''}</div></div>
+  <div class="fz">${FREEZER.map(p=>{const q=qtyOf(p.id);return `<div class="fzt${q?' on':''}"><span class="fzt-emoji" aria-hidden="true">🧊</span><div class="info"><b>${esc(p.name)}</b>${p.desc?`<small>${esc(p.desc)}</small>`:''}<span class="price num">${fmt(p.price)} ج</span></div><div class="step">${q?`<button type="button" data-ok="${p.id}" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${fmt(q)}</output>`:''}<button type="button" class="add" data-ok="${p.id}" data-d="1" aria-label="زوّد ${esc(p.name)}">+</button></div></div>`}).join('')}</div>`}
 const GTITLE={bf:['🖤 بلاك فرايدي ع الحلة',''],storage:['🧊 عروض التخزين',''],chicken:['عروض الفراخ','<span class="free">🚚 التوصيل مجاني</span>'],mahshi:['عروض المحاشي',''],freezer:['توفير الفريزر',''],events:['المناسبات',''],meat:['عروض اللحمة',''],garlic:['عروض التوم','']};
 function renderChips(){$('ofilter').innerHTML=`<button type="button" data-g="all" aria-pressed="${OG==='all'}">كل العروض</button>`+OGROUPS.map(([g,s])=>`<button type="button" data-g="${esc(g)}" aria-pressed="${OG===g}">${esc(s)}</button>`).join('')}
 const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
@@ -1456,26 +1456,26 @@ function renderGrid(){
     <div class="bf-offers-head"><span class="bf-kicker">🔥 عروض #ع_الحلة</span><h2 id="bfOffersTitle">بوكسات تريحك وتوفّرلك</h2><p>اختاري تجهيزات بيتك مرة واحدة، وشوفي كل صنف وسعره وهديته قبل ما تطلبي.</p></div>
     <div class="box-bundles" aria-label="بوكسات ع الحلة الجديدة">
      <article class="box-bundle box-month">
-      <img class="box-photo" src="${wide('wholech')}" alt="فراخ وتجهيزات من ع الحلة" loading="eager" decoding="async">
+      
       <div class="box-bundle-top"><span>⭐ أكبر بوكس للتجهيز</span><small>توفير 530 ج</small></div><h3>بوكس ع الحلة الشهري</h3>
       <p class="box-benefit">تشكيلة كبيرة من الفراخ والمصنعات، عشان تجهزي احتياجات البيت وتقللي مشاوير الشراء.</p>
       <div class="box-bundle-items"><ul><li>3 فراخ شرقي كبيرة</li><li>2 كيلو شاورما فراخ</li><li>2 كيلو بانيه</li><li>2 كيلو شيش طاووق</li><li>1½ كيلو استربس</li><li>1 كيلو بانيه شوي</li></ul><ul><li>1 كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو زنجر</li><li>½ كيلو ناجتس</li></ul></div>
       <div class="box-bundle-top"><span>🚚 التوصيل مجاني</span><small>بدل 4830 ج</small></div><div class="box-bundle-foot"><b>4300 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس ع الحلة الشهري بـ4300 جنيه من ع الحلة')}">اطلب البوكس</a></div>
      </article>
      <article class="box-bundle">
-      <img class="box-photo" src="${wide('thighs')}" alt="أوراك فراخ متبلة من ع الحلة" loading="lazy" decoding="async">
+      
       <div class="box-bundle-top"><span>🗓️ تجهيز أسبوعين · 🚚 توصيل مجاني</span><small>توفير 255 ج</small></div><h3>بوكس الأسبوعين</h3><p class="box-benefit">تنويع بين الفراخ المتبلة والمصنعات، مع هدية أوراك روستو.</p>
       <ul><li>1 كيلو أوراك تندوري</li><li>1 فرخة شرقي وسط</li><li>1 كيلو زنجر</li><li>1 كيلو شيش طاووق</li><li>½ كيلو بانيه</li><li>½ كيلو ناجتس</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو كوردن بلو</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو بانيه شوي</li></ul>
       <div class="box-gift">🎁 هدية ½ كيلو أوراك روستو</div><div class="box-bundle-foot"><b>1980 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب بوكس الأسبوعين بـ1980 جنيه من ع الحلة')}">اطلب البوكس</a></div>
      </article>
      <article class="box-bundle">
-      <img class="box-photo" src="${wide('pane')}" alt="بانيه متجهز من ع الحلة" loading="lazy" decoding="async">
+      
       <div class="box-bundle-top"><span>🎒 تجهيزات المدرسة · 🚚 توصيل مجاني</span><small>توفير 195 ج</small></div><h3>شنطة المدرسة</h3><p class="box-benefit">اختيارات متنوعة تساعدك تجهزي ساندوتشات ووجبات الأولاد.</p>
       <ul><li>½ كيلو شاورما فراخ</li><li>½ كيلو كفتة فراخ</li><li>1 كيلو برجر فراخ</li><li>½ كيلو استربس</li><li>½ كيلو ناجتس</li></ul>
       <div class="box-gift">🎁 هدية ½ كيلو أوراك</div><div class="box-bundle-foot"><b>850 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب شنطة المدرسة بـ850 جنيه من ع الحلة')}">اطلب الشنطة</a></div>
      </article>
      <article class="box-bundle">
-      <img class="box-photo" src="${wide('crispy2')}" alt="تجهيزات فراخ متنوعة من ع الحلة" loading="lazy" decoding="async">
+      
       <div class="box-bundle-top"><span>🚀 تشكيلة متنوعة · 🚚 توصيل مجاني</span><small>توفير 240 ج</small></div><h3>عرض الصاروخ</h3><p class="box-benefit">تشكيلة تجمع البانيه المشوي والشيش طاووق والبرجر والكفتة والأوراك.</p>
       <ul><li>1 كيلو بانيه شوي</li><li>1 كيلو شيش طاووق</li><li>½ كيلو برجر فراخ</li><li>½ كيلو كفتة فراخ</li><li>½ كيلو شاورما فراخ</li><li>½ كيلو أوراك روستو</li><li>½ كيلو أوراك تندوري</li><li>½ كيلو دبابيس</li></ul>
       <div class="box-gift">🎁 هدية ½ كيلو أوراك</div><div class="box-bundle-foot"><b>1250 ج</b><a target="_blank" rel="noopener" href="https://wa.me/201275165496?text=${encodeURIComponent('عايز أطلب عرض الصاروخ بـ1250 جنيه من ع الحلة')}">اطلب العرض</a></div>
