@@ -122,7 +122,9 @@ function recordItem(x,c,title,sub,val){const locked=isLockedRecord(c,x._id,x);co
 const newId=prefix=>prefix+"-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);
 
 const monthOf=x=>String(x.date||x.month||"").slice(0,7);
-const isInvoiceExpense=x=>/فاتورة/.test(String(x.source||"")+" "+String(x.item||"")+" "+String(x.note||""))||x.invoice===true;\nconst expenseCategoryLabel=x=>isInvoiceExpense(x)?"فواتير":(x.category||"غير مصنف");\nconst isPurchase=x=>!["مصروف تشغيل","توصيل","إيجار","عمالة","أخرى","مواصلات","صيانة","خدمات وفواتير","إعلانات"].includes(String(x.category||"")) && !x.excluded;
+const isInvoiceExpense=x=>/فاتورة/.test(String(x.source||"")+" "+String(x.item||"")+" "+String(x.note||""))||x.invoice===true;
+const expenseCategoryLabel=x=>isInvoiceExpense(x)?"فواتير":(x.category||"غير مصنف");
+const isPurchase=x=>!["مصروف تشغيل","توصيل","إيجار","عمالة","أخرى","مواصلات","صيانة","خدمات وفواتير","إعلانات"].includes(String(x.category||"")) && !x.excluded;
 function isCourierLabor(x){const n=String(x.name||"")+" "+String(x.worker||"");return x.kind==="order"||/مندوب/.test(n)||/w-(mohamed|marwan|old)/.test(n)}
 function currentLabor(){return collection("labor").filter(x=>!isCourierLabor(x))}
 function renderStaffAttendance(){
