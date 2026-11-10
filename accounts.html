@@ -248,10 +248,12 @@ function getStockRows(){
    balance=Number(base.qty)||0;
    const baselineKey=String(base.date||"")+" "+String(base.createdAt||"");
    related.filter(m=>m!==base&&m.type!=="count"&&(String(m.date||"")+" "+String(m.createdAt||""))>baselineKey).forEach(m=>{
-    if(m.type==="in")balance+=Number(m.qty)||0;
-    else if(m.type==="out")balance-=Number(m.qty)||0;
-    else if(m.type==="production")balance+=Number(m.qty)||0;
-    else if(m.type==="adjust")balance=Number(m.qty)||0;
+    const rawQty=Number(m.qty)||0;
+    const qty=it.id==="si-grapeleaf"&&/ربع كيلو/.test(String(m.unit||""))?rawQty*0.25:rawQty;
+    if(m.type==="in")balance+=qty;
+    else if(m.type==="out")balance-=qty;
+    else if(m.type==="production")balance+=qty;
+    else if(m.type==="adjust")balance=qty;
     if(String(m.date||"")>lastDate)lastDate=m.date;
    });
   }
