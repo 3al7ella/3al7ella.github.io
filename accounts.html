@@ -428,3 +428,4 @@ $("closeLaborMonth").onclick=async()=>{try{const m=$("laborMonth").value;if(!m)t
 $("exportBackup").onclick=()=>{const obj={meta:{system:"حسابات ع الحلة",exported_at:new Date().toISOString(),record_counts:records.reduce((a,x)=>(a[x.collection]=(a[x.collection]||0)+1,a),{})},collections:{}};for(const x of records)(obj.collections[x.collection]??=[]).push({id:x.record_id,data:x.data});const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="alhella-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
 (async()=>{const {data:{session:s}}=await sb.auth.getSession();if(s)showApp(s)})();
 </script></body></html>
+<!-- publish-retry-2026-11-11 -->
