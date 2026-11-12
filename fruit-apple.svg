@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 244">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF4E6"/><stop offset="1" stop-color="#F7DCC2"/></linearGradient><linearGradient id="apple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F05A35"/><stop offset="1" stop-color="#B9231C"/></linearGradient></defs>
+<rect width="600" height="244" rx="28" fill="url(#bg)"/>
+<g transform="translate(300 121)">
+<path d="M0 -55C-7 -83 1 -104 23 -119" fill="none" stroke="#6B4427" stroke-width="10" stroke-linecap="round"/>
+<path d="M8 -104C39 -133 78 -127 88 -97C54 -73 23 -76 8 -104Z" fill="#4F9B43"/>
+<path d="M-5 -57C-43 -85 -99 -62 -112 -17C-129 39 -87 100 -47 105C-23 108 -11 93 4 93C22 93 39 111 64 102C103 87 131 30 111 -24C95 -69 45 -82 4 -55Z" fill="url(#apple)"/>
+<path d="M-6 -50C-29 -70 -61 -63 -76 -42" fill="none" stroke="#FFB08D" stroke-width="8" stroke-linecap="round" opacity=".7"/>
+<path d="M-3 -51C-7 -29 -7 -17 -4 -4" fill="none" stroke="#8E1D19" stroke-width="5" stroke-linecap="round" opacity=".35"/>
+</g></svg>
