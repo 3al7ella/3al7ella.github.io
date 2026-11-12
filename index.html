@@ -79,6 +79,7 @@ a{color:inherit}
 .cat.t-prep{background:linear-gradient(180deg,#FCEFDD,#F5DFC1);color:var(--brown)}.cat.t-prep .ttl{color:#4A2210;background:#FFF7EC}.cat.t-prep .go b svg{stroke:#F5DFC1}
 .cat.t-mah{background:linear-gradient(180deg,#FBC531,#F3A51A);color:#5A2A08}.cat.t-mah .go b svg{stroke:#F3A51A}
 .cat.t-meal{background:linear-gradient(180deg,#C8191A,#9E1016)}.cat.t-meal .go b svg{stroke:#9E1016}
+.cat.t-fruit{background:linear-gradient(135deg,#FFF0DD,#F6D7BD);color:#552716}.cat.t-fruit .ttl{color:#552716;background:#FFF9F0}.cat.t-fruit .go b svg{stroke:#C83224}
 .subs{display:flex;gap:4px;margin-top:9px;width:100%}
 .subs span{flex:1;text-align:center;background:transparent;color:var(--brown);border:1.5px solid #8C5A3A;border-radius:30px;font-weight:900;font-size:11px;padding:5px 1px;white-space:nowrap;min-width:0}
 .withyou{display:flex;align-items:center;gap:10px;margin-top:14px}
@@ -436,7 +437,7 @@ const CATS=[
  {key:'veg',title:'الخضار',desc:'خضار وتجهيزات المطبخ · متنقي · متجهز · جاهز للطبخ',img:'c-veg.webp',s1:'خضار وتجهيزات المطبخ',s2:'متنقي · متجهز · جاهز للطبخ',tone:'t-veg',groups:[['الخضار المتنضف',['الخضار المتنضف']],['صوصات ومخللات',['مخللات وصوصات']]]},
  {key:'meal',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',img:'c-meal.webp',s1:'أكل بيتي حقيقي',s2:'وجبات وأطباق جاهزة',tone:'t-meal',groups:[['الوجبات',['الوجبات']],['صواني الفرن',['صواني الفرن']],['طواجن وطبيخ',['طواجن وطبيخ']],['الرز المعمر',['الرز المعمر']],['بولات وشوربة',['بولات وشوربة']]]},
  {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · مقور · مسلوق · ع التسوية · مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'مقور · ع التسوية · مستوي',tone:'t-mah',groups:[['المحاشي',['المحاشي']],['جاهز على الحشو',['جاهز على الحشو']]]},
- {key:'fruit',title:'فواكه #ع_الحله',desc:'فواكه سليمة فريش · وفواكه جاهزة ومتقطعة',img:'fruit-apple.svg',s1:'فواكه الموسم',s2:'فريش · جاهزة للأكل والعصير',tone:'t-fruit',groups:[['فواكه جاهزة',['فواكه جاهزة']],['فواكه سليمة فريش',['فواكه سليمة فريش']]]}
+ {key:'fruit',title:'فواكه #ع_الحله',desc:'فواكه سليمة فريش · وفواكه جاهزة ومتقطعة',img:'fruit-apple.svg',s1:'فواكه الموسم',s2:'الأسعار حسب السوق · فريش وجاهزة',tone:'t-fruit',groups:[['فواكه جاهزة',['فواكه جاهزة']],['فواكه سليمة فريش',['فواكه سليمة فريش']]]}
 ];
 const OGROUPS=[['all','كل العروض'],['boxes','بوكسات ع الحلة'],['freezer','أكياس الفريزر'],['storage','عروض التخزين']];
 const FOLDERS=[
@@ -572,7 +573,7 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
  else{const c=CATS.find(x=>x.key===CUR);if(!c){goHome(false);return}$('vTitle').textContent=c.title;$('vTitle').classList.remove('long');
   const gs=c.groups.filter(g=>items.some(p=>g[1].includes(p.section)));if(SUB>=gs.length)SUB=0;
   C.innerHTML=gs.length>1?gs.map((g,i)=>`<button type="button" data-sub="${i}" aria-pressed="${i===SUB}">${g[0]}</button>`).join(''):'';
-  const g=gs[SUB];h=g?(g[1].length===1&&g[1][0]==='الوجبات'?mealsHTML:listHTML)(items.filter(p=>g[1].includes(p.section))):'<div class="empty">مفيش أصناف هنا دلوقتي</div>'}
+  const g=gs[SUB];h=(CUR==='fruit'?'<p class="fsub">متاح فواكه الموسم · الأسعار متغيرة حسب أسعار السوق</p>':'')+(g?(g[1].length===1&&g[1][0]==='الوجبات'?mealsHTML:listHTML)(items.filter(p=>g[1].includes(p.section))):'<div class="empty">مفيش أصناف هنا دلوقتي</div>')}
  L.innerHTML=h}
 document.addEventListener('click',e=>{const b=e.target.closest('#vchips [data-sub]');if(!b)return;SUB=+b.dataset.sub;renderList();scrollTo({top:0})});
 function show(v){VIEW=v;const home=v==='home';$('vHome').hidden=!home;$('vList').hidden=home;document.querySelectorAll('.nav [data-nav]').forEach(b=>b.setAttribute('aria-current',String(b.dataset.nav===(home?'home':v==='offers'?'offers':''))));if(!home)renderList();else renderHome()}
