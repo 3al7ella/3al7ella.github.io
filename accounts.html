@@ -36,7 +36,7 @@
 <main id="app" class="hidden">
 <div class="panel" style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><b>الشهر المالي:</b><select id="globalMonth" style="max-width:220px"><option value="all">كل الشهور</option></select><span id="monthScopeLabel" class="muted">عرض منفصل لكل شهر</span></div>
 <nav class="tabs"><button class="active" data-tab="home">الرئيسية</button><button data-tab="stock">المخزن</button><button data-tab="orders">الأوردرات</button><button data-tab="expenses">المصروفات</button><button data-tab="labor">العمالة والعهد</button><button data-tab="parties">العملاء</button><button data-tab="intel">ذكاء الأعمال</button><button data-tab="reports">التقارير</button><button data-tab="tools">النسخ والاستيراد</button><button data-tab="history">من أول الشغل</button><button data-tab="suppliers">تفاصيل المشتريات</button><button data-tab="audit">مراجعة البيانات</button></nav>
-<section id="home" class="section active"><div class="account-main-cards">
+<section id="home" class="section active"><div class="panel" style="margin-bottom:12px"><div class="row"><b>العمالة والمرتبات</b><button type="button" class="ghost" data-goto="labor">الحضور والغياب</button></div><div id="homeStaffRoster" class="staff-roster-grid"></div></div><div class="account-main-cards>
 <button type="button" class="account-main-card sales" data-goto="orders"><span class="am-label">المبيعات</span><strong class="am-value" id="mainSalesValue">0 ج</strong><span class="am-hint">إجمالي الأوردرات المسجلة للشهر</span></button>
 <button type="button" class="account-main-card expenses" data-goto="expenses"><span class="am-label">المصروفات</span><strong class="am-value" id="mainExpensesValue">0 ج</strong><span class="am-hint">كل المصروفات المسجلة للشهر</span></button>
 <button type="button" class="account-main-card profit" data-goto="reports"><span class="am-label">صافي الربح</span><strong class="am-value" id="mainProfitValue">0 ج</strong><span class="am-hint">الإيرادات ناقص كل المصروفات التشغيلية</span></button>
@@ -131,7 +131,8 @@ const newId=prefix=>prefix+"-"+Date.now().toString(36)+"-"+Math.random().toStrin
 const monthOf=x=>String(x.date||x.month||"").slice(0,7);
 const isInvoiceExpense=x=>String(x.category||"")==="فواتير"||/فاتورة/.test(String(x.source||"")+" "+String(x.item||"")+" "+String(x.note||""))||x.invoice===true;
 const expenseCategoryLabel=x=>isInvoiceExpense(x)?"فواتير":(x.category||"غير مصنف");
-const isPurchase=x=>!x.excluded&&["مشتريات","فواتير",""].includes(String(x.category||"").trim());
+const PURCHASE_CATEGORIES=["مشتريات","فواتير","خضراوات","لحوم","دواجن","أدوات تغليف","تغليف","مستلزمات مطبخ","بقالة","فاكهة","فواكه","حبوب وأرز","ألبان","ألبان وأجبان","ألبان وبيض","بهارات","خامات متنوعة","زيوت","عجين ومخبوزات","مخبوزات","معجنات","مشتريات متنوعة","منظفات"];
+const isPurchase=x=>!x.excluded&&(PURCHASE_CATEGORIES.includes(String(x.category||"").trim())||isInvoiceExpense(x));
 function isCourierLabor(x){const n=String(x.name||"")+" "+String(x.worker||"");return x.kind==="order"||/مندوب/.test(n)||/w-(mohamed|marwan|old)/.test(n)}
 function currentLabor(){return collection("labor").filter(x=>!isCourierLabor(x))}
 function renderStaffAttendance(){
@@ -143,7 +144,7 @@ function renderStaffAttendance(){
  $("absenceWorker").innerHTML=workers.map(w=>'<option value="'+esc(w.id)+'">'+esc(w.name)+'</option>').join("");
  const monthlyPay=({"w-ummmohamed":4000,"w-maha":2500,"w-new1101":3000,"w-asmaa":1500,"w-haneen":1000});
  $("staffRoster").innerHTML='<div class="staff-roster-grid">'+workers.map(w=>{
-  const pay=monthlyPay[w.id],label=w.id==="w-hamza"?"150 جنيه / يوم":pay?money(pay)+" / شهر":money(Number(w.rate)||0)+" / يوم";
+  const pay=monthlyPay[w.id],label=w.id==="w-hamza"?"150 جنيه / يوم":pay?money(pay)+" / شهر":money(Number(w.rate)||0)+" / يوم";if($("homeStaffRoster"))$("homeStaffRoster").innerHTML=$("staffRoster").innerHTML;
   return '<div class="staff-roster-item"><b>'+esc(w.name)+'</b><strong>'+label+'</strong></div>';
  }).join("")+'</div>';
  const dayHeaders=days.map(d=>'<th class="'+(d===now?'today':'')+'">'+dayLabel(d)+'</th>').join("");
@@ -365,9 +366,9 @@ function renderHistoryAndAudit(){
  const months=[...new Set([...orders,...expenses,...labor].map(monthOf).filter(m=>/^\\d{4}-\\d{2}$/.test(m)))].sort().reverse();
  $("historyMonths").innerHTML=months.map(m=>{const o=orders.filter(x=>monthOf(x)===m),e=expenses.filter(x=>monthOf(x)===m),l=labor.filter(x=>monthOf(x)===m);return '<div class="history-month"><b>'+esc(m)+'</b><div class="muted">الأوردرات: '+o.length+' · العمالة المسجلة: '+l.length+' حركة</div><div class="row"><span>الإيرادات</span><b>'+money(o.reduce((s,x)=>s+(Number(x.total)||0),0))+'</b></div><div class="row"><span>المصروفات المسجلة</span><b>'+money(e.reduce((s,x)=>s+(Number(x.amount)||0),0))+'</b></div></div>'}).join("")||'<p class="muted">لا توجد سجلات من تاريخ بداية التشغيل.</p>';
  const detailMonth=$("purchaseMonthDetail")?.value||today().slice(0,7),purchases=expenses.filter(x=>isPurchase(x)&&monthOf(x)===detailMonth),itemMap={};
- purchases.forEach(x=>{const item=String(x.item||x.name||"بند غير محدد").trim()||"بند غير محدد",unit=String(x.unit||"وحدة غير محددة").trim(),key=item+"||"+unit,a=itemMap[key]||(itemMap[key]={item,unit,qty:0,amount:0,count:0,qtyMissing:false});a.amount+=Number(x.amount)||0;a.count++;if(Number(x.quantity)>0)a.qty+=Number(x.quantity);else a.qtyMissing=true;});
+ purchases.forEach(x=>{const item=String(x.item||x.name||"بند غير محدد").trim()||"بند غير محدد",qtyText=String(x.qty??x.quantity??"").trim(),key=item+"||"+qtyText,a=itemMap[key]||(itemMap[key]={item,qtyText,amount:0,count:0,dates:[]});a.amount+=Number(x.amount)||0;a.count++;if(x.date)a.dates.push(x.date);});
  $("purchaseDetailTotal").textContent=money(purchases.reduce((s,x)=>s+(Number(x.amount)||0),0));$("purchaseDetailItemsCount").textContent=Object.keys(itemMap).length;
- $("purchaseDetailRows").innerHTML=Object.values(itemMap).sort((a,b)=>b.amount-a.amount).map(x=>'<div class="item"><div><b>'+esc(x.item)+'</b><div class="muted">'+(x.qty>0?'إجمالي الكمية: '+x.qty.toLocaleString("ar-EG")+" "+esc(x.unit)+(x.qtyMissing?" · توجد سجلات قديمة بلا كمية":""):"الكمية غير مسجلة في بعض/كل السجلات") +' · '+x.count+' عملية شراء</div></div><b>'+money(x.amount)+'</b></div>').join("")||'<p class="muted">لا توجد مشتريات مسجلة للشهر.</p>';
+ $("purchaseDetailRows").innerHTML=Object.values(itemMap).sort((a,b)=>b.amount-a.amount).map(x=>'<div class="item"><div><b>'+esc(x.item)+'</b><div class="muted">'+(x.qtyText?"الكمية المسجلة: "+esc(x.qtyText):"الكمية غير محددة في السجل")+' · '+x.count+' مرة شراء · '+esc([...new Set(x.dates)].join("، "))+'</div></div><b>'+money(x.amount)+'</b></div>').join("")||'<p class="muted">لا توجد مشتريات مسجلة للشهر.</p>';
  const badOrders=fromStartRows("orders").filter(x=>orderStatusLabel(x)!=="ملغي"&&(!String(x.date||"").trim()||!String(x.customer||"").trim()||!(Number(x.total)>0)||!String(x.phone||"").trim()));
  const badExpenses=fromStartRows("expenses").filter(x=>!x.excluded&&(!String(x.date||"").trim()||!(Number(x.amount)>0)||!String(x.item||x.category||"").trim()));
  const badMoves=moves.filter(x=>!String(x.date||"").trim()||!String(x.name||x.item||"").trim()||x.qty===undefined||x.qty===null||!String(x.type||"").trim());
