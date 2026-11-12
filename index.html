@@ -437,7 +437,6 @@ const CATS=[
  {key:'veg',title:'الخضار',desc:'خضار وتجهيزات المطبخ · متنقي · متجهز · جاهز للطبخ',img:'c-veg.webp',s1:'خضار وتجهيزات المطبخ',s2:'متنقي · متجهز · جاهز للطبخ',tone:'t-veg',groups:[['الخضار المتنضف',['الخضار المتنضف']],['صوصات ومخللات',['مخللات وصوصات']]]},
  {key:'meal',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',img:'c-meal.webp',s1:'أكل بيتي حقيقي',s2:'وجبات وأطباق جاهزة',tone:'t-meal',groups:[['الوجبات',['الوجبات']],['صواني الفرن',['صواني الفرن']],['طواجن وطبيخ',['طواجن وطبيخ']],['الرز المعمر',['الرز المعمر']],['بولات وشوربة',['بولات وشوربة']]]},
  {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · مقور · مسلوق · ع التسوية · مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'مقور · ع التسوية · مستوي',tone:'t-mah',groups:[['المحاشي',['المحاشي']],['جاهز على الحشو',['جاهز على الحشو']]]},
- {key:'fruit',title:'فواكه #ع_الحله',desc:'فواكه سليمة فريش · وفواكه جاهزة ومتقطعة',img:'https://images.pexels.com/photos/7333130/pexels-photo-7333130.jpeg?cs=srgb&dl=pexels-shliftik-7333130.jpg&fm=jpg',s1:'فواكه الموسم',s2:'الأسعار حسب السوق · فريش وجاهزة',tone:'t-fruit',groups:[['فواكه جاهزة',['فواكه جاهزة']],['فواكه سليمة فريش',['فواكه سليمة فريش']]]}
 ];
 const OGROUPS=[['all','كل العروض'],['boxes','بوكسات ع الحلة'],['freezer','أكياس الفريزر'],['storage','عروض التخزين']];
 const FOLDERS=[
@@ -456,7 +455,7 @@ function applyOv(rows){const ov=window.__OV;if(!ov)return rows;const o=ov.o||{};
  const add=ov.add||{};Object.keys(add).forEach(id=>{const a=add[id];if(!a||!a.name||!(a.price>0)||(o[id]&&o[id].off)||/بام[ية]/.test([a.name,a.desc,a.inc].join(' ')))return;out.push([id,a.type||'صنف',a.sec||'أخرى',a.name,a.unit||'كيلو',a.price,'نعم',a.img||'',a.desc||'',a.inc||'',a.before||'',a.free?'نعم':'',a.badge||''])});return out.filter(r=>!/بام[ية]/.test([r[2],r[3],r[8],r[9]].join(' ')))}
 function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  /* old offers stay in the data but are hidden; only the approved offers (NEW_OFFERS) show */
- const rs=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim()));
+ const rs=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim())&&!/^فواكه/.test(String(r[2]||'').trim()));
  const newIds=new Set(NEW_OFFERS.map(r=>r[0]));
  const extra=rows.filter(r=>newIds.has(r[0]));/* admin overrides on new offers */
  const offers=NEW_OFFERS.map(r=>extra.find(x=>x[0]===r[0])||r);
