@@ -463,7 +463,7 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  const offers=NEW_OFFERS.map(r=>extra.find(x=>x[0]===r[0])||r);
  rs.concat(offers).forEach(r=>{const id=String(r[0]||'').trim(),type=String(r[1]||'').trim(),name=String(r[3]||'').trim(),price=num(r[5]);
   if(!id||!name||!(price>0)||!yes(r[6]))return;
-  const sec=String(r[2]||'أخرى').trim()||'أخرى';
+  let sec=String(r[2]||'أخرى').trim()||'أخرى';if(sec==='المحاشي'){const nm=String(r[3]||'');sec=/ممبار/.test(nm)?'ممبار':/لحم[ةه] مفروم/.test(nm)?'محاشي باللحمة المفرومة':/مستوي/.test(nm)?'محاشي مستوية':'محاشي ع التسوية'}
   const isOffer=type==='عرض'||type==='بوكس';
   const p={id,name,price,section:sec,unit:String(r[4]||'').trim()||'وحدة',img:String(r[7]||'').trim(),desc:String(r[8]||'').trim(),isOffer};byId[id]=p;
   if(isOffer){const inc=splitInc(r[9]);const gift=inc.find(x=>/هدية/.test(x[1]+x[0]));
