@@ -67,6 +67,10 @@ a{color:inherit}
 .again button{border:0;background:var(--ink);color:#fff;font-weight:900;font-size:13.5px;border-radius:12px;padding:9px 12px;flex:none}
 /* categories */
 .cats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quick-cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.quick-cat{border:1px solid #E8D3B9;border-radius:15px;padding:12px 10px;background:#FFF8EE;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:900;box-shadow:0 3px 10px rgba(90,40,15,.07);min-height:54px}
+.quick-cat span:first-child{font-size:21px}
+.quick-cat:active{transform:scale(.98)}
 .cat{position:relative;display:flex;flex-direction:column;align-items:center;border:0;padding:0;border-radius:22px;overflow:hidden;text-align:center;box-shadow:0 8px 20px rgba(90,30,10,.16);color:#fff;min-width:0}
 .cat .ph{height:122px;width:100%;object-fit:cover;background:#0001}
 .cat .cp{padding:0 10px 14px;display:flex;flex-direction:column;align-items:center;flex:1;width:100%}
@@ -379,6 +383,7 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  <section class="sec" id="menu">
   <div class="sech"><h2>اطلب إيه النهارده؟</h2></div>
   <div class="cats" id="cats"></div>
+  <div class="quick-cats" id="quickCats" aria-label="أقسام إضافية"></div>
   <div class="withyou"><a class="wapill" href="https://wa.me/201275165496" target="_blank" rel="noopener"><b class="num"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1a17 17 0 0 1-1.7-.6 13.4 13.4 0 0 1-5.1-4.5c-.4-.5-1.2-1.7-1.2-3.2s.8-2.3 1.1-2.6c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.4Z"/></svg>01275165496</b><small>🔖 احفظ الرقم وتابع الاستوري</small></a><p>معاك في كل بيت</p></div>
  </section>
  <section class="sec" id="offers">
@@ -461,13 +466,15 @@ const imgOf=k=>isFile(k)?k:(TH[k]||'');
 function T(n,p){try{gtag('event',n,p||{})}catch(_){}}
 const SEC_EMO={'المحاشي':'🫑','محاشي ع التسوية':'🫑','محاشي مستوية':'🍲','محاشي باللحمة المفرومة':'🥩','ممبار':'🌭','جاهز على الحشو':'🥒','الخضار المتنضف':'🥬','فراخ متبلة':'🍗','مصنعات الفراخ':'🍗','مصنعات اللحمة':'🥩','الحمام والبط':'🕊️','المقبلات':'🥟','الوجبات':'🍱','صواني الفرن':'🥘','طواجن وطبيخ':'🍲','بولات وشوربة':'🥣','الرز المعمر':'🍚','مخللات وصوصات':'🫙','إضافات':'🧺','فواكه جاهزة':'🍓','فواكه سليمة فريش':'🍎'};
 
-/* categories shown on home (4 cards, like the approved design) */
+/* categories shown on home (4 main cards + compact shortcuts) */
 const CATS=[
  {key:'prep',title:'المصنعات',desc:'فراخ ولحوم · تجهيزات متبلة وجاهزة للتسوية',img:'c-prep.webp',s1:'فراخ ولحوم',s2:'متبلة وجاهزة للتسوية',tone:'t-prep',subs:true,groups:[['مصنعات فراخ',['مصنعات الفراخ','فراخ متبلة']],['مصنعات لحوم',['مصنعات اللحمة']],['حمام وبط',['الحمام والبط']]]},
  {key:'veg',title:'الخضار',desc:'خضار وتجهيزات المطبخ · متنقي · متجهز · جاهز للطبخ',img:'c-veg.webp',s1:'خضار وتجهيزات المطبخ',s2:'متنقي · متجهز · جاهز للطبخ',tone:'t-veg',groups:[['الخضار المتنضف',['الخضار المتنضف']]]},
  {key:'meal',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',img:'c-meal.webp',s1:'أكل بيتي حقيقي',s2:'وجبات وأطباق جاهزة',tone:'t-meal',groups:[['الوجبات',['الوجبات']],['صواني الفرن',['صواني الفرن']],['طواجن وطبيخ',['طواجن وطبيخ']],['الرز المعمر',['الرز المعمر']],['بولات وشوربة',['بولات وشوربة']]]},
  {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · مقور · مسلوق · ع التسوية · مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'مقور · ع التسوية · مستوي',tone:'t-mah',tiles:true,groups:[['محاشي ع التسوية',['محاشي ع التسوية'],'r-grape.webp','جاهزة تسوّيها في البيت'],['محاشي مستوية',['محاشي مستوية'],'r-cabbage-cooked.webp','جاهزة على الأكل'],['محاشي باللحمة المفرومة',['محاشي باللحمة المفرومة'],'r-mix-cooked.webp','خلطة رز باللحمة المفرومة'],['ممبار',['ممبار'],'f-mombarstuffed.webp','متنضف · مسلوق · محشي · متحمر'],['جاهز ع الحشو',['جاهز على الحشو'],'f-zucchinicore.webp','مقور · مسلوق · خلطات']]}
 ];
+const QUICK_CATS=[{key:'pickles',title:'مخللات وصوصات',groups:[['مخللات وصوصات',['مخللات وصوصات']]]},{key:'extras',title:'إضافات',groups:[['إضافات',['إضافات']]]}];
+const ALL_CATS=CATS.concat(QUICK_CATS);
 const OGROUPS=[['all','كل العروض'],['boxes','بوكسات ع الحلة'],['freezer','أكياس الفريزر'],['storage','عروض التخزين']];
 const FOLDERS=[
  {k:'bride',title:'👰 صواني عشا العروسة',sub:'سفرة كاملة تشرّف ليلة العمر.. والتوصيل مجاني',gs:['bride']},
@@ -536,7 +543,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.step button');i
 /* ---------- home ---------- */
 function minPrice(secs){const ps=items.filter(p=>secs.includes(p.section)).map(p=>p.price);return ps.length?Math.min(...ps):0}
 function renderCats(){const ICO={veg:'<i><svg viewBox="0 0 26 26"><path d="M4 22C4 11 11 4 23 3c0 12-7 19-19 19z" fill="#3E9B3A"/><path d="M5 21C10 15 14 11 20 6" stroke="#fff" stroke-width="1.6" fill="none"/></svg></i>',mah:'<i><svg viewBox="0 0 26 26"><path d="M4 22C4 11 11 4 23 3c0 12-7 19-19 19z" fill="#3E9B3A"/><path d="M5 21C10 15 14 11 20 6" stroke="#fff" stroke-width="1.6" fill="none"/></svg></i>',meal:'<i><svg viewBox="0 0 26 26"><path d="M7 15a5 5 0 1 1 2-9.5 5 5 0 0 1 8 0A5 5 0 1 1 19 15v5H7z" fill="#fff" stroke="#3A1A0C" stroke-width="1.6"/><path d="M7 18h12" stroke="#3A1A0C" stroke-width="1.6"/></svg></i>',prep:''};$('cats').innerHTML=CATS.map(c=>
- `<button type="button" class="cat ${c.tone}" data-cat="${c.key}"><img class="ph" src="${c.img}" alt="${c.title}" width="300" height="122" loading="${c.key==='veg'||c.key==='prep'?'eager':'lazy'}" decoding="async"><span class="cp"><span class="ttl">${c.title}${ICO[c.key]||''}</span><span class="s1">${esc(c.s1||'')}</span><span class="s2">${esc(c.s2||'')}</span>${c.subs?`<span class="subs"><span data-cat="prep" data-sub="0">مصنعات فراخ</span><span data-cat="prep" data-sub="1">مصنعات لحوم</span></span>`:''}<span class="go"><span>ادخل القسم<b><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></b></span></span></span></button>`).join('')}
+ `<button type="button" class="cat ${c.tone}" data-cat="${c.key}"><img class="ph" src="${c.img}" alt="${c.title}" width="300" height="122" loading="${c.key==='veg'||c.key==='prep'?'eager':'lazy'}" decoding="async"><span class="cp"><span class="ttl">${c.title}${ICO[c.key]||''}</span><span class="s1">${esc(c.s1||'')}</span><span class="s2">${esc(c.s2||'')}</span>${c.subs?`<span class="subs"><span data-cat="prep" data-sub="0">مصنعات فراخ</span><span data-cat="prep" data-sub="1">مصنعات لحوم</span></span>`:''}<span class="go"><span>ادخل القسم<b><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></b></span></span></span></button>`).join('');$('quickCats').innerHTML=QUICK_CATS.filter(c=>items.some(p=>c.groups.some(g=>g[1].includes(p.section)))).map(c=>'<button type="button" class="quick-cat" data-cat="'+c.key+'"><span>'+(c.key==='pickles'?'🫙':'🧺')+'</span><span>'+c.title+'</span></button>').join('')}
 let OG='all';
 function renderOChips(el,cur){el.innerHTML=OGROUPS.filter(([g])=>g==='all'||OFFERS.some(o=>o.g===g)).map(([g,t])=>`<button type="button" data-og="${g}" aria-pressed="${cur===g}">${t}</button>`).join('')}
 function saveAmt(o){const p=byId[o.id];return o.before>p.price?o.before-p.price:0}
@@ -599,7 +606,7 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
  else if(VIEW==='offers'){const f=FOLDERS.find(x=>x.k===FOLD)||FOLDERS[0];const T1=$('vTitle');T1.textContent=f.title;T1.classList.toggle('long',f.title.length>18);
   C.innerHTML=FOLDERS.filter(x=>OFFERS.some(o=>x.gs.includes(o.g))).map(x=>`<button type="button" data-fold="${x.k}" aria-pressed="${x.k===f.k}">${FCHIP[x.k]||x.title}</button>`).join('');
   h=`<p class="fsub">${esc(f.sub)}</p>`+(f.k==='cheap'?cheapHTML(f):boxHTML(f))}
- else{const c=CATS.find(x=>x.key===CUR);if(!c){goHome(false);return}$('vTitle').textContent=c.title;$('vTitle').classList.remove('long');
+ else{const c=ALL_CATS.find(x=>x.key===CUR);if(!c){goHome(false);return}$('vTitle').textContent=c.title;$('vTitle').classList.remove('long');
   const gs=c.groups.filter(g=>items.some(p=>g[1].includes(p.section)));if(SUB>=gs.length)SUB=0;
   if(c.tiles&&SUB<0){C.innerHTML='';L.innerHTML='<p class="fsub">اختاري الفولدر اللي محتاجاه 👇</p><div class="stiles">'+gs.map((g,i)=>{const n=new Set(items.filter(p=>g[1].includes(p.section)).map(p=>p.name.replace(/\s*(ع التسوية|مستوي)$/,''))).size;return `<button type="button" class="stile" data-sub="${i}"><img src="${imgOf(g[2])||g[2]}" alt="" loading="lazy" decoding="async"><span class="sn">${g[0]}</span><span class="sd">${g[3]||''}</span><span class="sc">${n} ${n>10||n<3?'صنف':'أصناف'} ›</span></button>`}).join('')+'</div>';return}
   C.innerHTML=gs.length>1?(c.tiles?'<button type="button" data-sub="-1" aria-pressed="false">📂 كل الفولدرات</button>':'')+gs.map((g,i)=>`<button type="button" data-sub="${i}" aria-pressed="${i===SUB}">${g[0].replace(/^محاشي /,'')}</button>`).join(''):'';
@@ -607,7 +614,7 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
  L.innerHTML=h}
 document.addEventListener('click',e=>{const b=e.target.closest('#vchips [data-sub],.stile[data-sub]');if(!b)return;SUB=+b.dataset.sub;const c=CATS.find(x=>x.key===CUR);if(c&&c.tiles)history.pushState({v:'cat',k:CUR,s:SUB},'','#c-'+CUR);renderList();scrollTo({top:0})});
 function show(v){VIEW=v;const home=v==='home';$('vHome').hidden=!home;$('vList').hidden=home;document.querySelectorAll('.nav [data-nav]').forEach(b=>b.setAttribute('aria-current',String(b.dataset.nav===(home?'home':v==='offers'?'offers':''))));if(!home)renderList();else renderHome()}
-function openCat(key,sub,push=true){const cc=CATS.find(x=>x.key===key);if(sub===undefined)sub=cc&&cc.tiles?-1:0;CUR=key;SUB=sub;$('q').value='';$('qClr').hidden=true;show('cat');scrollTo({top:0});if(push)history.pushState({v:'cat',k:key,s:sub},'','#c-'+key);const c=CATS.find(x=>x.key===key);T('open_category',{category:c?c.title:key})}
+function openCat(key,sub,push=true){const cc=ALL_CATS.find(x=>x.key===key);if(sub===undefined)sub=cc&&cc.tiles?-1:0;CUR=key;SUB=sub;$('q').value='';$('qClr').hidden=true;show('cat');scrollTo({top:0});if(push)history.pushState({v:'cat',k:key,s:sub},'','#c-'+key);const c=ALL_CATS.find(x=>x.key===key);T('open_category',{category:c?c.title:key})}
 function openOffers(push=true,fold){if(fold)FOLD=fold;$('q').value='';$('qClr').hidden=true;show('offers');scrollTo({top:0});if(push)history.pushState({v:'offers',f:FOLD},'','#offers-'+FOLD);T('open_folder',{folder:FOLD})}
 function goHome(push=true){$('q').value='';$('qClr').hidden=true;show('home');if(push)history.pushState({v:'home'},'',location.pathname+location.search)}
 document.addEventListener('click',e=>{const s=e.target.closest('[data-sub][data-cat]');if(s){e.stopPropagation();openCat(s.dataset.cat,+s.dataset.sub);return}const c=e.target.closest('.cat[data-cat]');if(c)openCat(c.dataset.cat)});
@@ -751,7 +758,7 @@ function refresh(){if(VIEW==='home'){renderRail();showAgain()}else renderList();
 const SRC=(location.search.match(/[?&]src=([\w-]+)/)||[])[1]||'';if(SRC)T('visit_source',{source:SRC});
 let STARTED=false;
 function start(rows){window.__BASE=rows;const first=!STARTED;STARTED=true;build(applyOv(rows));clean();save();
- if(first){const h=location.hash;const m=h.match(/^#c-(\w+)/);if(m&&CATS.find(c=>c.key===m[1])){CUR=m[1];{const cc=CATS.find(c=>c.key===CUR);SUB=cc&&cc.tiles?-1:0}show('cat');history.replaceState({v:'cat',k:CUR,s:SUB},'')}else if(h==='#reviews'){show('reviews');history.replaceState({v:'reviews'},'')}else if(/^#offers/.test(h)){const fm=h.match(/^#offers-(\w+)/);if(fm&&FOLDERS.find(x=>x.k===fm[1]))FOLD=fm[1];show('offers');history.replaceState({v:'offers',f:FOLD},'')}else{show('home');history.replaceState({v:'home'},'')}}
+ if(first){const h=location.hash;const m=h.match(/^#c-(\w+)/);if(m&&ALL_CATS.find(c=>c.key===m[1])){CUR=m[1];{const cc=CATS.find(c=>c.key===CUR);SUB=cc&&cc.tiles?-1:0}show('cat');history.replaceState({v:'cat',k:CUR,s:SUB},'')}else if(h==='#reviews'){show('reviews');history.replaceState({v:'reviews'},'')}else if(/^#offers/.test(h)){const fm=h.match(/^#offers-(\w+)/);if(fm&&FOLDERS.find(x=>x.k===fm[1]))FOLD=fm[1];show('offers');history.replaceState({v:'offers',f:FOLD},'')}else{show('home');history.replaceState({v:'home'},'')}}
  else{if(VIEW==='home')renderHome();else renderList()}
  bar();if(!$('sheet').hidden&&STEP===1)drawSheet();if(first)setTimeout(doReorder,60)}
 function doReorder(){if(!/[?&]reorder=1/.test(location.search))return;let R=[];try{R=JSON.parse(localStorage.getItem('alhella-reorder')||'[]');localStorage.removeItem('alhella-reorder')}catch(_){}if(!R.length)return;let n=0,miss=[];
