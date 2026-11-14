@@ -334,18 +334,21 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 @media (min-width:700px){.of{flex-basis:46%}.cat .ph{height:170px}}
 
 /* Special market request — independent from menu/cart */
-.special-request{margin:14px 0 20px;padding:15px;background:linear-gradient(135deg,#fff8ed,#fff);border:1.5px solid #f1d6bd;border-radius:20px;box-shadow:0 5px 18px rgba(104,55,26,.07)}
-.special-request .sr-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.special-request .sr-icon{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:14px;background:#fff0df;font-size:23px}
-.special-request h2{margin:0;color:#9f321f;font-size:19px;font-weight:900}
-.special-request .sr-sub{margin:3px 0 12px;color:#765b49;font-size:13px;font-weight:700;line-height:1.7}
+.special-request{margin:10px 0 16px;padding:10px 12px;background:linear-gradient(135deg,#fff8ed,#fff);border:1.5px solid #f1d6bd;border-radius:16px;box-shadow:0 3px 12px rgba(104,55,26,.06)}
+.special-request .sr-head{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.special-request .sr-icon{width:34px;height:34px;display:grid;place-items:center;flex:none;border-radius:11px;background:#fff0df;font-size:19px}
+.special-request h2{margin:0;color:#9f321f;font-size:16px;font-weight:900}
+.special-request .sr-sub{margin:2px 0 0;color:#765b49;font-size:12px;font-weight:700;line-height:1.5}
+.special-request .sr-open{width:100%;border:1px solid #d94a20;border-radius:11px;background:#fff;color:#b83220;padding:8px 12px;font:900 13px Cairo,sans-serif;cursor:pointer}
+.special-request .sr-open:active{transform:scale(.99)}
+.special-request form[hidden]{display:none}
 .special-request .sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .special-request input,.special-request textarea{width:100%;min-width:0;border:1px solid #ead9ca;border-radius:12px;background:#fff;padding:11px 12px;font:700 14px Cairo, sans-serif;color:#35251d;outline:none}
 .special-request input:focus,.special-request textarea:focus{border-color:#d94a20;box-shadow:0 0 0 3px rgba(217,74,32,.1)}
 .special-request textarea{grid-column:1/-1;min-height:86px;resize:vertical}
 .special-request .sr-full{grid-column:1/-1}
-.special-request .sr-send{width:100%;border:0;border-radius:13px;background:#c92d22;color:#fff;padding:13px 16px;font:900 15px Cairo,sans-serif;margin-top:10px;cursor:pointer}
-.special-request .sr-note{font-size:11.5px;color:#806b5b;font-weight:700;line-height:1.7;margin:9px 0 0}
+.special-request .sr-send{width:100%;border:0;border-radius:13px;background:#c92d22;color:#fff;padding:11px 16px;font:900 14px Cairo,sans-serif;margin-top:9px;cursor:pointer}
+.special-request .sr-note{font-size:10.5px;color:#806b5b;font-weight:700;line-height:1.5;margin:6px 0 0}
 @media(max-width:380px){.special-request .sr-grid{grid-template-columns:1fr}.special-request textarea,.special-request .sr-full{grid-column:auto}}
 
 </style>
@@ -367,17 +370,18 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  <div class="again" id="again" hidden></div>
  
   <section class="special-request" id="specialRequestCard" aria-labelledby="specialRequestTitle">
-   <div class="sr-head"><div class="sr-icon" aria-hidden="true">🛒</div><div><h2 id="specialRequestTitle">مش لاقي طلبك في المنيو؟</h2><div class="sr-sub">اكتب الأصناف والكميات اللي محتاجها، وإحنا ننزل نشتريهالك من السوق.</div></div></div>
-   <form id="specialRequestForm">
+   <div class="sr-head"><div class="sr-icon" aria-hidden="true">🥬</div><div><h2 id="specialRequestTitle">خضارك وفاكهتك الطازة من السوق</h2><div class="sr-sub">اختار الخضار والفاكهة اللي محتاجها، وإحنا نشتريهالك طازة حسب طلبك.</div></div></div>
+   <button class="sr-open" id="srOpen" type="button" aria-expanded="false" aria-controls="specialRequestForm">اطلب خضار وفاكهة طازة</button>
+   <form id="specialRequestForm" hidden>
     <div class="sr-grid">
-     <textarea id="srItems" required maxlength="1800" placeholder="اكتب الأصناف والكميات بالتفصيل&#10;مثال: ٢ كيلو طماطم، كيلو بطاطس، نصف كيلو فلفل..." aria-label="الأصناف والكميات"></textarea>
+     <textarea id="srItems" required maxlength="1800" placeholder="اكتب الأصناف والكميات بالتفصيل&#10;مثال: ٢ كيلو طماطم، كيلو بطاطس، كيلو موز..." aria-label="الأصناف والكميات"></textarea>
      <input id="srName" required maxlength="80" autocomplete="name" placeholder="الاسم" aria-label="الاسم">
      <input id="srPhone" required maxlength="20" inputmode="tel" autocomplete="tel" placeholder="رقم الموبايل" aria-label="رقم الموبايل">
      <input id="srAddress" class="sr-full" required maxlength="240" autocomplete="street-address" placeholder="العنوان بالتفصيل" aria-label="العنوان بالتفصيل">
     </div>
     <button class="sr-send" type="submit">ابعت طلبك على واتساب</button>
    </form>
-   <p class="sr-note">الطلب ده منفصل عن المنيو والسلة. هنشتري الأصناف حسب سعر السوق، وبعد الشراء هنبعتلك الحساب الفعلي.</p>
+   <p class="sr-note">الشراء حسب سعر السوق، وبعد الشراء هنبعتلك الحساب الفعلي قبل التحصيل.</p>
   </section>
 
  <section class="sec" id="menu">
@@ -543,7 +547,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.step button');i
 /* ---------- home ---------- */
 function minPrice(secs){const ps=items.filter(p=>secs.includes(p.section)).map(p=>p.price);return ps.length?Math.min(...ps):0}
 function renderCats(){const ICO={veg:'<i><svg viewBox="0 0 26 26"><path d="M4 22C4 11 11 4 23 3c0 12-7 19-19 19z" fill="#3E9B3A"/><path d="M5 21C10 15 14 11 20 6" stroke="#fff" stroke-width="1.6" fill="none"/></svg></i>',mah:'<i><svg viewBox="0 0 26 26"><path d="M4 22C4 11 11 4 23 3c0 12-7 19-19 19z" fill="#3E9B3A"/><path d="M5 21C10 15 14 11 20 6" stroke="#fff" stroke-width="1.6" fill="none"/></svg></i>',meal:'<i><svg viewBox="0 0 26 26"><path d="M7 15a5 5 0 1 1 2-9.5 5 5 0 0 1 8 0A5 5 0 1 1 19 15v5H7z" fill="#fff" stroke="#3A1A0C" stroke-width="1.6"/><path d="M7 18h12" stroke="#3A1A0C" stroke-width="1.6"/></svg></i>',prep:''};$('cats').innerHTML=CATS.map(c=>
- `<button type="button" class="cat ${c.tone}" data-cat="${c.key}"><img class="ph" src="${c.img}" alt="${c.title}" width="300" height="122" loading="${c.key==='veg'||c.key==='prep'?'eager':'lazy'}" decoding="async"><span class="cp"><span class="ttl">${c.title}${ICO[c.key]||''}</span><span class="s1">${esc(c.s1||'')}</span><span class="s2">${esc(c.s2||'')}</span>${c.subs?`<span class="subs"><span data-cat="prep" data-sub="0">مصنعات فراخ</span><span data-cat="prep" data-sub="1">مصنعات لحوم</span></span>`:''}<span class="go"><span>ادخل القسم<b><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></b></span></span></span></button>`).join('');$('quickCats').innerHTML=QUICK_CATS.filter(c=>items.some(p=>c.groups.some(g=>g[1].includes(p.section)))).map(c=>'<button type="button" class="quick-cat" data-cat="'+c.key+'"><span>'+(c.key==='pickles'?'🫙':'🧺')+'</span><span>'+c.title+'</span></button>').join('')}
+ `<button type="button" class="cat ${c.tone}" data-cat="${c.key}"><img class="ph" src="${c.img}" alt="${c.title}" width="300" height="122" loading="${c.key==='veg'||c.key==='prep'?'eager':'lazy'}" decoding="async"><span class="cp"><span class="ttl">${c.title}${ICO[c.key]||''}</span><span class="s1">${esc(c.s1||'')}</span><span class="s2">${esc(c.s2||'')}</span>${c.subs?`<span class="subs"><span data-cat="prep" data-sub="0">مصنعات فراخ</span><span data-cat="prep" data-sub="1">مصنعات لحوم</span></span>`:''}<span class="go"><span>ادخل القسم<b><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></b></span></span></span></button>`).join('');$('quickCats').innerHTML=QUICK_CATS.map(c=>'<button type="button" class="quick-cat" data-cat="'+c.key+'"><span>'+(c.key==='pickles'?'🫙':'🧺')+'</span><span>'+c.title+'</span></button>').join('')}
 let OG='all';
 function renderOChips(el,cur){el.innerHTML=OGROUPS.filter(([g])=>g==='all'||OFFERS.some(o=>o.g===g)).map(([g,t])=>`<button type="button" data-og="${g}" aria-pressed="${cur===g}">${t}</button>`).join('')}
 function saveAmt(o){const p=byId[o.id];return o.before>p.price?o.before-p.price:0}
@@ -783,8 +787,13 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
 <script>
 (function(){
  const form=document.getElementById('specialRequestForm');
+ const open=document.getElementById('srOpen');
  if(!form || form.dataset.ready)return;
  form.dataset.ready='1';
+ if(open)open.addEventListener('click',function(){
+  form.hidden=false;open.hidden=true;open.setAttribute('aria-expanded','true');
+  document.getElementById('srItems').focus();
+ });
  form.addEventListener('submit',function(e){
   e.preventDefault();
   const items=document.getElementById('srItems').value.trim();
