@@ -477,7 +477,7 @@ const CATS=[
  {key:'meal',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',img:'c-meal.webp',s1:'أكل بيتي حقيقي',s2:'وجبات وأطباق جاهزة',tone:'t-meal',groups:[['الوجبات',['الوجبات']],['صواني الفرن',['صواني الفرن']],['طواجن وطبيخ',['طواجن وطبيخ']],['الرز المعمر',['الرز المعمر']],['بولات وشوربة',['بولات وشوربة']]]},
  {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · مقور · مسلوق · ع التسوية · مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'مقور · ع التسوية · مستوي',tone:'t-mah',tiles:true,groups:[['محاشي ع التسوية',['محاشي ع التسوية'],'r-grape.webp','جاهزة تسوّيها في البيت'],['محاشي مستوية',['محاشي مستوية'],'r-cabbage-cooked.webp','جاهزة على الأكل'],['محاشي باللحمة المفرومة',['محاشي باللحمة المفرومة'],'r-mix-cooked.webp','خلطة رز باللحمة المفرومة'],['ممبار',['ممبار'],'f-mombarstuffed.webp','متنضف · مسلوق · محشي · متحمر'],['جاهز ع الحشو',['جاهز على الحشو'],'f-zucchinicore.webp','مقور · مسلوق · خلطات']]}
 ];
-const QUICK_CATS=[{key:'pickles',title:'مخللات وصوصات',groups:[['مخللات وصوصات',['مخللات وصوصات']]]},{key:'extras',title:'إضافات',groups:[['إضافات',['إضافات']]]}];
+const QUICK_CATS=[{key:'pickles',title:'مخللات وصوصات',groups:[['مخللات وصوصات',['مخللات وصوصات']]]},{key:'extras',title:'إضافات',groups:[['كل الإضافات',['إضافات','إضافات على الأوردر']]]}];
 const ALL_CATS=CATS.concat(QUICK_CATS);
 const OGROUPS=[['all','كل العروض'],['boxes','بوكسات ع الحلة'],['freezer','أكياس الفريزر'],['storage','عروض التخزين']];
 const FOLDERS=[
@@ -621,7 +621,7 @@ function show(v){VIEW=v;const home=v==='home';$('vHome').hidden=!home;$('vList')
 function openCat(key,sub,push=true){const cc=ALL_CATS.find(x=>x.key===key);if(sub===undefined)sub=cc&&cc.tiles?-1:0;CUR=key;SUB=sub;$('q').value='';$('qClr').hidden=true;show('cat');scrollTo({top:0});if(push)history.pushState({v:'cat',k:key,s:sub},'','#c-'+key);const c=ALL_CATS.find(x=>x.key===key);T('open_category',{category:c?c.title:key})}
 function openOffers(push=true,fold){if(fold)FOLD=fold;$('q').value='';$('qClr').hidden=true;show('offers');scrollTo({top:0});if(push)history.pushState({v:'offers',f:FOLD},'','#offers-'+FOLD);T('open_folder',{folder:FOLD})}
 function goHome(push=true){$('q').value='';$('qClr').hidden=true;show('home');if(push)history.pushState({v:'home'},'',location.pathname+location.search)}
-document.addEventListener('click',e=>{const s=e.target.closest('[data-sub][data-cat]');if(s){e.stopPropagation();openCat(s.dataset.cat,+s.dataset.sub);return}const c=e.target.closest('.cat[data-cat]');if(c)openCat(c.dataset.cat)});
+document.addEventListener('click',e=>{const s=e.target.closest('[data-sub][data-cat]');if(s){e.stopPropagation();openCat(s.dataset.cat,+s.dataset.sub);return}const c=e.target.closest('.cat[data-cat],.quick-cat[data-cat]');if(c)openCat(c.dataset.cat)});
 $('back').addEventListener('click',()=>{if(history.state&&history.state.v&&history.length>1)history.back();else goHome()});
 
 window.addEventListener('popstate',e=>{const s=e.state||{};if(!$('sheet').hidden){closeSheet(true)}if(!$('osheet').hidden){closeOffer(true)}
