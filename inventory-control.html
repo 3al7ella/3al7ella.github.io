@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#a93622"><title>ع الحلة | مراقب حركة المطبخ</title>
+<style>
+:root{--red:#a93622;--orange:#d85a2a;--cream:#fff8ed;--ink:#292522;--muted:#77716b;--line:#eee2d5;--green:#237548;--amber:#936018;--blue:#315b86}
+*{box-sizing:border-box}body{margin:0;background:#f7f3ed;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:11px;padding:11px 14px;background:var(--red);color:#fff;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:13px}.top{background:linear-gradient(120deg,var(--red),var(--orange));color:#fff;border-radius:19px;padding:17px;display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{font-weight:950;font-size:23px}.sub{font-size:12px;opacity:.9}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;margin-top:12px}.muted{font-size:12px;color:var(--muted);line-height:1.7}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}.metric{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}.metric small{color:var(--muted);font-size:11px}.metric strong{display:block;font-size:21px;margin-top:6px}.field{display:grid;gap:5px;margin:8px 0}.field label{font-size:12px;color:var(--muted);font-weight:700}input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.tabs{display:flex;gap:7px;overflow:auto;margin-top:12px}.tabs button{white-space:nowrap;background:#fff;color:var(--ink);border:1px solid var(--line)}.tabs button.active{background:#29394d;color:#fff}.tab{display:none}.tab.active{display:block}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:right;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;color:var(--muted);white-space:nowrap}.pill{display:inline-block;padding:4px 8px;border-radius:30px;font-size:11px;font-weight:800;background:#f2eee8;color:#5d5145}.pill.good{background:#e6f4ea;color:var(--green)}.pill.warn{background:#fff1d8;color:var(--amber)}.pill.bad{background:#fde9e7;color:#a52e24}.notice{padding:10px 12px;border-radius:10px;background:#fff2dc;color:#765016;font-size:12px;line-height:1.7;margin-top:9px}.hidden{display:none!important}.list{display:grid;gap:7px}.entry{border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;justify-content:space-between;gap:10px}.entry b{font-size:13px}.entry small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.auth{max-width:430px;margin:8vh auto}.ghost{background:#fff;color:var(--red);border:1px solid var(--line)}@media(max-width:650px){.wrap{padding:9px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric strong{font-size:18px}.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding:14px}.brand{font-size:20px}}
+</style></head>
+<body><div class="wrap">
+<header class="top"><div><div class="brand">ع الحلة | مراقب حركة المطبخ</div><div class="sub">المشتريات • اللي اتباع • الصرف • الرصيد المتوقع</div></div><button id="logout" class="ghost hidden">خروج</button></header>
+<section id="auth" class="panel auth"><h3>دخول الإدارة</h3><p class="muted">التطبيق مستقل في الاستخدام، وبيقرأ سجلات ع الحلة من قاعدة البيانات الحالية بصلاحية تسجيل الدخول.</p><div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="username"></div><div class="field"><label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password"></div><button id="login">دخول</button><div id="authmsg" class="notice hidden"></div></section>
+<main id="app" class="hidden">
+<section class="panel"><div class="row"><div><b>الفترة اللي بنراجعها</b><div class="muted">اختار أسبوع المشتريات والأوردرات. المقارنة بالاسم والوحدة المطابقين فقط.</div></div><button id="refresh" class="ghost">تحديث البيانات</button></div><div class="formgrid"><div class="field"><label>من تاريخ</label><input id="from" type="date"></div><div class="field"><label>إلى تاريخ</label><input id="to" type="date"></div><div class="field" style="align-self:end"><button id="apply">عرض الفترة</button></div></div></section>
+<div class="grid">
+<div class="metric"><small>قيمة مشتريات الفترة</small><strong id="buyTotal">—</strong></div>
+<div class="metric"><small>بنود شراء مسجلة</small><strong id="buyCount">—</strong></div>
+<div class="metric"><small>أصناف ظهرت في الأوردرات</small><strong id="soldCount">—</strong></div>
+<div class="metric"><small>أصناف محتاجة مراجعة</small><strong id="reviewCount">—</strong></div>
+</div>
+<nav class="tabs"><button class="active" data-tab="compare">المقارنة الأسبوعية</button><button data-tab="purchases">المشتريات</button><button data-tab="sales">الأوردرات المباعة</button><button data-tab="moves">حركة المطبخ</button><button data-tab="add">تسجيل حركة جديدة</button></nav>
+<section id="compare" class="tab active panel"><div class="row"><b>اشتريت إيه وطلع منه إيه؟</b><span class="pill warn">مطابقة الاسم والوحدة</span></div><p class="muted">البيع الظاهر هنا من الأصناف المسجلة في الأوردرات. الصرف الداخلي والتجهيز والهالك لازم يتسجلوا كحركة منفصلة عشان الرصيد يبقى حقيقي.</p><div id="comparison" class="tablewrap"></div><div id="compareNote" class="notice"></div></section>
+<section id="purchases" class="tab panel"><b>تفاصيل المشتريات المسجلة</b><div id="purchaseList" class="list" style="margin-top:10px"></div></section>
+<section id="sales" class="tab panel"><b>الأصناف اللي اتباعت في الأوردرات</b><div id="salesList" class="list" style="margin-top:10px"></div></section>
+<section id="moves" class="tab panel"><b>حركة المخزن المسجلة</b><div id="movesList" class="list" style="margin-top:10px"></div></section>
+<section id="add" class="tab panel"><b>تسجيل حركة جديدة</b><p class="muted">أي شراء جديد سجّله هنا أو ابعتهولي في المحادثة؛ الشراء هيتسجل كمصروف وكوارد مخزن مرة واحدة. الصرف يسجل خروجًا من المخزون.</p>
+<div class="formgrid">
+<div class="field"><label>نوع الحركة</label><select id="kind"><option value="purchase">شراء جديد (مصروف + وارد مخزن)</option><option value="out">صرف / استهلاك من المطبخ</option><option value="production">ناتج تجهيز / تصنيع</option><option value="count">جرد فعلي للرصيد</option></select></div>
+<div class="field"><label>اسم الصنف كما هو</label><input id="item" list="itemsList" placeholder="مثال: ممبار"><datalist id="itemsList"></datalist></div>
+<div class="field"><label>الكمية</label><input id="qty" type="number" min="0.001" step="0.001" placeholder="مثال: 2"></div>
+<div class="field"><label>الوحدة</label><input id="unit" placeholder="كيلو / كيس 400 جم / طبق"></div>
+<div class="field"><label>التاريخ</label><input id="moveDate" type="date"></div>
+<div class="field" id="costField"><label>إجمالي تكلفة الشراء بالجنيه</label><input id="cost" type="number" min="0" step="0.01" placeholder="مثال: 240"></div>
+<div class="field" style="grid-column:1/-1"><label>ملاحظة أو اسم المورد</label><input id="note" placeholder="اختياري"></div>
+</div><button id="saveMove">حفظ الحركة</button><div id="saveMsg" class="notice hidden"></div></section>
+<div id="status" class="muted" style="padding:10px 2px"></div>
+</main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL="https://jijwwqgukheviejogfdy.supabase.co",SB_KEY="sb_publishable_MhOgUwlO03I2GrVH1TLWjg_3SMic1oW",FN=SB_URL+"/functions/v1/alhella-import";
+const sb=window.supabase.createClient(SB_URL,SB_KEY),$=id=>document.getElementById(id);
+let session=null,records=[];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2})+" ج";
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const newId=p=>p+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,8);
+const coll=c=>records.filter(r=>r.collection===c).map(r=>({...r.data,_id:r.record_id}));
+async function api(payload){const {data:{session:s}}=await sb.auth.getSession();if(!s)throw Error("سجّل الدخول أولًا");const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+s.access_token,"apikey":SB_KEY},body:JSON.stringify(payload)});const j=await r.json();if(!r.ok)throw Error(j.error||"تعذر تنفيذ العملية");return j}
+function msg(id,t){$(id).textContent=t;$(id).classList.remove("hidden")}
+function inRange(d){return d>=$("from").value&&d<=$("to").value}
+function dateRange(){const end=today(),start=new Date(Date.now()-6*86400000);$("to").value=end;$("from").value=start.getFullYear()+"-"+String(start.getMonth()+1).padStart(2,"0")+"-"+String(start.getDate()).padStart(2,"0");$("moveDate").value=end}
+function norm(s){return String(s||"").trim().replace(/[أإآ]/g,"ا").replace(/[ىي]/g,"ي").replace(/\s+/g," ").toLowerCase()}
+function render(){
+ const ex=coll("expenses").filter(x=>inRange(String(x.date||""))&&!/توصيل مشتريات/.test(x.item||"")&&x.category!=="مواصلات");
+ const orders=coll("orders").filter(x=>inRange(String(x.date||"")));
+ const moves=coll("stockMoves").filter(x=>inRange(String(x.date||"")));
+ const buyTotal=ex.reduce((a,x)=>a+(Number(x.amount)||0),0);
+ const sold=new Map();orders.forEach(o=>(o.items||[]).forEach(it=>{const k=norm(it.name)+"|"+norm(it.unit);const v=sold.get(k)||{name:it.name,unit:it.unit,qty:0,orders:0};v.qty+=Number(it.qty)||0;v.orders++;sold.set(k,v)}));
+ const purchased=new Map();ex.forEach(x=>{const name=x.item||"مشتريات غير مفصلة",unit=x.unit||"",k=norm(name)+"|"+norm(unit);const v=purchased.get(k)||{name,unit,qty:0,qtyText:[],amount:0,complete:true};v.amount+=Number(x.amount)||0;if(Number(x.quantity)>0){v.qty+=Number(x.quantity);v.qtyText.push(Number(x.quantity)+" "+unit)}else{v.complete=false;v.qtyText.push(x.qty||"الكمية غير محددة")}purchased.set(k,v)});
+ const outgoing=new Map();moves.filter(m=>m.type==="out").forEach(m=>{const k=norm(m.name||m.item)+"|"+norm(m.unit);outgoing.set(k,(outgoing.get(k)||0)+(Number(m.qty)||0))});
+ const keys=new Set([...purchased.keys(),...sold.keys(),...outgoing.keys()]);
+ const rows=[...keys].map(k=>{const p=purchased.get(k),s=sold.get(k),out=outgoing.get(k)||0;return {k,name:p?.name||s?.name||k.split("|")[0],unit:p?.unit||s?.unit||"",purchase:p?.qtyText.join(" + ")||"لا يوجد شراء مفصل",purchaseQty:p?.qty||0,complete:p?.complete??false,amount:p?.amount||0,sold:s?.qty||0,out,hasSale:!!s}}).sort((a,b)=>(b.amount-a.amount)||a.name.localeCompare(b.name,"ar"));
+ const review=rows.filter(x=>x.purchaseQty>0&&!x.hasSale&&x.out===0||x.purchase==="لا يوجد شراء مفصل"&&x.hasSale).length;
+ $("buyTotal").textContent=money(buyTotal);$("buyCount").textContent=ex.length.toLocaleString("ar-EG");$("soldCount").textContent=sold.size.toLocaleString("ar-EG");$("reviewCount").textContent=review.toLocaleString("ar-EG");
+ $("comparison").innerHTML=rows.length?'<table><thead><tr><th>الصنف</th><th>اشتريت</th><th>اتباع في الأوردرات</th><th>صرف مطبخ</th><th>الحالة</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.name)+'</b><div class="muted">'+esc(x.unit)+'</div></td><td>'+esc(x.purchase)+'</td><td>'+x.sold.toLocaleString("ar-EG")+(x.hasSale?' '+esc(x.unit):'')+'</td><td>'+x.out.toLocaleString("ar-EG")+'</td><td>'+(x.purchaseQty>0&&!x.hasSale&&x.out===0?'<span class="pill warn">مفيش بيع أو صرف مسجل</span>':!x.complete&&x.purchase!=="لا يوجد شراء مفصل"?'<span class="pill warn">كمية الشراء محتاجة تفصيل</span>':x.hasSale?'<span class="pill good">ظهر في الأوردرات</span>':'<span class="pill">مراجعة</span>')+'</td></tr>').join("")+'</tbody></table>':'<p class="muted">لا توجد حركات في الفترة المختارة.</p>';
+ $("compareNote").textContent="تنبيه: المقارنة الحالية لا تخصم بيع صنف من شراء صنف مختلف الاسم أو الوحدة. المشتريات المسجلة كإجمالي بدون تفصيل كمية لن نعتبرها رصيدًا. لا يتم اتهام أي شخص أو اعتبار الصنف مفقودًا إلا بعد تسجيل الصرف والتجهيز والجرد.";
+ $("purchaseList").innerHTML=ex.length?ex.map(x=>'<div class="entry"><div><b>'+esc(x.item||"مشتريات متنوعة")+'</b><small>'+esc(x.date)+' · '+esc(x.qty||((x.quantity||"")+" "+(x.unit||"")))+' · '+esc(x.category||"")+'</small></div><b>'+money(x.amount)+'</b></div>').join(""):'<p class="muted">لا توجد مشتريات مسجلة في الفترة.</p>';
+ const saleRows=[...sold.values()].sort((a,b)=>b.qty-a.qty);$("salesList").innerHTML=saleRows.length?saleRows.map(x=>'<div class="entry"><div><b>'+esc(x.name)+'</b><small>'+esc(x.unit||"وحدة")+' · عدد مرات الورود في الأوردرات: '+x.orders+'</small></div><b>'+x.qty.toLocaleString("ar-EG")+'</b></div>').join(""):'<p class="muted">لا توجد أوردرات مسجلة في الفترة.</p>';
+ $("movesList").innerHTML=moves.length?moves.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>'<div class="entry"><div><b>'+esc(x.name||x.item)+'</b><small>'+esc(x.date)+' · '+esc(x.type)+' · '+esc(x.unit||"")+'</small></div><b>'+Number(x.qty||0).toLocaleString("ar-EG")+'</b></div>').join(""):'<p class="muted">لا توجد حركات مخزن مسجلة في الفترة.</p>';
+ $("itemsList").innerHTML=[...new Set([...coll("stockItems").map(x=>x.name),...coll("expenses").map(x=>x.item),...coll("stockMoves").map(x=>x.name)].filter(Boolean))].map(x=>'<option value="'+esc(x)+'">').join("");
+ $("status").textContent="آخر تحديث: "+new Date().toLocaleString("ar-EG")+" · السجلات المعروضة من الحسابات الحالية.";
+}
+async function load(){ $("status").textContent="جارٍ تحميل البيانات...";const j=await api({action:"list"});records=j.records||[];render()}
+function showApp(s){session=s;$("auth").classList.toggle("hidden",!!s);$("app").classList.toggle("hidden",!s);$("logout").classList.toggle("hidden",!s);if(s)load().catch(e=>msg("status",e.message))}
+$("login").onclick=async()=>{try{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;showApp(data.session)}catch(e){msg("authmsg",e.message)}};
+$("logout").onclick=async()=>{await sb.auth.signOut();showApp(null)};sb.auth.onAuthStateChange((_e,s)=>{if(s)showApp(s)});
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
+$("refresh").onclick=()=>load().catch(e=>alert(e.message));$("apply").onclick=render;
+$("kind").onchange=()=>{$("costField").classList.toggle("hidden",$("kind").value!=="purchase")};
+$("saveMove").onclick=async()=>{const kind=$("kind").value,item=$("item").value.trim(),qty=Number($("qty").value),unit=$("unit").value.trim(),date=$("moveDate").value||today(),cost=Number($("cost").value)||0;if(!item||!(qty>0)||!unit)return msg("saveMsg","اكتب اسم الصنف والكمية والوحدة بشكل صحيح.");if(kind==="purchase"&&!(cost>0))return msg("saveMsg","اكتب إجمالي تكلفة الشراء.");const stamp=new Date().toISOString(),month=date.slice(0,7);try{if(kind==="purchase"){const eid=newId("e"),mid=newId("sm-in");await api({action:"save",collection:"expenses",id:eid,data:{item,amount:cost,date,category:"مشتريات",quantity:qty,unit,qty:qty+" "+unit,note:$("note").value.trim(),month,source:"مراقب حركة المطبخ",createdAt:stamp}});await api({action:"save",collection:"stockMoves",id:mid,data:{item,name:item,date,month,type:"in",qty,unit,cost,note:"وارد شراء من مراقب حركة المطبخ",sourceExpense:eid,createdAt:stamp}})}else{const type=kind==="out"?"out":kind==="count"?"count":"production";await api({action:"save",collection:"stockMoves",id:newId("sm-"+type),data:{item,name:item,date,month,type,qty,unit,cost:0,note:$("note").value.trim(),createdAt:stamp}})}$("qty").value=$("cost").value=$("note").value="";msg("saveMsg","تم حفظ الحركة. جارٍ تحديث المطابقة.");await load()}catch(e){msg("saveMsg","لم يتم الحفظ: "+e.message)}};
+dateRange();sb.auth.getSession().then(({data})=>{if(data.session)showApp(data.session)});
+</script></body></html>
