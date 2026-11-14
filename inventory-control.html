@@ -51,7 +51,8 @@ function inRange(d){return d>=$("from").value&&d<=$("to").value}
 function dateRange(){const end=today(),start=new Date(Date.now()-6*86400000);$("to").value=end;$("from").value=start.getFullYear()+"-"+String(start.getMonth()+1).padStart(2,"0")+"-"+String(start.getDate()).padStart(2,"0");$("moveDate").value=end}
 function norm(s){return String(s||"").trim().replace(/[أإآ]/g,"ا").replace(/[ىي]/g,"ي").replace(/\s+/g," ").toLowerCase()}
 function render(){
- const ex=coll("expenses").filter(x=>inRange(String(x.date||""))&&!/توصيل مشتريات/.test(x.item||"")&&x.category!=="مواصلات");
+ const purchaseCats=new Set(["خضراوات","لحوم","دواجن","مشتريات متنوعة","خامات متنوعة","حبوب وأرز","زيوت","بهارات","بقالة","ألبان","ألبان وبيض","ألبان وأجبان","فواكه","فاكهة","معجنات","مخبوزات","عجين ومخبوزات","مستلزمات مطبخ","منظفات","أدوات تغليف","تغليف","مصنعية"]);
+ const ex=coll("expenses").filter(x=>inRange(String(x.date||""))&&purchaseCats.has(String(x.category||""))&&!/توصيل مشتريات/.test(x.item||""));
  const orders=coll("orders").filter(x=>inRange(String(x.date||"")));
  const moves=coll("stockMoves").filter(x=>inRange(String(x.date||"")));
  const buyTotal=ex.reduce((a,x)=>a+(Number(x.amount)||0),0);
@@ -63,7 +64,8 @@ function render(){
  const review=rows.filter(x=>x.purchaseQty>0&&!x.hasSale&&x.out===0||x.purchase==="لا يوجد شراء مفصل"&&x.hasSale).length;
  $("buyTotal").textContent=money(buyTotal);$("buyCount").textContent=ex.length.toLocaleString("ar-EG");$("soldCount").textContent=sold.size.toLocaleString("ar-EG");$("reviewCount").textContent=review.toLocaleString("ar-EG");
  $("comparison").innerHTML=rows.length?'<table><thead><tr><th>الصنف</th><th>اشتريت</th><th>اتباع في الأوردرات</th><th>صرف مطبخ</th><th>الحالة</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.name)+'</b><div class="muted">'+esc(x.unit)+'</div></td><td>'+esc(x.purchase)+'</td><td>'+x.sold.toLocaleString("ar-EG")+(x.hasSale?' '+esc(x.unit):'')+'</td><td>'+x.out.toLocaleString("ar-EG")+'</td><td>'+(x.purchaseQty>0&&!x.hasSale&&x.out===0?'<span class="pill warn">مفيش بيع أو صرف مسجل</span>':!x.complete&&x.purchase!=="لا يوجد شراء مفصل"?'<span class="pill warn">كمية الشراء محتاجة تفصيل</span>':x.hasSale?'<span class="pill good">ظهر في الأوردرات</span>':'<span class="pill">مراجعة</span>')+'</td></tr>').join("")+'</tbody></table>':'<p class="muted">لا توجد حركات في الفترة المختارة.</p>';
- $("compareNote").textContent="تنبيه: المقارنة الحالية لا تخصم بيع صنف من شراء صنف مختلف الاسم أو الوحدة. المشتريات المسجلة كإجمالي بدون تفصيل كمية لن نعتبرها رصيدًا. لا يتم اتهام أي شخص أو اعتبار الصنف مفقودًا إلا بعد تسجيل الصرف والتجهيز والجرد.";
+ const incomplete=ex.filter(x=>!(Number(x.quantity)>0)&&!String(x.qty||"").match(/^\\s*\\d+(?:[.,]\\d+)?\\s/));
+ $("compareNote").textContent="تنبيه مهم: "+incomplete.length+" بند شراء في الفترة تفاصيل كميته غير رقمية أو غير واضحة. المقارنة لا تخصم بيع صنف من شراء صنف مختلف الاسم أو الوحدة. المشتريات المسجلة كإجمالي بدون تفصيل كمية لن نعتبرها رصيدًا. لا يتم اتهام أي شخص أو اعتبار الصنف مفقودًا إلا بعد تسجيل الصرف والتجهيز والجرد.";
  $("purchaseList").innerHTML=ex.length?ex.map(x=>'<div class="entry"><div><b>'+esc(x.item||"مشتريات متنوعة")+'</b><small>'+esc(x.date)+' · '+esc(x.qty||((x.quantity||"")+" "+(x.unit||"")))+' · '+esc(x.category||"")+'</small></div><b>'+money(x.amount)+'</b></div>').join(""):'<p class="muted">لا توجد مشتريات مسجلة في الفترة.</p>';
  const saleRows=[...sold.values()].sort((a,b)=>b.qty-a.qty);$("salesList").innerHTML=saleRows.length?saleRows.map(x=>'<div class="entry"><div><b>'+esc(x.name)+'</b><small>'+esc(x.unit||"وحدة")+' · عدد مرات الورود في الأوردرات: '+x.orders+'</small></div><b>'+x.qty.toLocaleString("ar-EG")+'</b></div>').join(""):'<p class="muted">لا توجد أوردرات مسجلة في الفترة.</p>';
  $("movesList").innerHTML=moves.length?moves.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>'<div class="entry"><div><b>'+esc(x.name||x.item)+'</b><small>'+esc(x.date)+' · '+esc(x.type)+' · '+esc(x.unit||"")+'</small></div><b>'+Number(x.qty||0).toLocaleString("ar-EG")+'</b></div>').join(""):'<p class="muted">لا توجد حركات مخزن مسجلة في الفترة.</p>';
@@ -71,7 +73,7 @@ function render(){
  $("status").textContent="آخر تحديث: "+new Date().toLocaleString("ar-EG")+" · السجلات المعروضة من الحسابات الحالية.";
 }
 async function load(){ $("status").textContent="جارٍ تحميل البيانات...";const j=await api({action:"list"});records=j.records||[];render()}
-function showApp(s){session=s;$("auth").classList.toggle("hidden",!!s);$("app").classList.toggle("hidden",!s);$("logout").classList.toggle("hidden",!s);if(s)load().catch(e=>msg("status",e.message))}
+function showApp(s){const same=!!s&&!!session&&s.user?.id===session.user?.id;session=s;$("auth").classList.toggle("hidden",!!s);$("app").classList.toggle("hidden",!s);$("logout").classList.toggle("hidden",!s);if(s&&!same)load().catch(e=>msg("status",e.message))}
 $("login").onclick=async()=>{try{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;showApp(data.session)}catch(e){msg("authmsg",e.message)}};
 $("logout").onclick=async()=>{await sb.auth.signOut();showApp(null)};sb.auth.onAuthStateChange((_e,s)=>{if(s)showApp(s)});
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
