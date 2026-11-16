@@ -351,6 +351,21 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 @media (min-width:700px){.of{flex-basis:46%}.cat .ph{height:170px}}
 
+/* Vegetable-only special market request */
+.special-request{margin:14px 16px 0;padding:12px;background:linear-gradient(135deg,#fff8ed,#fff);border:1.5px solid #f1d6bd;border-radius:16px;box-shadow:0 3px 12px rgba(104,55,26,.06)}
+.special-request .sr-head{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.special-request .sr-icon{width:34px;height:34px;display:grid;place-items:center;flex:none;border-radius:11px;background:#fff0df;font-size:19px}
+.special-request h2{margin:0;color:#9f321f;font-size:16px;font-weight:900}
+.special-request .sr-sub{margin:2px 0 0;color:#765b49;font-size:12px;font-weight:700;line-height:1.5}
+.special-request .sr-open{width:100%;border:1px solid #d94a20;border-radius:11px;background:#fff;color:#b83220;padding:8px 12px;font:900 13px Cairo,sans-serif;cursor:pointer}
+.special-request form[hidden]{display:none}
+.special-request .sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.special-request input,.special-request textarea{width:100%;min-width:0;border:1px solid #ead9ca;border-radius:12px;background:#fff;padding:11px 12px;font:700 14px Cairo,sans-serif;color:#35251d;outline:none}
+.special-request textarea{grid-column:1/-1;min-height:86px;resize:vertical}
+.special-request .sr-full{grid-column:1/-1}
+.special-request .sr-send{width:100%;border:0;border-radius:13px;background:#c92d22;color:#fff;padding:11px 16px;font:900 14px Cairo,sans-serif;margin-top:9px;cursor:pointer}
+.special-request .sr-note{font-size:10.5px;color:#806b5b;font-weight:700;line-height:1.5;margin:6px 0 0}
+@media(max-width:380px){.special-request .sr-grid{grid-template-columns:1fr}.special-request textarea,.special-request .sr-full{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -383,6 +398,20 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
   <div class="sech"><h2>عروض ع الحلة 🔥</h2></div>
   <div class="folders" id="folders"></div>
  </section>
+  <section class="special-request" id="specialRequestCard" aria-labelledby="specialRequestTitle">
+   <div class="sr-head"><div class="sr-icon" aria-hidden="true">🥬</div><div><h2 id="specialRequestTitle">خضارك الطازة من السوق</h2><div class="sr-sub">اختار الخضار اللي محتاجه، وإحنا نشتريهولك طازة حسب طلبك.</div></div></div>
+   <button class="sr-open" id="srOpen" type="button" aria-expanded="false" aria-controls="specialRequestForm">اطلب خضار طازة</button>
+   <form id="specialRequestForm" hidden>
+    <div class="sr-grid">
+     <textarea id="srItems" required maxlength="1800" placeholder="اكتب أصناف الخضار والكميات بالتفصيل&#10;مثال: ٢ كيلو طماطم، كيلو بطاطس، كيلو بصل..." aria-label="أصناف الخضار والكميات"></textarea>
+     <input id="srName" required maxlength="80" autocomplete="name" placeholder="الاسم" aria-label="الاسم">
+     <input id="srPhone" required maxlength="20" inputmode="tel" autocomplete="tel" placeholder="رقم الموبايل" aria-label="رقم الموبايل">
+     <input id="srAddress" class="sr-full" required maxlength="240" autocomplete="street-address" placeholder="العنوان بالتفصيل" aria-label="العنوان بالتفصيل">
+    </div>
+    <button class="sr-send" type="submit">ابعت طلب الخضار على واتساب</button>
+   </form>
+   <p class="sr-note">الشراء حسب سعر السوق، وبعد الشراء هنبعتلك الحساب الفعلي قبل التحصيل.</p>
+  </section>
  <section class="sec" id="reviews">
   <div class="sech"><h2>آراء زباينا ❤️</h2><button type="button" class="more" id="rvAll" data-rvall hidden></button></div>
   <div class="rvs" id="rvs"></div>
@@ -785,5 +814,27 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
 
 
 
+<script>
+(function(){
+ const form=document.getElementById('specialRequestForm');
+ const open=document.getElementById('srOpen');
+ if(!form || form.dataset.ready)return;
+ form.dataset.ready='1';
+ if(open)open.addEventListener('click',function(){
+  form.hidden=false;open.hidden=true;open.setAttribute('aria-expanded','true');
+  document.getElementById('srItems').focus();
+ });
+ form.addEventListener('submit',function(e){
+  e.preventDefault();
+  const items=document.getElementById('srItems').value.trim();
+  const name=document.getElementById('srName').value.trim();
+  const phone=document.getElementById('srPhone').value.trim();
+  const address=document.getElementById('srAddress').value.trim();
+  if(!items||!name||!phone||!address){form.reportValidity();return}
+  const msg='طلب خضار طازة من موقع ع الحلة 🥬\n\nأصناف الخضار والكميات:\n'+items+'\n\nالاسم: '+name+'\nرقم الموبايل: '+phone+'\nالعنوان: '+address+'\n\nملاحظة: الطلب حسب سعر السوق، برجاء إرسال الحساب الفعلي بعد الشراء.';
+  window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');
+ });
+})();
+</script>
 </body>
 </html>
