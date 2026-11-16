@@ -724,7 +724,9 @@ function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
   Fo.innerHTML=totals(true)+`<button type="button" class="btn full wa" id="reviewOrder" ${window.__CLOSED?'disabled':''}>راجع الفاتورة قبل الإرسال</button>`}
  else if(STEP===3){$('shTitle').textContent='راجع الفاتورة';B.innerHTML=`<div class="inv" id="inv">${esc(invoice())}</div>`+'<button type="button" class="btn full ghost" id="editDetails" style="margin-top:10px">تعديل الأصناف أو البيانات</button>'+(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
   Fo.innerHTML=`<button type="button" class="btn full wa" id="send" ${window.__CLOSED?'disabled':''}>تأكيد وإرسال على واتساب ✓</button>`}
- else{$('shTitle').textContent='تم 🎉';B.innerHTML=`<div class="done"><div class="big">✅</div><h3>طلبك اتبعت</h3><p>رقم الأوردر <b class="num">${esc(LAST.ref)}</b> — هنأكدلك على واتساب في أقرب وقت</p><a class="btn full wa" href="${LAST.url}" target="_blank" rel="noopener" style="display:block;text-decoration:none;margin-bottom:8px">لو الواتساب ما فتحش، دوس هنا</a><button type="button" class="btn full ghost" id="copyInv">انسخ الفاتورة</button></div>`;
+ else if(STEP===4){$('shTitle').textContent='تم تسجيل الطلب 🎉';B.innerHTML=`<div class="done"><div class="big">✅</div><h3>طلبك اتسجل عندنا</h3><p>رقم الأوردر <b class="num">${esc(LAST.ref)}</b></p><p>فاضل خطوة مهمة: اضغط <b>إرسال</b> في واتساب عشان تفاصيل الأوردر توصلنا.</p><a class="btn full wa" href="${LAST.url}" target="_blank" rel="noopener" style="display:block;text-decoration:none;margin-bottom:8px">افتح واتساب واضغط إرسال</a><button type="button" class="btn full ghost" id="copyInv">انسخ الفاتورة</button></div>`;
+  Fo.innerHTML='<button type="button" class="btn full dark" id="newOrder">أوردر جديد</button>'}
+ else{$('shTitle').textContent='محتاجين تأكيد الطلب';B.innerHTML=`<div class="done"><div class="big">⚠️</div><h3>الطلب ما اتسجلش على الموقع</h3><p>لكن جهزنا رسالة الأوردر. افتح واتساب واضغط <b>إرسال</b> عشان توصلنا مباشرة.</p><p>رقم الأوردر <b class="num">${esc(LAST.ref)}</b></p><a class="btn full wa" href="${LAST.url}" target="_blank" rel="noopener" style="display:block;text-decoration:none;margin-bottom:8px">إرسال الأوردر على واتساب</a><button type="button" class="btn full ghost" id="copyInv">انسخ الفاتورة</button></div>`;
   Fo.innerHTML='<button type="button" class="btn full dark" id="newOrder">أوردر جديد</button>'}}
 function readF(){const v=(id,c)=>($(id)?$(id).value.trim():(c||''));F.name=v('fName',F.name);F.phone=v('fPhone',F.phone).replace(/[\s-]/g,'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/^\+?20/,'0');F.area=v('fArea',F.area);F.addr=v('fAddr',F.addr);F.note=v('fNote',F.note);const w=document.querySelector('input[name=when]:checked');F.when=w?w.value:(F.when||'بكره');const p=document.querySelector('input[name=pay]:checked');if(p)F.pay=p.value}
 function validate(){const bad=[];const mark=(id,msg)=>{let el=$(id);if(!el){EDIT=true;drawSheet();el=$(id)}if(!el)return;el.classList.add('bad');const em=document.createElement('em');em.textContent=msg;el.after(em);bad.push(el)};
@@ -752,12 +754,28 @@ $('shFoot').addEventListener('click',e=>{const id=e.target.id;
  if(id==='send'){readF();if(!validate())return;persist();T('begin_checkout',{currency:'EGP',value:sub()});sendOrder();return}
  if(id==='newOrder'){cart={};save();refresh();closeSheet();goHome()}});
 $('shBody').addEventListener('input',e=>{if(e.target.matches('input,textarea,select')){const el=e.target;el.classList.remove('bad');const n=el.nextElementSibling;if(n&&n.tagName==='EM'&&!n.style.color)n.remove()}});
-function sendOrder(){if(window.__CLOSED)return;const text=invoice();const ent=Object.entries(cart);const s=sub(),d=delFee();
+async function sendOrder(){if(window.__CLOSED)return;
+ const text=invoice(),ent=Object.entries(cart),s=sub(),d=delFee();
  try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
- let oid='';try{if(window.FB){oid=FB.newId();FB.save(oid,{ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),total:s+d,src:'site'+(SRC?'-'+SRC:'')}).catch(()=>{})}}catch(_){oid=''}
- T('purchase',{transaction_id:oid||REF,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});if(F.area)T('order_area',{area:F.area});
- const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(text);LAST={ref:REF,url,text};STEP=4;drawSheet();
- const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
+ const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(text);
+ LAST={ref:REF,url,text};
+ // افتح واتساب فور ضغطة العميل حتى لا يمنع المتصفح النافذة بعد انتظار الحفظ.
+ const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+ const sendBtn=$('send');if(sendBtn)sendBtn.disabled=true;
+ try{
+  if(!window.FB||typeof FB.newId!=='function'||typeof FB.save!=='function')throw new Error('Firebase is not ready');
+  const oid=FB.newId();
+  const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),total:s+d,src:'site'+(SRC?'-'+SRC:'')};
+  await FB.save(oid,payload);
+  T('purchase',{transaction_id:oid,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
+  if(F.area)T('order_area',{area:F.area});
+  STEP=4;
+ }catch(err){
+  console.error('Order save failed:',err);
+  STEP=5;
+ }
+ drawSheet();
+}
 function copy(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('اتنسخت ✓')).catch(()=>{const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');toast('اتنسخت ✓')}catch(_){}x.remove()})}
 
 /* ---------- UI refresh ---------- */
