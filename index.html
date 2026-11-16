@@ -626,7 +626,19 @@ function mealsHTML(list){const used=new Set();const ids=new Set(list.map(p=>p.id
  return h+'<div class="mfoot">⏰ الأصناف المتاحة لنفس اليوم قبل 2 ظهرًا · باقي الأصناف قبلها بيوم</div>'}
 const noPh=k=>/^(meal|ml_)/.test(k||'');
 function listHTML(list){const seen=new Set();return list.map(p=>{const g=PAIR_OF[p.id];if(!g)return itemHTML(p);if(seen.has(g))return '';seen.add(g);return pairHTML(PAIRS[g])}).join('')}
-function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>n.includes(w)||n.includes(w.replace(/^ال/,'')))};
+const SEARCH_ALIASES={
+ 'دوالي':['ورق عنب','عنب'],
+ 'ملفوف':['كرنب'],
+ 'كوسا':['كوسه'],
+ 'دجاج':['فراخ'],
+ 'موزاريلا':['موتزاريلا'],
+ 'جبن':['جبنه','موتزاريلا'],
+ 'محاشي':['محشي'],
+ 'محشي':['محاشي'],
+ 'صوص':['صوصات','صلصه'],
+ 'صلصة':['صلصه','صوص']
+};
+function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=SEARCH_ALIASES[w]||[w];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
  return {its:items.filter(p=>hit(p.name+' '+p.desc+' '+p.section)),ofs:OFFERS.filter(o=>hit(o.title+' '+o.desc+' '+o.inc.map(x=>x[1]).join(' ')))}}
 function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips');let h='';
  if(VIEW==='search'){$('vTitle').textContent='نتايج البحث';$('vTitle').classList.remove('long');C.innerHTML='';const r=search(q);
