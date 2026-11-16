@@ -292,6 +292,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .shf{padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -6px 16px rgba(0,0,0,.06)}
 .tot{display:flex;justify-content:space-between;font-weight:800;font-size:14px;color:var(--mute);margin-bottom:4px}
 .tot.big{color:var(--ink);font-weight:900;font-size:18px;margin:6px 0 10px}
+.cart-upsell{margin:12px 0;padding:12px;background:#FFF7E9;border:1px solid #EED5B5;border-radius:16px}.cart-upsell>b{display:block;color:#87350D;font-size:15px}.cart-upsell>small{display:block;color:#7A6455;font-size:12px;margin:2px 0 8px}.upsell-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px dashed #E4C9A8;font-size:13px;font-weight:800}.upsell-row strong{white-space:nowrap;color:#B3261A}.upsell-row button{border:0;border-radius:10px;background:#D9381E;color:#fff;padding:7px 12px;font-weight:900;white-space:nowrap}
 .hint{background:#FFF0E2;color:var(--org);border-radius:12px;padding:8px 12px;font-weight:900;font-size:13.5px;margin:8px 0 2px;text-align:center}
 .hint.ok{background:#E5F3E7;color:var(--ok)}
 .ln{background:#fff;border-radius:16px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
@@ -684,6 +685,15 @@ function openSheet(){STEP=1;drawSheet();$('sheet').hidden=false;document.body.st
 function closeSheet(fromPop){$('sheet').hidden=true;document.body.style.overflow='';if(!fromPop&&history.state&&history.state.s)history.back()}
 $('shClose').addEventListener('click',()=>closeSheet());$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
 $('shBack').addEventListener('click',()=>{if(STEP>1&&STEP<4){STEP--;drawSheet()}});
+function cartUpsellHTML(){
+ const inCart=Object.keys(cart).map(k=>byId[pidOf(k)]).filter(Boolean);
+ const hasMahshi=inCart.some(p=>/محشي|محاشي/.test(p.name+' '+p.section));
+ if(!hasMahshi)return '';
+ const wanted=['صلصة متسبكة','طبق خضرة محشي'];
+ const picks=wanted.map(n=>items.find(p=>NORM(p.name)===NORM(n))).filter(p=>p&&!cart[p.id]).slice(0,2);
+ if(!picks.length)return '';
+ return '<section class="cart-upsell"><b>🍲 كمّل طلب المحشي</b><small>إضافات ممكن تحتاجها — اختار اللي يناسبك</small>'+picks.map(p=>'<div class="upsell-row"><span>'+esc(p.name)+' <strong>'+fmt(p.price)+' ج</strong></span><button type="button" data-upsell="'+esc(p.id)+'">+ أضف</button></div>').join('')+'</section>';
+}
 function hintHTML(){const s=sub();if(!count())return '';if(isFree())return `<p class="hint ok">🎉 التوصيل مجاني${freeDel()?' مع العرض':''}</p>`;return `<p class="hint">🚚 فاضلك <b class="num">${fmt(FREE_OVER-s)} ج</b> والتوصيل يبقى مجاني</p>`}
 function totals(big){const s=sub(),d=delFee();return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(s+d)} ج</span></div>`:''}`}
 function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
@@ -692,7 +702,7 @@ function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
   if(!ent.length){B.innerHTML='<div class="empty">السلة فاضية 🛒<br>اختار أصنافك من الأقسام أو العروض</div>';Fo.innerHTML='<button type="button" class="btn full" id="goShop">ابدأ اختيار الأصناف</button>';return}
   const known=F.name&&/^01[0125]\d{8}$/.test(F.phone)&&F.area&&F.addr.length>=6&&!EDIT;if(!known)EDIT=true;
   const AREAS=['العجمي','البيطاش','الهانوفيل','شاطئ النخيل','الورديان','القباري','المنشية','محرم بك','سموحة','سيدي بشر','ميامي','المندرة','العصافرة','الحضرة','سبورتنج','كليوباترا','العوايد','المعمورة','العامرية','الأنفوشي'];
-  B.innerHTML=ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=p.isOffer?'':' '+p.unit;return `<div class="ln"><div class="lt">${esc(lineName(k))}<small class="num">${qtx(q,p.unit)}${esc(u)} × ${fmt(p.price)} ج</small><button type="button" class="rm" data-rm="${esc(k)}">شيل</button></div><div class="step" data-k="${esc(k)}"><button type="button" data-kd="-1" aria-label="قلّل">−</button><output class="num">${qtx(q,p.unit)}</output><button type="button" class="add" data-kd="1" aria-label="زوّد">+</button></div><span class="lp num">${fmt(lineTotal(p,q))} ج</span></div>`}).join('')+hintHTML()+'<p class="hint schedule-hint">⏰ الأصناف المتاحة لنفس اليوم قبل 2 ظهرًا، وباقي الأصناف قبلها بيوم.</p>'
+  B.innerHTML=ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=p.isOffer?'':' '+p.unit;return `<div class="ln"><div class="lt">${esc(lineName(k))}<small class="num">${qtx(q,p.unit)}${esc(u)} × ${fmt(p.price)} ج</small><button type="button" class="rm" data-rm="${esc(k)}">شيل</button></div><div class="step" data-k="${esc(k)}"><button type="button" data-kd="-1" aria-label="قلّل">−</button><output class="num">${qtx(q,p.unit)}</output><button type="button" class="add" data-kd="1" aria-label="زوّد">+</button></div><span class="lp num">${fmt(lineTotal(p,q))} ج</span></div>`}).join('')+cartUpsellHTML()+hintHTML()+'<p class="hint schedule-hint">⏰ الأصناف المتاحة لنفس اليوم قبل 2 ظهرًا، وباقي الأصناف قبلها بيوم.</p>'
   +'<p class="co-h">📍 هيوصل لـ</p>'
   +(known?`<div class="adc"><div>${esc(F.name)} · <span class="num">${esc(F.phone)}</span><small>${esc(F.area)} — ${esc(F.addr)}</small></div><button type="button" id="editAd">تعديل</button></div>`
    :`<div class="row2"><label class="fld"><span>الاسم</span><input id="fName" autocomplete="name" value="${esc(F.name)}" placeholder="اسمك"></label>
@@ -720,7 +730,7 @@ function invoice(){const ent=Object.entries(cart);const s=sub(),d=delFee();if(!R
   ...ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=p.isOffer||p.name.startsWith(p.unit)?'':' '+p.unit;return '• '+qtx(q,p.unit)+u+' '+lineName(k)+' ........ '+fmt(lineTotal(p,q))+' ج.م'}),L,
   '💰 إجمالي الأصناف: '+fmt(s)+' ج.م','🚚 التوصيل: '+(d?fmt(d)+' ج.م':(freeDel()?'مجاني مع العرض':'مجاني')),'💵 الإجمالي النهائي: '+fmt(s+d)+' ج.م',L,
   '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':' على 01275165496'),F.note?'📝 ملاحظات: '+F.note:'',L,'برجاء تأكيد الطلب ❤️'].filter(Boolean).join('\n')}
-$('shBody').addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
+ $('shBody').addEventListener('click',e=>{const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
  const b=e.target.closest('[data-kd]');if(b){const k=b.closest('[data-k]').dataset.k;const p=byId[pidOf(k)];setQty(k,(cart[k]||0)+(+b.dataset.kd)*(p.isOffer?1:stepOf(p)));drawSheet();return}
  if(e.target.id==='copyInv'){copy(LAST.text)}
  if(e.target.id==='editDetails'){STEP=1;drawSheet();return}
