@@ -734,7 +734,7 @@ function validate(){const bad=[];const mark=(id,msg)=>{let el=$(id);if(!el){EDIT
  if(!F.name)mark('fName','اكتب اسمك');if(!/^01[0125]\d{8}$/.test(F.phone))mark('fPhone','اكتب رقم موبايل صحيح من 11 رقم يبدأ بـ 01');if(!F.area)mark('fArea','اكتب المنطقة');if(F.addr.length<6)mark('fAddr','اكتب العنوان بالتفصيل');
  if(bad.length){bad[0].focus();bad[0].scrollIntoView({block:'center'});return false}return true}
 function refCode(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return 'AH-'+pad(d.getDate())+pad(d.getMonth()+1)+'-'+String(Math.floor(100+Math.random()*900))}
-let REF='',LAST={};
+let REF='',LAST={},ORDER_SENDING=false;
 function invoice(){const ent=Object.entries(cart);const s=sub(),d=delFee();if(!REF)REF=refCode();const L='──────────────────';
  return ['#ع_الحله 🧾','فاتورة الطلب رقم '+REF,L,'👤 '+F.name+' · 📞 '+F.phone,'📍 '+F.area+' — '+F.addr,'📅 التسليم: '+F.when,L,
   ...ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=p.isOffer||p.name.startsWith(p.unit)?'':' '+p.unit;return '• '+qtx(q,p.unit)+u+' '+lineName(k)+' ........ '+fmt(lineTotal(p,q))+' ج.م'}),L,
@@ -751,8 +751,8 @@ $('shFoot').addEventListener('click',e=>{const id=e.target.id;
  if(id==='next1'){STEP=2;drawSheet();T('begin_checkout',{currency:'EGP',value:sub()});return}
  if(id==='next2'){readF();if(!validate())return;persist();REF='';STEP=3;drawSheet();return}
  if(id==='reviewOrder'){readF();if(!validate())return;persist();REF='';STEP=3;drawSheet();return}
- if(id==='send'){readF();if(!validate())return;persist();T('begin_checkout',{currency:'EGP',value:sub()});sendOrder();return}
- if(id==='newOrder'){cart={};save();refresh();closeSheet();goHome()}});
+ if(id==='send'){if(ORDER_SENDING||window.__CLOSED)return;readF();if(!validate())return;persist();ORDER_SENDING=true;const sb=$('send');if(sb)sb.disabled=true;T('begin_checkout',{currency:'EGP',value:sub()});sendOrder();return}
+ if(id==='newOrder'){ORDER_SENDING=false;REF='';LAST={};cart={};save();refresh();closeSheet();goHome()}});
 $('shBody').addEventListener('input',e=>{if(e.target.matches('input,textarea,select')){const el=e.target;el.classList.remove('bad');const n=el.nextElementSibling;if(n&&n.tagName==='EM'&&!n.style.color)n.remove()}});
 async function sendOrder(){if(window.__CLOSED)return;
  const text=invoice(),ent=Object.entries(cart),s=sub(),d=delFee();
