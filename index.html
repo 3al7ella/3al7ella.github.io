@@ -719,7 +719,7 @@ const SEC_EMO={'المحاشي':'🫑','محاشي ع التسوية':'🫑','م
 const CATS=[
  {key:'veg',title:'الخضار',desc:'خضار وتجهيزات المطبخ · متنقي · متجهز · جاهز للطبخ',img:'c-veg.webp',s1:'خضار وتجهيزات المطبخ',s2:'متنقي · متجهز · جاهز للطبخ',tone:'t-veg',groups:[['الخضار المتنضف',['الخضار المتنضف']]]},
  {key:'prep',title:'المصنعات',desc:'فراخ ولحوم · تجهيزات متبلة وجاهزة للتسوية',img:'c-prep.webp',s1:'فراخ ولحوم',s2:'متبلة وجاهزة للتسوية',tone:'t-prep',subs:true,groups:[['مصنعات فراخ',['مصنعات الفراخ','فراخ متبلة']],['مصنعات لحوم',['مصنعات اللحمة']]]},
- {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · اختاري على التسوية أو مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'على التسوية · مستوي',tone:'t-mah',tiles:true,filterGroups:true,groups:[['المحاشي',['محاشي ع التسوية','محاشي مستوية'],'f-grape.webp','اختاري على التسوية أو مستوي','combined'],['محاشي باللحمة المفرومة',['محاشي باللحمة المفرومة'],'f-mahshi2.webp','خلطة رز باللحمة المفرومة'],['الممبار',['ممبار'],'f-mombarstuffed.webp','متنضف · مسلوق · محشي · متحمر'],['جاهز على الحشو',['جاهز على الحشو'],'f-zucchinicore.webp','مقور · مسلوق · خلطات']]},
+ {key:'mah',title:'المحاشي',desc:'محشي صح مخدوم · اختاري على التسوية أو مستوي',img:'c-mah.webp',s1:'محشي صح مخدوم',s2:'على التسوية · مستوي',tone:'t-mah',tiles:true,filterGroups:true,groups:[['المحاشي',['محاشي ع التسوية','محاشي مستوية','المحاشي'],'f-grape.webp','اختاري على التسوية أو مستوي','combined'],['محاشي باللحمة المفرومة',['محاشي باللحمة المفرومة'],'f-mahshi2.webp','خلطة رز باللحمة المفرومة'],['الممبار',['ممبار'],'f-mombarstuffed.webp','متنضف · مسلوق · محشي · متحمر'],['جاهز على الحشو',['جاهز على الحشو'],'f-zucchinicore.webp','مقور · مسلوق · خلطات']]},
  {key:'meal',title:'الوجبات',desc:'أكل بيتي حقيقي · وجبات وأطباق جاهزة',img:'c-meal.webp',s1:'أكل بيتي حقيقي',s2:'وجبات وأطباق جاهزة',tone:'t-meal',groups:[['الوجبات',['الوجبات']],['صواني الفرن',['صواني الفرن']],['طواجن وطبيخ',['طواجن وطبيخ']],['الرز المعمر',['الرز المعمر']],['بولات وشوربة',['بولات وشوربة']]]}
 ];
 const QUICK_CATS=[
@@ -884,7 +884,7 @@ const SEARCH_ALIASES={
 };
 function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=[w,...(SEARCH_ALIASES[w]||[])];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
  return {its:uniqueVisibleItems(items.filter(p=>hit(p.name+' '+p.desc+' '+p.section))),ofs:OFFERS.filter(o=>hit(o.title+' '+o.desc+' '+o.inc.map(x=>x[1]).join(' ')))}}
-let MAH_PREP=null;function groupItems(g,prep=null){let a=items.filter(p=>g[1].includes(p.section));if(g[4]==='combined'&&prep==='raw')a=a.filter(p=>/ع التسوية/.test(p.name));else if(g[4]==='combined'&&prep==='cooked')a=a.filter(p=>/مستوي/.test(p.name));return uniqueVisibleItems(a)}
+let MAH_PREP=null;function groupItems(g,prep=null){let a;if(g[4]==='combined'){a=items.filter(p=>/محاشي/.test(p.section)&&!/باللحمة المفرومة/.test(p.section)&&/(ع التسوية|مستوي)/.test(p.name));if(prep==='raw')a=a.filter(p=>/ع التسوية/.test(p.name));else if(prep==='cooked')a=a.filter(p=>/مستوي/.test(p.name));}else{a=items.filter(p=>g[1].includes(p.section));}return uniqueVisibleItems(a)}
 function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips');let h='';
  if(VIEW==='search'){$('vTitle').textContent='نتايج البحث';$('vTitle').classList.remove('long');C.innerHTML='';const r=search(q);
   if(r.ofs.length)h+=`<p class="gtitle">العروض</p>`+r.ofs.map(o=>itemHTML(byId[o.id])).join('');
