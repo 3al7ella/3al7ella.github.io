@@ -266,7 +266,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .step-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex:none}.step-hint{font-size:9px;line-height:1.2;color:var(--mute);font-weight:800;white-space:nowrap}.step{display:flex;align-items:center;gap:4px;flex:none}
 .step button{width:34px;height:34px;border:0;border-radius:11px;background:#FFE7D6;color:var(--org);font-size:20px;font-weight:900;line-height:1}
 .step button.add{background:var(--org);color:#fff}
-.step[data-id] button.add{width:auto;min-width:94px;padding:0 9px;font-size:12px;white-space:nowrap}
+.step[data-id] button.add.first-add{width:auto;min-width:94px;padding:0 9px;font-size:12px;white-space:nowrap}
 .step[data-id] output{min-width:30px;text-align:center;font-weight:900;font-size:13px}
 .step output{min-width:30px;text-align:center;font-weight:900;font-size:14px}
 .empty{text-align:center;color:var(--mute);font-weight:800;padding:30px 10px}
@@ -687,7 +687,7 @@ function setQty(k,v){v=Math.max(0,Math.round(v*100)/100);const P=byId[pidOf(k)],
  if(P&&v>old)T('add_to_cart',{currency:'EGP',value:Math.round(P.price*(v-old)),items:[{item_id:P.id,item_name:P.name,item_category:P.section,price:P.price,quantity:v-old}]});
  if(v)cart[k]=v;else delete cart[k];save();refresh()}
 function stepOf(p){return HALF(p.unit)?0.5:1}
-function stepHTML(id){const p=byId[id];const q=cart[id]||0;const half=HALF(p.unit);return `<div class="step-wrap"><div class="step" data-id="${id}" title="${half?'كل ضغطة = نصف كيلو':'تعديل الكمية'}">${q?`<button type="button" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${qtx(q,p.unit)}</output>`:''}<button type="button" class="add" data-d="1" aria-label="${q?'زوّد':'أضف للسلة'} ${esc(p.name)}">${q?'+':'أضف للسلة +'}</button></div>${half?'<small class="step-hint">كل ضغطة + أو − = ½ كيلو</small>':''}</div>`}
+function stepHTML(id){const p=byId[id];const q=cart[id]||0;const half=HALF(p.unit);return `<div class="step-wrap"><div class="step" data-id="${id}" title="${half?'كل ضغطة = نصف كيلو':'تعديل الكمية'}">${q?`<button type="button" data-d="-1" aria-label="قلّل ${esc(p.name)}">−</button><output class="num">${qtx(q,p.unit)}</output>`:''}<button type="button" class="add${q?'':' first-add'}" data-d="1" aria-label="${q?'زوّد':'أضف للسلة'} ${esc(p.name)}">${q?'+':'أضف للسلة +'}</button></div>${half?'<small class="step-hint">كل ضغطة + أو − = ½ كيلو</small>':''}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('.step button');if(!b)return;const id=b.closest('.step').dataset.id;const p=byId[id];if(!p)return;
  if(p.isOffer){const o=offerOf(id);if(o&&o.pick&&+b.dataset.d>0){openOffer(id);return}}
  const nq=(cart[id]||0)+(+b.dataset.d)*stepOf(p);setQty(id,nq);if(+b.dataset.d>0&&(cart[id]||0)===stepOf(p))toast('اتضاف للسلة ✓')});
@@ -747,7 +747,7 @@ function mealsHTML(list){const used=new Set();const ids=new Set(list.map(p=>p.id
  const rest=list.filter(p=>!used.has(p.id));if(rest.length)h+=`<section class="mm"><h3>كمان</h3>${rest.map(p=>row(p.id,p.name,p.desc==='جديد'?'':p.desc,'')).join('')}</section>`;
  return h+'<div class="mfoot">⏰ الطلب قبلها بيوم</div>'}
 const noPh=k=>/^(meal|ml_)/.test(k||'');
-function uniqueVisibleItems(list){const seen=new Set();return list.filter(p=>{const k=NORM(p.name)+'|'+NORM(p.unit)+'|'+p.price;if(seen.has(k))return false;seen.add(k);return true})}
+function uniqueVisibleItems(list){const canonical=new Map();items.forEach(p=>{const k=NORM(p.name)+'|'+NORM(p.unit)+'|'+p.price;if(!canonical.has(k))canonical.set(k,p.id)});return list.filter(p=>canonical.get(NORM(p.name)+'|'+NORM(p.unit)+'|'+p.price)===p.id)}
 function listHTML(list){const seen=new Set();return uniqueVisibleItems(list).map(p=>{const g=PAIR_OF[p.id];if(!g)return itemHTML(p);if(seen.has(g))return '';seen.add(g);return pairHTML(PAIRS[g])}).join('')}
 const SEARCH_ALIASES={
  'دوالي':['ورق عنب','عنب'],
