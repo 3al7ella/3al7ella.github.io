@@ -367,21 +367,28 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .special-request .sr-send{width:100%;border:0;border-radius:13px;background:#c92d22;color:#fff;padding:11px 16px;font:900 14px Cairo,sans-serif;margin-top:9px;cursor:pointer}
 .special-request .sr-note{font-size:10.5px;color:#806b5b;font-weight:700;line-height:1.5;margin:6px 0 0}
 @media(max-width:380px){.special-request .sr-grid{grid-template-columns:1fr}.special-request textarea,.special-request .sr-full{grid-column:auto}}
-.bagstrip{display:flex;justify-content:center;gap:18px;margin:14px 0 6px}
-.bagc{flex:1;max-width:190px;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;font:inherit;cursor:pointer;color:inherit;padding:0}
-.bagc .bimg{position:relative;width:132px;height:132px;border-radius:50%;padding:5px;background:conic-gradient(#E83904,#F48802,#E83904);box-shadow:0 8px 22px #b5161e33}
-.bagc .bimg img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid #fff;display:block}
-.bagc .bimg em{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);white-space:nowrap;font-style:normal;background:#2A7A2E;color:#fff;font-weight:900;font-size:12px;border-radius:12px;padding:2px 10px;border:2px solid #fff}
-.bagc b{margin-top:8px;font-weight:900;font-size:16px;color:#7a2a0c}
-.bagc .bt{font-style:normal;font-weight:900;font-size:12px;color:#E83904;margin-top:-4px}
-.bagc small{font-size:12px;color:#8a6a55;font-weight:700}
-.bagc .bp{background:#B5161E;color:#fff;font-weight:900;font-size:15px;border-radius:14px;padding:2px 14px}
-.bagc:active .bimg{transform:scale(.96)}
-.bag-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:100%;margin-top:5px}
-.bag-actions button{border:0;border-radius:10px;padding:7px 4px;font:900 11px Cairo,sans-serif;background:#B5161E;color:#fff;cursor:pointer}
-.bag-actions button+button{background:#287b43}
-.bag-actions button:active{transform:scale(.97)}
-@media(max-width:520px){.bagstrip{gap:8px;align-items:flex-start}.bagc{min-width:0}.bagc .bimg{width:min(26vw,112px);height:min(26vw,112px)}.bagc b{font-size:13px}.bagc small{font-size:10px}.bag-actions{grid-template-columns:1fr}.bag-actions button{font-size:10px;padding:6px 2px}}
+.story-area{margin:10px 0 16px;padding:10px 14px 13px;background:linear-gradient(180deg,#fff9f1,#fff2e3);border:1px solid #f0d7bd;border-radius:20px}
+.story-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}.story-heading b{font:400 21px Lalezar,Cairo;color:#9b321d}.story-heading span{font-size:11px;color:#8a6a55;font-weight:700}
+.bagstrip{display:flex;gap:18px;overflow-x:auto;justify-content:flex-start;padding:2px 2px 5px;scrollbar-width:none}.bagstrip::-webkit-scrollbar{display:none}
+.bagc{flex:0 0 104px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;font:inherit;cursor:pointer;color:inherit;padding:0;text-align:center}
+.bagc .bimg{position:relative;width:94px;height:94px;border-radius:50%;padding:4px;background:conic-gradient(#E83904,#F48802,#E83904,#D52C52,#E83904);box-shadow:0 5px 16px #b5161e30}
+.bagc .bimg img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #fff;display:block}
+.bagc b{margin-top:4px;font-weight:900;font-size:13px;color:#7a2a0c;white-space:nowrap}
+.bagc small{font-size:12px;color:#B3261A;font-weight:900}
+.bagc:active .bimg{transform:scale(.95)}
+.story-modal{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:14px}.story-modal[hidden]{display:none}
+.story-backdrop{position:absolute;inset:0;background:#160b08d9;backdrop-filter:blur(4px)}
+.story-panel{position:relative;width:min(100%,430px);max-height:min(92dvh,820px);overflow:auto;background:#fff8ef;border-radius:24px;box-shadow:0 20px 70px #0008}
+.story-close{position:absolute;z-index:2;top:10px;left:10px;width:38px;height:38px;border:0;border-radius:50%;background:#2a1a12cc;color:#fff;font-size:27px;line-height:1}
+.story-progress{position:absolute;z-index:2;top:10px;right:58px;left:58px;height:4px;border-radius:9px;background:#ffffff88;overflow:hidden}.story-progress i{display:block;width:100%;height:100%;background:#fff}
+.story-photo{width:100%;height:245px;object-fit:cover;background:#f0dfcd}
+.story-content{padding:14px 17px 18px}.story-brand{font-size:12px;font-weight:900;color:#d34220}.story-content h2{margin:3px 0;color:#7b2b12;font:400 27px Lalezar,Cairo}.story-content p{margin:0 0 10px;color:#795f4d;font-weight:700}
+.story-ingredients{background:#fff;border:1px solid #f0dfcf;border-radius:14px;padding:11px 13px;color:#493328;font-weight:800;line-height:1.8}
+.story-size{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.story-size button{border:1px solid #e5c9ae;border-radius:12px;padding:9px 5px;background:#fff;color:#6f4630;font:900 12px Cairo}.story-size button[aria-pressed=true]{background:#b83220;border-color:#b83220;color:#fff}
+.story-note-wrap{display:block;margin-top:10px;color:#76533e;font-size:12px;font-weight:900}.story-note-wrap textarea{display:block;width:100%;margin-top:5px;border:1px solid #e7d2bf;border-radius:12px;padding:10px;font:700 13px Cairo;resize:vertical}
+.story-price{margin:12px 0;text-align:center;font-size:23px;font-weight:900;color:#b3261a}
+.story-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.story-actions button{border:0;border-radius:13px;padding:12px 7px;color:#fff;font:900 14px Cairo}.story-add{background:#b3261a}.story-wa{background:#287b43}
+@media(max-width:520px){.bagstrip{gap:13px}.bagc{flex-basis:91px}.bagc .bimg{width:82px;height:82px}.story-photo{height:220px}.story-actions button{font-size:13px}}
 
 </style>
 </head>
@@ -399,10 +406,35 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 <div class="notice" id="notice" hidden></div>
 <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="دوّر على صنف.. ورق عنب، بانيه، ملوخية" autocomplete="off" enterkeyhint="search" aria-label="بحث"><button type="button" class="clr" id="qClr" hidden aria-label="مسح البحث">×</button></div>
 
-<div class="bagstrip" id="bagStrip" aria-label="شنط ع الحلة">
- <article class="bagc"><span class="bimg"><img src="bag-mahshi.webp" alt="شنطة المحاشي" width="200" height="200"></span><b>شنطة المحاشي</b><i class="bt">من #ع_الحله</i><small>جاهز ع الحشو · 9 أصناف</small><span class="bp num">250 ج</span><div class="bag-actions"><button type="button" data-bag-cart="p330">أضف للسلة</button><button type="button" data-bag-wa="p330">اطلب واتساب</button></div></article>
- <article class="bagc"><span class="bimg"><img src="bag-veg.webp" alt="شنطة الخضار" width="200" height="200"></span><b>شنطة الخضار</b><i class="bt">من #ع_الحله</i><small>10 أكياس × 400 جم</small><span class="bp num">250 ج</span><div class="bag-actions"><button type="button" data-bag-cart="p331">أضف للسلة</button><button type="button" data-bag-wa="p331">اطلب واتساب</button></div></article>
- <article class="bagc fruit-bag"><span class="bimg"><img src="https://images.pexels.com/photos/8426698/pexels-photo-8426698.jpeg?auto=compress&cs=tinysrgb&w=750" alt="شنطة فاكهة طازة فريش" width="200" height="200" onerror="this.style.display='none';this.parentElement.textContent='🍌🍊🍎'"></span><b>فاكهة طازة فريش</b><i class="bt">من #ع_الحله</i><small>موز · برتقال · تفاح · رمان</small><span class="bp num">250 ج</span><div class="bag-actions"><button type="button" data-fruit-cart>اختار وأضف للسلة</button><button type="button" data-fruit-wa>اطلب واتساب</button></div><small>متاح نص الكمية بـ125 ج · وتعديل الأصناف حسب الموسم</small></article>
+<section class="story-area" aria-label="عروض ع الحلة المؤقتة">
+ <div class="story-heading"><b>عروض نازلة دلوقتي</b><span>افتح الستوري وشوف التفاصيل</span></div>
+ <div class="bagstrip" id="bagStrip">
+  <button class="bagc" type="button" data-story-id="p330" aria-label="افتح ستوري شنطة المحاشي"><span class="bimg"><img src="bag-mahshi.webp" alt="" width="200" height="200"></span><b>شنطة المحاشي</b><small>250 ج</small></button>
+  <button class="bagc" type="button" data-story-id="p331" aria-label="افتح ستوري شنطة الخضار"><span class="bimg"><img src="bag-veg.webp" alt="" width="200" height="200"></span><b>شنطة الخضار</b><small>250 ج</small></button>
+  <button class="bagc fruit-bag" type="button" data-story-id="p332" aria-label="افتح ستوري فاكهة طازة فريش"><span class="bimg"><img src="https://images.pexels.com/photos/8426698/pexels-photo-8426698.jpeg?auto=compress&cs=tinysrgb&w=750" alt="" width="200" height="200" onerror="this.style.display='none';this.parentElement.textContent='🍌🍊🍎'"></span><b>فاكهة طازة فريش</b><small>من 125 ج</small></button>
+ </div>
+</section>
+<div class="story-modal" id="storyModal" hidden role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+ <div class="story-backdrop" data-story-close></div>
+ <section class="story-panel">
+  <button class="story-close" type="button" data-story-close aria-label="إغلاق">×</button>
+  <div class="story-progress"><i></i></div>
+  <img class="story-photo" id="storyPhoto" alt="">
+  <div class="story-content">
+   <small class="story-brand">#ع_الحله · عرض مؤقت</small>
+   <h2 id="storyTitle"></h2><p id="storyDesc"></p>
+   <div class="story-ingredients" id="storyIngredients"></div>
+   <div class="story-size" id="storySize" hidden>
+    <button type="button" data-story-size="full" aria-pressed="true">الشنطة كاملة · 250 ج</button>
+    <button type="button" data-story-size="half" aria-pressed="false">نص الكمية · 125 ج</button>
+   </div>
+   <label class="story-note-wrap" id="storyNoteWrap" hidden>تعديل اختياري حسب الموسم
+    <textarea id="storyNote" rows="2" placeholder="مثلاً: استبدال صنف أو حذف صنف"></textarea>
+   </label>
+   <div class="story-price" id="storyPrice"></div>
+   <div class="story-actions"><button type="button" class="story-add" id="storyAdd">أضف للسلة</button><button type="button" class="story-wa" id="storyWa">كلمنا على واتساب</button></div>
+  </div>
+ </section>
 </div>
 <main id="vHome">
  <div class="again" id="again" hidden></div>
@@ -892,19 +924,41 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
   window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');
  });
 })();
-document.getElementById('bagStrip').addEventListener('click',e=>{
- const cartBtn=e.target.closest('[data-bag-cart]');if(cartBtn){setQty(cartBtn.dataset.bagCart,(cart[cartBtn.dataset.bagCart]||0)+1);toast('اتضافت الشنطة للسلة ✓');return}
- const waBtn=e.target.closest('[data-bag-wa]');if(waBtn){const o=offerOf(waBtn.dataset.bagWa);if(!o)return;const msg='طلب من #ع_الحله ❤️\n'+o.title+'\nالسعر: '+fmt(byId[o.id].price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');return}
- const fruitCart=e.target.closest('[data-fruit-cart]'),fruitWa=e.target.closest('[data-fruit-wa]');if(!fruitCart&&!fruitWa)return;
- const half=confirm('تريد نص الكمية بـ125 جنيه؟ اضغط موافق للنصف أو إلغاء للشنطة الكاملة بـ250 جنيه.');
- const id=half?'p333':'p332',price=half?125:250;
- const change=prompt('ممكن تكتب تعديلك على الفاكهة (تغيير أو حذف أو إضافة حسب الموسم)، أو اتركه فارغًا:','');
- const note=(change||'').trim();
- const name=half?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';
- const defaults=half?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان';
- const details=defaults+(note?'\nتعديلات العميل: '+note:'');
- if(fruitCart){setQty(id+'::'+details,1);toast('اتضافت شنطة الفاكهة للسلة ✓')}
- else{const msg='طلب من #ع_الحله ❤️\n'+name+'\n'+details+'\nالسعر: '+price+' جنيه\nبرجاء تأكيد التوفر والحساب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
-});</script>
+let activeStory=null,storyHalf=false;
+const storyModal=document.getElementById('storyModal');
+function showStory(id){
+ const o=offerOf(id);if(!o)return;activeStory=id;storyHalf=false;
+ const p=byId[id],fruit=id==='p332'||id==='p333';
+ document.getElementById('storyPhoto').src=imgOf(o.img)||'';
+ document.getElementById('storyTitle').textContent=o.title;
+ document.getElementById('storyDesc').textContent=o.desc||'عرض مميز من ع الحلة';
+ document.getElementById('storyIngredients').textContent=o.inc.length?o.inc.map(incTxt).join(' · '):o.desc;
+ document.getElementById('storySize').hidden=!fruit;
+ document.getElementById('storyNoteWrap').hidden=!fruit;
+ document.getElementById('storyNote').value='';
+ document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storySize==='full'?'true':'false'));
+ document.getElementById('storyPrice').textContent='السعر: '+fmt(p.price)+' جنيه';
+ storyModal.hidden=false;document.body.style.overflow='hidden';
+}
+function closeStory(){storyModal.hidden=true;document.body.style.overflow=''}
+document.getElementById('bagStrip').addEventListener('click',e=>{const b=e.target.closest('[data-story-id]');if(b)showStory(b.dataset.storyId)});
+storyModal.addEventListener('click',e=>{
+ if(e.target.closest('[data-story-close]')){closeStory();return}
+ const size=e.target.closest('[data-story-size]');if(size){storyHalf=size.dataset.storySize==='half';document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b===size?'true':'false'));document.getElementById('storyPrice').textContent='السعر: '+(storyHalf?'125':'250')+' جنيه';document.getElementById('storyTitle').textContent=storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';document.getElementById('storyIngredients').textContent=storyHalf?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان';return}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!storyModal.hidden)closeStory()});
+function storyOrder(toWhatsApp){
+ if(!activeStory)return;
+ const fruit=activeStory==='p332',id=fruit?(storyHalf?'p333':'p332'):activeStory;
+ const o=offerOf(id),p=byId[id];if(!o||!p)return;
+ const note=fruit?document.getElementById('storyNote').value.trim():'';
+ const ingredients=fruit?(storyHalf?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان'):o.inc.map(incTxt).join(' · ');
+ const title=fruit?(storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش'):o.title;
+ const extra=note?'\nتعديل العميل: '+note:'';
+ if(toWhatsApp){const msg='طلب من #ع_الحله ❤️\n'+title+'\n'+ingredients+extra+'\nالسعر: '+fmt(p.price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
+ else{const key=id+(note?'::تعديل العميل: '+note:'');setQty(key,(cart[key]||0)+1);toast('اتضاف العرض للسلة ✓');closeStory()}
+}
+document.getElementById('storyAdd').addEventListener('click',()=>storyOrder(false));
+document.getElementById('storyWa').addEventListener('click',()=>storyOrder(true));</script>
 </body>
 </html>
