@@ -872,7 +872,7 @@ function invoice(){
   const p=byId[pidOf(k)];
   const qty=qtx(q,p.unit)+(p.unit?' '+p.unit:'');
   const unitLabel=p.isOffer?'سعر العرض':'سعر الوحدة';
-  return [(i+1)+') '+lineName(k),'   الكمية: '+qty,'   '+unitLabel+': '+fmt(p.price)+' جنيه','   إجمالي الصنف: '+fmt(lineTotal(p,q))+' جنيه'].join('\\n');
+  return [(i+1)+') '+lineName(k),'   الكمية: '+qty,'   '+unitLabel+': '+fmt(p.price)+' جنيه','   إجمالي الصنف: '+fmt(lineTotal(p,q))+' جنيه'].join('\n');
  });
  const deliveryLabel=d?fmt(d)+' جنيه':(freeDel()?'مجاني مع عرض مؤهل':'مجاني لتجاوز حد التوصيل المجاني');
  return [
@@ -896,12 +896,12 @@ function invoice(){
   'الإجمالي المطلوب: '+fmt(total)+' جنيه',
   L,
   '💳 طريقة الدفع: '+F.pay,
-  F.pay==='كاش'?'الدفع عند الاستلام':'التحويل على رقم ع الحلة: 01275165496\\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.',
+  F.pay==='كاش'?'الدفع عند الاستلام':'التحويل على رقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.',
   F.note?'📝 ملاحظات الطلب: '+F.note:'',
   L,
   '⏰ الأصناف العادية تُطلب قبلها بيوم، وأصناف نفس اليوم متاحة قبل 2 ظهرًا.',
   'برجاء مراجعة الفاتورة وتأكيد الطلب ❤️'
- ].filter(Boolean).join('\\n')
+ ].filter(Boolean).join('\n')
 }
  $('shBody').addEventListener('click',e=>{if(e.target.closest('[data-copy-payment]')){copy('01275165496');toast('رقم الدفع اتنسخ ✓');return}const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
  const b=e.target.closest('[data-kd]');if(b){const k=b.closest('[data-k]').dataset.k;const p=byId[pidOf(k)];setQty(k,(cart[k]||0)+(+b.dataset.kd)*(p.isOffer?1:stepOf(p)));drawSheet();return}
