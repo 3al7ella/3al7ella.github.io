@@ -969,12 +969,12 @@ let STORY_IDS=[];
 function renderStoryRail(){
  const el=document.getElementById('bagStrip'),area=document.querySelector('.story-area');
  if(!el||!area)return;
- STORY_IDS=OFFERS.filter(o=>o.id!=='p333'&&byId[o.id]).map(o=>o.id);
+ STORY_IDS=OFFERS.filter(o=>byId[o.id]).map(o=>o.id);
  area.hidden=!STORY_IDS.length;
  el.innerHTML=STORY_IDS.map(id=>{
   const o=offerOf(id),p=byId[id],im=imgOf(o.img);
-  const ico=o.g==='bride'?'👰':o.g==='freezer'?'🧊':o.g==='storage'?'📦':o.g==='boxes'?'🎁':'🛍️';
-  const price=id==='p332'?'من '+fmt(byId.p333?byId.p333.price:125)+' ج':fmt(p.price)+' ج';
+  const ico=o.g==='freezer'?'🧊':o.g==='storage'?'📦':'🛍️';
+  const price=fmt(p.price)+' ج';
   return `<button class="bagc" type="button" data-story-id="${id}" aria-label="افتح ستوري ${esc(o.title)}"><span class="bimg">${im?`<img src="${im}" alt="" width="200" height="200" loading="lazy" onerror="this.remove();this.parentElement.textContent='${ico}'">`:`<i aria-hidden="true">${ico}</i>`}</span><b>${esc(o.title)}</b><small>${price}</small></button>`;
  }).join('');
 }
@@ -992,7 +992,7 @@ function renderStoryIngredients(o,half=false){
 const storyModal=document.getElementById('storyModal');
 function showStory(id){
  const o=offerOf(id);if(!o)return;activeStory=id;storyHalf=false;
- const storyIndex=STORY_IDS.indexOf(id),p=byId[id],fruit=id==='p332';
+ const storyIndex=STORY_IDS.indexOf(id),p=byId[id];
  document.getElementById('storyCounter').textContent=(storyIndex+1)+' / '+STORY_IDS.length;
  document.querySelector('.story-progress i').style.width=((storyIndex+1)/STORY_IDS.length*100)+'%';
  document.getElementById('storyPrev').disabled=storyIndex<=0;
@@ -1002,14 +1002,8 @@ function showStory(id){
  document.getElementById('storyTitle').textContent=o.title;
  document.getElementById('storyDesc').textContent=o.desc||'عرض مميز من ع الحلة';
  renderStoryIngredients(o);
- document.getElementById('storySize').hidden=!fruit;
- document.getElementById('storyNoteWrap').hidden=!fruit;
- document.getElementById('storyNote').value='';
- document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storySize==='full'?'true':'false'));
- if(fruit){
-  document.querySelector('[data-story-size="full"]').textContent='الشنطة كاملة · '+fmt(p.price)+' ج';
-  document.querySelector('[data-story-size="half"]').textContent='نص الكمية · '+fmt(byId.p333?byId.p333.price:125)+' ج';
- }
+ document.getElementById('storySize').hidden=true;
+ document.getElementById('storyNoteWrap').hidden=true;
  document.getElementById('storyPrice').textContent='إجمالي العرض: '+fmt(p.price)+' جنيه';
  document.getElementById('storyAdd').textContent=o.pick?'اختار الأصناف':'أضف للسلة';
  storyModal.hidden=false;document.body.style.overflow='hidden';
@@ -1021,7 +1015,6 @@ document.getElementById('storyNext').addEventListener('click',()=>moveStory(1));
 document.getElementById('bagStrip').addEventListener('click',e=>{const b=e.target.closest('[data-story-id]');if(b)showStory(b.dataset.storyId)});
 storyModal.addEventListener('click',e=>{
  if(e.target.closest('[data-story-close]')){closeStory();return}
- const size=e.target.closest('[data-story-size]');if(size){storyHalf=size.dataset.storySize==='half';document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b===size?'true':'false'));document.getElementById('storyPrice').textContent='إجمالي العرض: '+(storyHalf?'125':'250')+' جنيه';document.getElementById('storyTitle').textContent=storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';renderStoryIngredients(null,storyHalf);return}
 });
 document.addEventListener('keydown',e=>{if(storyModal.hidden)return;if(e.key==='Escape')closeStory();else if(e.key==='ArrowRight')moveStory(1);else if(e.key==='ArrowLeft')moveStory(-1)});
 let storyTouchX=0;
@@ -1029,15 +1022,15 @@ document.getElementById('storyPhoto').addEventListener('touchstart',e=>{storyTou
 document.getElementById('storyPhoto').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-storyTouchX;if(Math.abs(dx)>55)moveStory(dx<0?1:-1)},{passive:true});
 function storyOrder(toWhatsApp){
  if(!activeStory)return;
- const fruit=activeStory==='p332',baseId=activeStory,id=fruit?(storyHalf?'p333':'p332'):baseId;
- const o=offerOf(id),p=byId[id];if(!o||!p)return;
- if(o.pick){const chosen=activeStory;closeStory();openOffer(chosen);return}
- const note=fruit?document.getElementById('storyNote').value.trim():'';
- const ingredients=fruit?(storyHalf?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان'):o.inc.map(incTxt).join(' · ');
- const title=fruit?(storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش'):o.title;
- const extra=note?'\nتعديل العميل: '+note:'';
- if(toWhatsApp){const msg='طلب من #ع_الحله ❤️\n'+title+'\n'+(ingredients||o.desc)+extra+'\nالسعر: '+fmt(p.price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
- else{const key=id+(note?'::تعديل العميل: '+note:'');setQty(key,(cart[key]||0)+1);toast('اتضاف العرض للسلة ✓');closeStory()}
+ const id=activeStory,o=offerOf(id),p=byId[id];if(!o||!p)return;
+ if(o.pick){closeStory();openOffer(id);return}
+ const ingredients=o.inc.map(incTxt).join(' · ');
+ if(toWhatsApp){
+  const msg='طلب من #ع_الحله ❤️\\n'+o.title+'\\n'+(ingredients||o.desc)+'\\nالسعر: '+fmt(p.price)+' جنيه\\nميعاد الطلب: قبلها بيوم\\nبرجاء تأكيد الطلب.';
+  window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');
+ }else{
+  setQty(id,(cart[id]||0)+1);toast('اتضاف العرض للسلة ✓');closeStory();
+ }
 }
 document.getElementById('storyAdd').addEventListener('click',()=>storyOrder(false));
 document.getElementById('storyWa').addEventListener('click',()=>storyOrder(true));</script>
