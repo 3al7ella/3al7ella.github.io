@@ -406,6 +406,34 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .story-heading span{font-size:12px;text-align:left}
 @media(max-width:520px){.bagstrip{gap:10px}.bagc{flex-basis:96px}.bagc .bimg{width:80px;height:80px}.story-photo{height:205px}.story-actions button{font-size:13px}.story-content{padding:12px 13px 15px}.story-content h2{font-size:24px}.story-ingredients li{font-size:12.5px}}
 
+
+/* Clear offer cards + cart hierarchy */
+.bxs{gap:16px}
+.bx{padding:0;overflow:hidden;border:1px solid #f0dfce;gap:0}
+.bx-cover{height:174px;background:#f7eadc;overflow:hidden;position:relative}
+.bx-cover img{width:100%;height:100%;display:block;object-fit:cover}
+.bx-main{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px}
+.bxh{align-items:flex-start;justify-content:space-between}
+.bxh h3{font-size:23px;line-height:1.3}
+.bx-desc{margin:0;color:#806b5c;font-size:13px;font-weight:800;line-height:1.5}
+.bx-ing-title{display:flex;align-items:center;justify-content:space-between;color:#7b2b12;font-size:14px;font-weight:900;padding-top:5px;border-top:1px solid #f0e4d8}
+.bx-ing-title small{background:#fff0df;color:#9b321d;border-radius:20px;padding:2px 9px;font-size:11px}
+.bx .bxl{margin:0}
+.bx .bxl li{padding-top:7px;padding-bottom:7px}
+.bx .bxf{margin-top:3px;gap:9px}
+.bx .bxr{align-items:center;flex-wrap:wrap}
+.bx .ptag{min-width:104px;text-align:center}
+.bx .bxr .btn{flex:1;min-height:46px}
+.bx-wa{width:100%;border:1px solid #287b43;background:#fff;color:#287b43;border-radius:12px;min-height:42px;font:900 13px Cairo,sans-serif}
+.ln{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"info total" "qty total";align-items:center;gap:8px 10px;padding:12px;border:1px solid #f0e2d4;box-shadow:0 2px 8px rgba(90,40,15,.04)}
+.ln .lt{grid-area:info;font-size:14px}
+.ln .lt small{margin-top:4px;line-height:1.5}
+.ln .rm{padding:3px 0;color:#a33b26}
+.ln .step{grid-area:qty;justify-self:start}
+.ln .lp{grid-area:total;align-self:center;background:#fff2e7;color:#a92e1c;border-radius:10px;padding:8px 10px;font-size:15px}
+.tot{padding:5px 2px;margin:0;color:#6f5b4d}
+.tot.big{margin-top:6px;padding:12px 13px;background:#fff0e2;border:1px solid #efd5bc;border-radius:13px;color:#7b2b12;font-size:17px;font-weight:900}
+@media(max-width:520px){.bx-cover{height:148px}.bx-main{padding:11px}.bxh h3{font-size:21px}.bx .bxr{gap:8px}.bx .ptag{min-width:88px;font-size:23px}.ln{gap:7px 8px}.ln .lp{font-size:14px;padding:7px 8px}}
 </style>
 </head>
 <body>
@@ -654,9 +682,8 @@ function renderRail(){const el=$('folders');el.innerHTML=FOLDERS.map(folderTile)
 function cheapHTML(f){return f.gs.map(g=>{const L=OFFERS.filter(o=>o.g===g);if(!L.length)return '';
  return `<section class="cg"><div class="cgh"><b>${GT[g]}</b><span>${GNOTE[g]||''}</span></div>${L.map((o,i)=>{const p=byId[o.id];const im=imgOf(o.img);const q=qtyOf(o.id);
   return `<article class="crow"><span class="cn num">${i+1}</span>${im?`<img src="${im}" alt="" loading="lazy" decoding="async" width="58" height="58">`:'<span class="cim">🧊</span>'}<div class="cb"><h3>${esc(oName(o))}</h3><p>${esc(oSub(o))}</p></div><div class="cpr"><span class="pr num">${fmt(p.price)} ج</span>${o.before>p.price?`<s class="num">${fmt(o.before)} ج</s>`:''}${q&&!o.pick?stepHTML(o.id):''}<button type="button" class="btn sm" data-oadd="${o.id}">اطلب العرض</button></div></article>`}).join('')}</section>`}).join('')}
-function boxHTML(f){return `<div class="bxs">${OFFERS.filter(o=>f.gs.includes(o.g)).map(o=>{const p=byId[o.id];const sv=saveOf(o);const q=qtyOf(o.id);
- const bim=o.g==='bride'?imgOf(o.img):'';
- return `<article class="bx">${bim?`<div class="bxi"><img src="${bim}" alt="${esc(o.title)}" loading="lazy" decoding="async" width="720" height="720"><span>صورة توضيحية</span></div>`:''}<div class="bxh"><h3>${esc(o.title)}</h3>${o.free?'<span class="frt">🚚 توصيل مجاني</span>':''}</div>${sv?`<span class="svp">بتوفّر <span class="num">${fmt(sv)}</span> ج</span>`:''}<ul class="bxl${o.inc.length>7?' two':''}">${o.inc.map(x=>`<li>${esc(incTxt(x))}</li>`).join('')}</ul><div class="bxf">${o.gift?`<span class="gft">🎁 هدية ${esc(o.gift)}</span>`:''}<div class="bxr"><span class="ptag num">${fmt(p.price)}<small>ج</small></span>${q?stepHTML(o.id):''}<button type="button" class="btn" data-oadd="${o.id}">اطلب العرض</button></div></div></article>`}).join('')}</div>`}
+function boxHTML(f){return `<div class="bxs">${OFFERS.filter(o=>f.gs.includes(o.g)).map(o=>{const p=byId[o.id];const sv=saveOf(o);const q=qtyOf(o.id);const bim=imgOf(o.img);
+ return `<article class="bx">${bim?`<div class="bx-cover"><img src="${bim}" alt="${esc(o.title)}" loading="lazy" decoding="async" width="720" height="520"></div>`:''}<div class="bx-main"><div class="bxh"><h3>${esc(o.title)}</h3>${o.free?'<span class="frt">🚚 توصيل مجاني</span>':''}</div><p class="bx-desc">${esc(o.desc||'عرض من ع الحلة')}</p>${sv?`<span class="svp">بتوفّر <span class="num">${fmt(sv)}</span> ج</span>`:''}<div class="bx-ing-title">مكونات العرض <small>${o.inc.length} مكونات</small></div><ul class="bxl${o.inc.length>7?' two':''}">${o.inc.map(x=>`<li>${esc(incTxt(x))}</li>`).join('')}</ul><div class="bxf">${o.gift?`<span class="gft">🎁 هدية ${esc(o.gift)}</span>`:''}<div class="bxr"><span class="ptag num">${fmt(p.price)}<small>ج</small></span>${q?stepHTML(o.id):''}<button type="button" class="btn" data-oadd="${o.id}">${q?'أضف كمان للسلة':'أضف للسلة'}</button></div><button type="button" class="bx-wa" data-o-wa="${o.id}">كلمنا على واتساب بخصوص العرض</button></div></div></article>`}).join('')}</div>`}
 let FOLD='cheap';
 document.addEventListener('click',e=>{const b=e.target.closest('[data-fold]');if(!b)return;openOffers(true,b.dataset.fold)});
 document.addEventListener('click',e=>{const a=e.target.closest('[data-oadd]');if(a){const o=offerOf(a.dataset.oadd);if(o.pick){openOffer(o.id);return}setQty(o.id,(cart[o.id]||0)+1);toast('اتضاف للسلة ✓');return}
