@@ -465,6 +465,20 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  #reviews,.special-request,#offers{content-visibility:auto;contain-intrinsic-size:auto 420px}
  .ov{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 }
+
+/* Mobile viewport safety: prevent horizontal page drift and clipped headings */
+@media (max-width: 600px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .wrap,#vHome,#vList{width:100%;max-width:560px;min-width:0}
+  .search{margin:0 0 10px;max-width:100%;min-width:0}
+  .search input{min-width:0;max-width:100%}
+  .story-area,.special-request,.again,.sec{min-width:0;max-width:100%}
+  .story-heading,.sech{min-width:0;flex-wrap:wrap}
+  .story-heading b,.story-heading span,.sech h2{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .cats,.quick-cats,.withyou{min-width:0;max-width:100%}
+  .withyou p{white-space:normal}
+}
+
 </style>
 </head>
 <body>
