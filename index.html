@@ -309,7 +309,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .fld textarea{min-height:70px;resize:vertical}
 .fld .bad{border-color:#D23B1E;background:#FFF6F3}
 .fld em{display:block;color:#C0331A;font-style:normal;font-weight:800;font-size:12.5px;margin-top:4px}
-.pays{display:flex;gap:8px}
+.pays{display:flex;gap:8px;flex-wrap:wrap}.pay-help{margin:8px 0 2px;padding:10px 12px;border:1px solid #E8C9A8;border-radius:13px;background:#FFF8EF;color:#69401F;font-size:12.5px;font-weight:800;line-height:1.65}.pay-help strong{display:block;color:#A52A18;font-size:16px;direction:ltr;text-align:right}.pay-copy{border:0;border-radius:9px;background:#F4E1CF;color:#7A351C;font:900 12px Cairo,sans-serif;padding:5px 10px;margin-top:6px;cursor:pointer}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .co-h{font-weight:900;font-size:15px;color:var(--brown);margin:14px 0 8px}
 .adc{background:#fff;border:1.5px solid #E5CDB6;border-radius:16px;padding:11px 13px;display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
@@ -818,7 +818,7 @@ function cartUpsellHTML(){
 }
 function hintHTML(){const s=sub();if(!count())return '';if(isFree())return `<p class="hint ok">🎉 التوصيل مجاني${freeDel()?' مع العرض':''}</p>`;return `<p class="hint">🚚 فاضلك <b class="num">${fmt(FREE_OVER-s)} ج</b> والتوصيل يبقى مجاني</p>`}
 function totals(big){const s=sub(),d=delFee();return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(s+d)} ج</span></div>`:''}`}
-function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
+function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';return ''}\nfunction drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;}
  const B=$('shBody'),Fo=$('shFoot');
  if(STEP===1){if($('fName')||$('fAddr'))readF();$('shTitle').textContent='طلبك';const ent=Object.entries(cart);
   if(!ent.length){B.innerHTML='<div class="empty">السلة فاضية 🛒<br>اختار أصنافك من الأقسام أو العروض</div>';Fo.innerHTML='<button type="button" class="btn full" id="goShop">ابدأ اختيار الأصناف</button>';return}
@@ -832,7 +832,7 @@ function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
   <label class="fld"><span>المنطقة</span><input id="fArea" list="areas" value="${esc(F.area)}" placeholder="مثلًا: سموحة، العجمي، سيدي بشر"><datalist id="areas">${AREAS.map(a=>`<option value="${a}">`).join('')}</datalist></label>
   <label class="fld"><span>العنوان</span><textarea id="fAddr" rows="2" style="min-height:52px" autocomplete="street-address" placeholder="الشارع، العمارة، الدور، علامة مميزة">${esc(F.addr)}</textarea></label>`)
   +`<div class="fld"><span>ميعاد التوصيل المفضل</span><div class="pays">${['بكره','بعد بكره','أقرب موعد متاح'].map(w=>`<label><input type="radio" name="when" value="${w}"${(F.when||'بكره')===w?' checked':''}><span>${w}</span></label>`).join('')}</div><small class="fld-help">الطلب قبلها بيوم، واختيارك تفضيل مبدئي وهنأكد معاك الموعد على واتساب.</small></div>
-  <div class="fld"><span>الدفع</span><div class="pays">${['كاش','إنستاباي','محفظة'].map(x=>`<label><input type="radio" name="pay" value="${x}"${F.pay===x?' checked':''}><span>${x}</span></label>`).join('')}</div></div>`
+  <div class="fld"><span>طريقة الدفع</span><div class="pays">${['كاش','إنستاباي','محفظة'].map(x=>`<label><input type="radio" name="pay" value="${x}"${F.pay===x?' checked':''}><span>${x}</span></label>`).join('')}</div>${paymentHelpHTML(F.pay)}</div>`
   +(F.note||NOTE?`<label class="fld"><span>ملاحظة</span><textarea id="fNote" rows="2" style="min-height:52px" placeholder="أي طلب خاص">${esc(F.note)}</textarea></label>`:'<button type="button" class="notebtn" id="addNote">+ عندك ملاحظة؟</button>')
   +(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
   Fo.innerHTML=totals(true)+`<button type="button" class="btn full wa" id="reviewOrder" ${window.__CLOSED?'disabled':''}>راجع الفاتورة قبل الإرسال</button>`}
@@ -853,8 +853,8 @@ function invoice(){const ent=Object.entries(cart);const s=sub(),d=delFee();if(!R
  return ['#ع_الحله 🧾','فاتورة الطلب رقم '+REF,L,'👤 '+F.name+' · 📞 '+F.phone,'📍 '+F.area+' — '+F.addr,'📅 موعد التسليم المفضل: '+F.when+' · الطلب قبلها بيوم',L,
   ...ent.map(([k,q])=>{const p=byId[pidOf(k)];const u=p.isOffer||p.name.startsWith(p.unit)?'':' '+p.unit;return '• '+qtx(q,p.unit)+u+' '+lineName(k)+' ........ '+fmt(lineTotal(p,q))+' ج.م'}),L,
   '💰 إجمالي الأصناف: '+fmt(s)+' ج.م','🚚 التوصيل: '+(d?fmt(d)+' ج.م':(freeDel()?'مجاني مع العرض':'مجاني')),'💵 الإجمالي النهائي: '+fmt(s+d)+' ج.م',L,
-  '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':' على 01275165496'),F.note?'📝 ملاحظات: '+F.note:'',L,'برجاء تأكيد الطلب ❤️'].filter(Boolean).join('\n')}
- $('shBody').addEventListener('click',e=>{const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
+  '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':' — التحويل على 01275165496، وإرسال صورة التحويل على واتساب'),F.note?'📝 ملاحظات: '+F.note:'',L,'برجاء تأكيد الطلب ❤️'].filter(Boolean).join('\n')}
+ $('shBody').addEventListener('click',e=>{if(e.target.closest('[data-copy-payment]')){copy('01275165496');toast('رقم الدفع اتنسخ ✓');return}const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
  const b=e.target.closest('[data-kd]');if(b){const k=b.closest('[data-k]').dataset.k;const p=byId[pidOf(k)];setQty(k,(cart[k]||0)+(+b.dataset.kd)*(p.isOffer?1:stepOf(p)));drawSheet();return}
  if(e.target.id==='copyInv'){copy(LAST.text)}
  if(e.target.id==='editDetails'){STEP=1;drawSheet();return}
@@ -868,6 +868,7 @@ $('shFoot').addEventListener('click',e=>{const id=e.target.id;
  if(id==='send'){if(ORDER_SENDING||window.__CLOSED)return;readF();if(!validate())return;persist();ORDER_SENDING=true;const sb=$('send');if(sb)sb.disabled=true;T('begin_checkout',{currency:'EGP',value:sub()});sendOrder();return}
  if(id==='newOrder'){ORDER_SENDING=false;REF='';LAST={};cart={};save();refresh();closeSheet();goHome()}});
 $('shBody').addEventListener('input',e=>{if(e.target.matches('input,textarea,select')){const el=e.target;el.classList.remove('bad');const n=el.nextElementSibling;if(n&&n.tagName==='EM'&&!n.style.color)n.remove()}});
+$('shBody').addEventListener('change',e=>{if(e.target.matches('input[name="pay"]')){F.pay=e.target.value;persist();const h=$('payHelp');if(h)h.outerHTML=paymentHelpHTML(F.pay);else{const box=e.target.closest('.fld');if(box)box.insertAdjacentHTML('beforeend',paymentHelpHTML(F.pay))}}});
 async function sendOrder(){if(window.__CLOSED)return;
  const text=invoice(),ent=Object.entries(cart),s=sub(),d=delFee();
  try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
