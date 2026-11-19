@@ -838,7 +838,7 @@ function hintHTML(){
  return '<div class="delivery-progress"><div class="dp-copy"><b>🚚 فاضلك '+fmt(remain)+' جنيه</b><small>وزوّد طلبك عشان التوصيل يبقى مجاني</small></div><div class="dp-track" role="progressbar" aria-label="التقدم نحو التوصيل المجاني" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(pct)+'"><span style="width:'+pct.toFixed(1)+'%"></span></div><small class="dp-foot">وصلت لـ '+Math.round(pct)+'٪ من حد التوصيل المجاني ('+fmt(FREE_OVER)+' جنيه)</small></div>';
 }
 function totals(big){const s=sub(),d=delFee();return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(s+d)} ج</span></div>`:''}`}
-function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';return ''}
+function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي باستخدام رقم ع الحلة أو عنوان الدفع، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>رقم ع الحلة: 01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button><strong>عنوان InstaPay: hamdymohamed12@instapay</strong><button type="button" class="pay-copy" data-copy-payment="hamdymohamed12@instapay">نسخ عنوان InstaPay</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button></div>';return ''}
 function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
  const B=$('shBody'),Fo=$('shFoot');
  if(STEP===1){if($('fName')||$('fAddr'))readF();$('shTitle').textContent='طلبك';const ent=Object.entries(cart);
@@ -903,14 +903,14 @@ function invoice(){
   'الإجمالي المطلوب: '+fmt(total)+' جنيه',
   L,
   '💳 طريقة الدفع: '+F.pay,
-  F.pay==='كاش'?'الدفع عند الاستلام':'التحويل على رقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.',
+  F.pay==='كاش'?'الدفع عند الاستلام':(F.pay==='إنستاباي'?'InstaPay: hamdymohamed12@instapay\nرقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.':'التحويل على رقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.'),
   F.note?'📝 ملاحظات الطلب: '+F.note:'',
   L,
   '⏰ الأصناف العادية تُطلب قبلها بيوم، وأصناف نفس اليوم متاحة قبل 2 ظهرًا.',
   'برجاء مراجعة الفاتورة وتأكيد الطلب ❤️'
  ].filter(Boolean).join('\n')
 }
- $('shBody').addEventListener('click',e=>{if(e.target.closest('[data-copy-payment]')){copy('01275165496');toast('رقم الدفع اتنسخ ✓');return}const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
+ $('shBody').addEventListener('click',e=>{const payCopy=e.target.closest('[data-copy-payment]');if(payCopy){const value=payCopy.dataset.copyPayment||'01275165496';copy(value);toast(value.includes('@')?'عنوان InstaPay اتنسخ ✓':'رقم الدفع اتنسخ ✓');return}const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
  const b=e.target.closest('[data-kd]');if(b){const k=b.closest('[data-k]').dataset.k;const p=byId[pidOf(k)];setQty(k,(cart[k]||0)+(+b.dataset.kd)*(p.isOffer?1:stepOf(p)));drawSheet();return}
  if(e.target.id==='copyInv'){copy(LAST.text)}
  if(e.target.id==='editDetails'){STEP=1;drawSheet();return}
