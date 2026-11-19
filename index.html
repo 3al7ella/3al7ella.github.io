@@ -243,6 +243,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .it{min-width:0;flex-direction:column;gap:8px;padding:9px;border-radius:16px}
 .it .ph{width:100%;height:auto;aspect-ratio:4/3;border-radius:12px}
 .it .phbox{position:relative;width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--cream2)}.it .phbox .ph{width:100%;height:100%;aspect-ratio:auto;object-fit:cover}.it .phnote{position:absolute;right:6px;bottom:6px;background:rgba(42,26,18,.72);color:#fff;border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800}
+.it .phbox.broken img,.it .phbox.broken .phnote{display:none!important}.it .phbox.broken::after{content:attr(data-fallback);height:100%;display:grid;place-items:center;font-size:34px}
 .it .ib{width:100%;min-width:0}
 .it h3{font-size:14px;line-height:1.35}
 .it .idesc{-webkit-line-clamp:3;font-size:12px}
@@ -694,7 +695,7 @@ const EXTRA_IMG={
 };
 const imgOf=k=>isFile(k)?k:(TH[k]||'');
 const imageFor=p=>{const own=imgOf(p.img);if(own)return {src:own,stock:false};const x=EXTRA_IMG[p.id];if(!x)return null;return {src:imgOf(x)||x,stock:/^https?:/.test(x)}};
-function photoHTML(p){const im=imageFor(p);return im?'<div class="phbox"><img class="ph" src="'+im.src+'" alt="" loading="lazy" decoding="async" width="300" height="225">'+(im.stock?'<small class="phnote">صورة توضيحية</small>':'')+'</div>':`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}
+function photoHTML(p){const im=imageFor(p);return im?'<div class="phbox" data-fallback="'+(SEC_EMO[p.section]||'🍲')+'"><img class="ph" src="'+im.src+'" alt="'+esc((im.stock?'صورة توضيحية لـ ':'')+p.name)+'" loading="lazy" decoding="async" width="300" height="225" onerror="this.onerror=null;this.parentElement.classList.add(\'broken\')">'+(im.stock?'<small class="phnote">صورة توضيحية</small>':'')+'</div>':`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}
 function T(n,p){try{gtag('event',n,p||{})}catch(_){}}
 const SEC_EMO={'المحاشي':'🫑','محاشي ع التسوية':'🫑','محاشي مستوية':'🍲','محاشي باللحمة المفرومة':'🥩','ممبار':'🌭','جاهز على الحشو':'🥒','الخضار المتنضف':'🥬','فراخ متبلة':'🍗','مصنعات الفراخ':'🍗','مصنعات اللحمة':'🥩','الحمام والبط':'🕊️','المقبلات':'🥟','الوجبات':'🍱','صواني الفرن':'🥘','طواجن وطبيخ':'🍲','بولات وشوربة':'🥣','الرز المعمر':'🍚','مخللات وصوصات':'🫙','إضافات':'🧺','فواكه جاهزة':'🍓','فواكه سليمة فريش':'🍎'};
 
