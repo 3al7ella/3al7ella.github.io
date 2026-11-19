@@ -879,16 +879,9 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
   h=`<p class="fsub">${esc(f.sub)}</p>`+boxHTML(f)}
  else{const c=ALL_CATS.find(x=>x.key===CUR);if(!c){goHome(false);return}$('vTitle').textContent=c.title;$('vTitle').classList.remove('long');
   const gs=c.groups.filter(g=>items.some(p=>g[1].includes(p.section)));if(SUB>=gs.length)SUB=0;
-  if(c.tiles){
-   C.innerHTML='<button type="button" data-sub="-1" aria-pressed="'+(SUB<0)+'">كل الأصناف</button>'+gs.map((g,i)=>`<button type="button" data-sub="${i}" aria-pressed="${i===SUB}">${g[0].replace(/^محاشي /,'')}</button>`).join('');
-   const selected=SUB<0?gs:[gs[SUB]].filter(Boolean);
-   const sections=new Set(selected.flatMap(g=>g[1]));
-   const products=uniqueVisibleItems(items.filter(p=>sections.has(p.section)));
-   h=listHTML(products)||'<div class="empty">مفيش أصناف هنا دلوقتي</div>';
-  }else{
-   C.innerHTML=gs.length>1?gs.map((g,i)=>`<button type="button" data-sub="${i}" aria-pressed="${i===SUB}">${g[0].replace(/^محاشي /,'')}</button>`).join(''):'';
-   const g=gs[SUB];h=(CUR==='fruit'?'<p class="fsub">متاح فواكه الموسم · الأسعار متغيرة حسب أسعار السوق</p>':'')+(g?(g[1].length===1&&g[1][0]==='الوجبات'?mealsHTML:listHTML)(uniqueVisibleItems(items.filter(p=>g[1].includes(p.section)))):'<div class="empty">مفيش أصناف هنا دلوقتي</div>');
-  }
+  if(c.tiles&&SUB<0){C.innerHTML='';L.innerHTML='<p class="fsub">اختاري الفولدر اللي محتاجاه 👇</p><div class="stiles">'+gs.map((g,i)=>{const n=new Set(uniqueVisibleItems(items.filter(p=>g[1].includes(p.section))).map(p=>p.name.replace(/\s*(ع التسوية|مستوي)$/,''))).size;return `<button type="button" class="stile" data-sub="${i}"><img src="${imgOf(g[2])||g[2]}" alt="" loading="lazy" decoding="async"><span class="sn">${g[0]}</span><span class="sd">${g[3]||''}</span><span class="sc">${n} ${n>10||n<3?'صنف':'أصناف'} ›</span></button>`}).join('')+'</div>';return}
+  C.innerHTML=gs.length>1?(c.tiles?'<button type="button" data-sub="-1" aria-pressed="false">📂 كل الفولدرات</button>':'')+gs.map((g,i)=>`<button type="button" data-sub="${i}" aria-pressed="${i===SUB}">${g[0].replace(/^محاشي /,'')}</button>`).join(''):'';
+  const g=gs[SUB];h=(CUR==='fruit'?'<p class="fsub">متاح فواكه الموسم · الأسعار متغيرة حسب أسعار السوق</p>':'')+(g?(g[1].length===1&&g[1][0]==='الوجبات'?mealsHTML:listHTML)(uniqueVisibleItems(items.filter(p=>g[1].includes(p.section)))):'<div class="empty">مفيش أصناف هنا دلوقتي</div>')}
  L.innerHTML=h}
 document.addEventListener('click',e=>{const b=e.target.closest('#vchips [data-sub],.stile[data-sub]');if(!b)return;SUB=+b.dataset.sub;const c=CATS.find(x=>x.key===CUR);if(c&&c.tiles)history.pushState({v:'cat',k:CUR,s:SUB},'','#c-'+CUR);renderList();scrollTo({top:0})});
 function show(v){VIEW=v;const home=v==='home';$('vHome').hidden=!home;$('vList').hidden=home;document.querySelectorAll('.nav [data-nav]').forEach(b=>b.setAttribute('aria-current',String(b.dataset.nav===(home?'home':v==='offers'?'offers':''))));if(!home)renderList();else renderHome()}
