@@ -141,13 +141,13 @@ div.mr .pr[data-id]{background:var(--t)}
   <section class="ab2">
    <h2>مين إحنا؟</h2>
    <p>ع الحلة مطبخ أكل بيتي في إسكندرية.. بنجهزلك المحاشي والخضار المتنضف والفراخ واللحوم المتبلة والوجبات، بنفس طعم أكل البيت وبنضافة تطمّنك.</p>
-   <div class="why"><span>🧼 متنضف وجاهز</span><span>🏠 طعم بيتي</span><span>🚚 لكل إسكندرية</span><span>⏰ الطلب قبلها بيوم</span></div>
+   <div class="why"><span>🧼 متنضف وجاهز</span><span>🏠 طعم بيتي</span><span>🚚 لكل إسكندرية</span><span>🚚 التوصيل 60 ج · مجاني من 1000 ج أو مع عروض محددة</span><span>⏰ الطلب قبلها بيوم</span></div>
   </section>
   <section class="ab2">
    <h2>شنط #ع_الحله 🛍️</h2>
    <div class="bags">
-    <a href="index.html?src=card-bag"><img src="bag-mahshi.webp" alt="شنطة المحاشي" loading="lazy"><b>شنطة المحاشي</b><small>9 أصناف جاهز ع الحشو</small><em>250 ج</em></a>
-    <a href="index.html?src=card-bag"><img src="bag-veg.webp" alt="شنطة الخضار" loading="lazy"><b>شنطة الخضار</b><small>10 أكياس × 400 جم</small><em>250 ج</em></a>
+    <a href="index.html?src=card-bag#offers"><img src="bag-mahshi.webp" alt="شنطة المحاشي" loading="lazy"><b>شنطة المحاشي</b><small>9 أصناف جاهز ع الحشو</small><em>250 ج</em></a>
+    <a href="index.html?src=card-bag#offers"><img src="bag-veg.webp" alt="شنطة الخضار" loading="lazy"><b>شنطة الخضار</b><small>10 أكياس × 400 جم</small><em>250 ج</em></a>
    </div>
   </section>
   <section class="ab2">
@@ -212,7 +212,7 @@ document.getElementById('share').onclick=async()=>{
 };
 
 const mv=document.getElementById('mv');
-function route(){const h=location.hash;if(h==='#menu'||/^#s-/.test(h)){mv.hidden=false;if(h!=='#menu'){const el=document.getElementById(h.slice(1));el&&el.scrollIntoView()}else mv.scrollTop=0}else mv.hidden=true}
+function route(){const h=location.hash;if(h==='#menu'||/^#s-/.test(h)){location.replace('index.html?src=card-menu#menu');return}mv.hidden=true}
 document.querySelectorAll('.mvc a').forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.getElementById(a.getAttribute('href').slice(1));el&&el.scrollIntoView({behavior:'smooth'})});
 const q2=document.getElementById('q2');
 q2&&q2.addEventListener('input',()=>{const v=q2.value.trim().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه');let any=false;
