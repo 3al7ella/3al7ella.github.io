@@ -842,12 +842,27 @@ const SEARCH_ALIASES={
  'ملفوف':['كرنب'],
  'كوسا':['كوسه'],
  'دجاج':['فراخ'],
+ 'فراخ':['دجاج'],
+ 'فرخه':['فراخ'],
+ 'فرخة':['فراخ'],
  'موزاريلا':['موتزاريلا'],
  'جبن':['جبنه','موتزاريلا'],
  'محاشي':['محشي'],
  'محشي':['محاشي'],
  'صوص':['صوصات','صلصه'],
- 'صلصة':['صلصه','صوص']
+ 'صلصة':['صلصه','صوص'],
+ 'ثوم':['توم'],
+ 'توم':['ثوم'],
+ 'باذنجان':['بتنجان'],
+ 'بتنجان':['باذنجان'],
+ 'بفتيك':['بيفتيك'],
+ 'بيفتيك':['بفتيك'],
+ 'لحم':['لحمه'],
+ 'لحمه':['لحم'],
+ 'شاورما':['شاورمه'],
+ 'شاورمه':['شاورما'],
+ 'برجر':['برغر'],
+ 'برغر':['برجر']
 };
 function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=SEARCH_ALIASES[w]||[w];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
  return {its:uniqueVisibleItems(items.filter(p=>hit(p.name+' '+p.desc+' '+p.section))),ofs:OFFERS.filter(o=>hit(o.title+' '+o.desc+' '+o.inc.map(x=>x[1]).join(' ')))}}
