@@ -733,11 +733,11 @@ function buildPairs(){PAIRS={};PAIR_OF={};const by={};
  items.forEach(p=>{let m=p.name.match(/^(.*?)\s+(ع التسوية|على التسوية|مستوي)$/);let base,kind;
   if(m){base=m[1].trim();kind=/مستوي/.test(m[2])?'done':'raw'}
   else if(/^ممبار مسلوق/.test(p.name)){base='ممبار محشي';kind='boiled'}
-  else if((m=p.name.match(/^(فرخة .+?)\s+(كبيرة|وسط)$/))){base=m[1].trim();kind=m[2]==='كبيرة'?'large':'medium'}
+  else if((m=p.name.match(/^(.*?)\s+(كبيرة|كبير|وسط|صغيرة|صغير)$/))){base=m[1].trim();kind=/^(كبيرة|كبير)$/.test(m[2])?'large':/^(صغيرة|صغير)$/.test(m[2])?'small':'medium'}
   else{const z=p.name.match(/^(.*?)\s+—\s+(نص كيلو|كيلو)$/);if(!z)return;base=z[1].trim();kind=z[2]==='كيلو'?'kilo':'half'}
   const key=p.section+'|'+base;(by[key]=by[key]||{base,section:p.section,v:{}}).v[kind]=p});
- Object.values(by).forEach(g=>{if(Object.keys(g.v).length<2)return;g.id='g'+Object.keys(PAIRS).length;g.order=['raw','done','boiled','large','medium','half','kilo'].filter(k=>g.v[k]);PAIRS[g.id]=g;g.order.forEach(k=>PAIR_OF[g.v[k].id]=g.id)})}
-const VLABEL={raw:['ع التسوية','تطبخه في البيت'],done:['مستوي','جاهز للأكل'],boiled:['مسلوق جاهز ع التحمير','تحمّره وتقدّمه'],large:['كبيرة',''],medium:['وسط',''],half:['نص كيلو',''],kilo:['كيلو','']};
+ Object.values(by).forEach(g=>{if(Object.keys(g.v).length<2)return;g.id='g'+Object.keys(PAIRS).length;g.order=['raw','done','boiled','large','medium','small','half','kilo'].filter(k=>g.v[k]);PAIRS[g.id]=g;g.order.forEach(k=>PAIR_OF[g.v[k].id]=g.id)})}
+const VLABEL={raw:['ع التسوية','تطبخه في البيت'],done:['مستوي','جاهز للأكل'],boiled:['مسلوق جاهز ع التحمير','تحمّره وتقدّمه'],large:['كبير / كبيرة',''],medium:['وسط',''],small:['صغير / صغيرة',''],half:['نص كيلو',''],kilo:['كيلو','']};
 
 /* ---------- cart ---------- */
 let cart={};try{cart=JSON.parse(localStorage.getItem('alhella-cart')||'{}')||{}}catch(_){cart={}}
