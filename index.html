@@ -894,7 +894,7 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
 })();
 document.getElementById('bagStrip').addEventListener('click',e=>{
  const cartBtn=e.target.closest('[data-bag-cart]');if(cartBtn){setQty(cartBtn.dataset.bagCart,(cart[cartBtn.dataset.bagCart]||0)+1);toast('اتضافت الشنطة للسلة ✓');return}
- const waBtn=e.target.closest('[data-bag-wa]');if(waBtn){const o=offerOf(waBtn.dataset.bagWa);if(!o)return;const msg='طلب من #ع_الحله ❤️\\n'+o.title+'\\nالسعر: '+fmt(byId[o.id].price)+' جنيه\\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');return}
+ const waBtn=e.target.closest('[data-bag-wa]');if(waBtn){const o=offerOf(waBtn.dataset.bagWa);if(!o)return;const msg='طلب من #ع_الحله ❤️\n'+o.title+'\nالسعر: '+fmt(byId[o.id].price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener');return}
  const fruitCart=e.target.closest('[data-fruit-cart]'),fruitWa=e.target.closest('[data-fruit-wa]');if(!fruitCart&&!fruitWa)return;
  const half=confirm('تريد نص الكمية بـ125 جنيه؟ اضغط موافق للنصف أو إلغاء للشنطة الكاملة بـ250 جنيه.');
  const id=half?'p333':'p332',price=half?125:250;
@@ -902,9 +902,9 @@ document.getElementById('bagStrip').addEventListener('click',e=>{
  const note=(change||'').trim();
  const name=half?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';
  const defaults=half?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان';
- const details=defaults+(note?'\\nتعديلات العميل: '+note:'');
+ const details=defaults+(note?'\nتعديلات العميل: '+note:'');
  if(fruitCart){setQty(id+'::'+details,1);toast('اتضافت شنطة الفاكهة للسلة ✓')}
- else{const msg='طلب من #ع_الحله ❤️\\n'+name+'\\n'+details+'\\nالسعر: '+price+' جنيه\\nبرجاء تأكيد التوفر والحساب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
+ else{const msg='طلب من #ع_الحله ❤️\n'+name+'\n'+details+'\nالسعر: '+price+' جنيه\nبرجاء تأكيد التوفر والحساب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
 });</script>
 </body>
 </html>
