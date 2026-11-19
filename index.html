@@ -383,13 +383,26 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .story-progress{position:absolute;z-index:2;top:10px;right:58px;left:58px;height:4px;border-radius:9px;background:#ffffff88;overflow:hidden}.story-progress i{display:block;width:100%;height:100%;background:#fff}
 .story-photo{width:100%;height:245px;object-fit:cover;background:#f0dfcd}
 .story-content{padding:14px 17px 18px}.story-brand{font-size:12px;font-weight:900;color:#d34220}.story-content h2{margin:3px 0;color:#7b2b12;font:400 27px Lalezar,Cairo}.story-content p{margin:0 0 10px;color:#795f4d;font-weight:700}
-.story-ingredients{background:#fff;border:1px solid #f0dfcf;border-radius:14px;padding:11px 13px;color:#493328;font-weight:800;line-height:1.8}
-.story-size{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.story-size button{border:1px solid #e5c9ae;border-radius:12px;padding:9px 5px;background:#fff;color:#6f4630;font:900 12px Cairo}.story-size button[aria-pressed=true]{background:#b83220;border-color:#b83220;color:#fff}
-.story-note-wrap{display:block;margin-top:10px;color:#76533e;font-size:12px;font-weight:900}.story-note-wrap textarea{display:block;width:100%;margin-top:5px;border:1px solid #e7d2bf;border-radius:12px;padding:10px;font:700 13px Cairo;resize:vertical}
-.story-price{margin:12px 0;text-align:center;font-size:23px;font-weight:900;color:#b3261a}
-.story-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.story-actions button{border:0;border-radius:13px;padding:12px 7px;color:#fff;font:900 14px Cairo}.story-add{background:#b3261a}.story-wa{background:#287b43}
-.story-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding-top:9px;border-top:1px solid #ead8c7}.story-nav button{border:0;background:transparent;color:#8b3924;font:900 12px Cairo;padding:7px 3px}.story-nav span{font-size:11px;color:#9a806d;font-weight:900}
-@media(max-width:520px){.bagstrip{gap:13px}.bagc{flex-basis:91px}.bagc .bimg{width:82px;height:82px}.story-photo{height:220px}.story-actions button{font-size:13px}}
+.story-ingredients{background:#fff;border:1px solid #ead8c7;border-radius:14px;padding:12px;color:#493328;font-weight:800;line-height:1.6}
+.story-ingredients .ing-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #f0e4d8;color:#7b2b12;font-size:14px;font-weight:900}
+.story-ingredients .ing-head small{background:#fff0df;color:#9b321d;border-radius:20px;padding:2px 9px;font-size:11px;white-space:nowrap}
+.story-ingredients ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:6px}
+.story-ingredients li{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:9px;background:#fffaf5;font-size:13px}
+.story-ingredients li:before{content:"";width:7px;height:7px;margin-top:7px;flex:none;border-radius:50%;background:#e98216}
+.story-ingredients .ing-qty{flex:none;min-width:62px;text-align:center;background:#f8eadb;color:#7b3b1c;border-radius:7px;padding:2px 5px;font-size:11px;font-weight:900}
+.story-ingredients .ing-name{flex:1;min-width:0}
+.story-price{margin:12px 0;text-align:center;background:#fff0e3;border:1px solid #f0d4bd;border-radius:13px;padding:9px;font-size:22px;font-weight:900;color:#b3261a}
+.story-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.story-actions button{min-height:48px;border:0;border-radius:13px;padding:10px 7px;color:#fff;font:900 14px Cairo}.story-add{background:#b3261a}.story-wa{background:#287b43}
+.story-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding-top:9px;border-top:1px solid #ead8c7}.story-nav button{border:1px solid #ead8c7;background:#fff;border-radius:10px;color:#8b3924;font:900 12px Cairo;padding:8px 10px}.story-nav span{font-size:11px;color:#9a806d;font-weight:900;white-space:nowrap}
+.bagstrip{gap:12px;padding:4px 2px 8px}
+.bagc{flex-basis:108px;min-width:0}
+.bagc .bimg{width:88px;height:88px}
+.bagc b{max-width:100%;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px;line-height:1.35}
+.bagc small{background:#fff;border:1px solid #f0d7bd;border-radius:20px;padding:2px 9px;white-space:nowrap}
+.story-heading{align-items:center}
+.story-heading b{font-size:22px}
+.story-heading span{font-size:12px;text-align:left}
+@media(max-width:520px){.bagstrip{gap:10px}.bagc{flex-basis:96px}.bagc .bimg{width:80px;height:80px}.story-photo{height:205px}.story-actions button{font-size:13px}.story-content{padding:12px 13px 15px}.story-content h2{font-size:24px}.story-ingredients li{font-size:12.5px}}
 
 </style>
 </head>
@@ -936,6 +949,12 @@ function renderStoryRail(){
   return `<button class="bagc" type="button" data-story-id="${id}" aria-label="افتح ستوري ${esc(o.title)}"><span class="bimg">${im?`<img src="${im}" alt="" width="200" height="200" loading="lazy" onerror="this.remove();this.parentElement.textContent='${ico}'">`:`<i aria-hidden="true">${ico}</i>`}</span><b>${esc(o.title)}</b><small>${price}</small></button>`;
  }).join('');
 }
+function renderStoryIngredients(o,half=false){
+ const rows=o&&o.inc.length?o.inc.map(x=>Array.isArray(x)?{qty:x[0],name:x[1]}:{qty:'',name:String(x)}):
+  (half?[['نص كيلو','موز'],['نص كيلو','برتقال'],['نص كيلو','تفاح'],['نص كيلو','رمان']]:[['كيلو','موز'],['كيلو','برتقال'],['كيلو','تفاح'],['كيلو','رمان']]).map(x=>({qty:x[0],name:x[1]}));
+ const count=rows.length;
+ document.getElementById('storyIngredients').innerHTML='<div class="ing-head"><b>مكونات العرض</b><small>'+count+' مكونات</small></div><ul>'+rows.map(x=>'<li>'+(x.qty?'<span class="ing-qty">'+esc(String(x.qty))+'</span>':'')+'<span class="ing-name">'+esc(String(x.name))+'</span></li>').join('')+'</ul>';
+}
 const storyModal=document.getElementById('storyModal');
 function showStory(id){
  const o=offerOf(id);if(!o)return;activeStory=id;storyHalf=false;
@@ -948,7 +967,7 @@ function showStory(id){
  document.querySelector('.story-brand').textContent='#ع_الحله · '+(o.sec||'عرض مؤقت');
  document.getElementById('storyTitle').textContent=o.title;
  document.getElementById('storyDesc').textContent=o.desc||'عرض مميز من ع الحلة';
- document.getElementById('storyIngredients').textContent=o.inc.length?o.inc.map(incTxt).join(' · '):o.desc;
+ renderStoryIngredients(o);
  document.getElementById('storySize').hidden=!fruit;
  document.getElementById('storyNoteWrap').hidden=!fruit;
  document.getElementById('storyNote').value='';
@@ -957,7 +976,7 @@ function showStory(id){
   document.querySelector('[data-story-size="full"]').textContent='الشنطة كاملة · '+fmt(p.price)+' ج';
   document.querySelector('[data-story-size="half"]').textContent='نص الكمية · '+fmt(byId.p333?byId.p333.price:125)+' ج';
  }
- document.getElementById('storyPrice').textContent='السعر: '+fmt(p.price)+' جنيه';
+ document.getElementById('storyPrice').textContent='إجمالي العرض: '+fmt(p.price)+' جنيه';
  document.getElementById('storyAdd').textContent=o.pick?'اختار الأصناف':'أضف للسلة';
  storyModal.hidden=false;document.body.style.overflow='hidden';
 }
@@ -968,7 +987,7 @@ document.getElementById('storyNext').addEventListener('click',()=>moveStory(1));
 document.getElementById('bagStrip').addEventListener('click',e=>{const b=e.target.closest('[data-story-id]');if(b)showStory(b.dataset.storyId)});
 storyModal.addEventListener('click',e=>{
  if(e.target.closest('[data-story-close]')){closeStory();return}
- const size=e.target.closest('[data-story-size]');if(size){storyHalf=size.dataset.storySize==='half';document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b===size?'true':'false'));document.getElementById('storyPrice').textContent='السعر: '+(storyHalf?'125':'250')+' جنيه';document.getElementById('storyTitle').textContent=storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';document.getElementById('storyIngredients').textContent=storyHalf?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان';return}
+ const size=e.target.closest('[data-story-size]');if(size){storyHalf=size.dataset.storySize==='half';document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b===size?'true':'false'));document.getElementById('storyPrice').textContent='إجمالي العرض: '+(storyHalf?'125':'250')+' جنيه';document.getElementById('storyTitle').textContent=storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';renderStoryIngredients(null,storyHalf);return}
 });
 document.addEventListener('keydown',e=>{if(storyModal.hidden)return;if(e.key==='Escape')closeStory();else if(e.key==='ArrowRight')moveStory(1);else if(e.key==='ArrowLeft')moveStory(-1)});
 let storyTouchX=0;
