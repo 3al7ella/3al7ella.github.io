@@ -635,7 +635,7 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  const newIds=new Set(NEW_OFFERS.map(r=>r[0]));
  const extra=rows.filter(r=>newIds.has(r[0]));/* admin overrides on new offers */
  const ACTIVE_OFFER_IDS=new Set(['p330','p331','p332','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p316','p317','p318','p319']);
- const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>extra.find(x=>x[0]===r[0])||r);
+ const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>{const src=extra.find(x=>x[0]===r[0])||r;const c=src.slice();c[6]='نعم';return c});
  rs.concat(offers).forEach(r=>{const id=String(r[0]||'').trim(),type=String(r[1]||'').trim(),name=String(r[3]||'').trim(),price=num(r[5]);
   if(!id||!name||!(price>0)||!yes(r[6]))return;
   let sec=String(r[2]||'أخرى').trim()||'أخرى';if(sec==='المحاشي'){const nm=String(r[3]||'');sec=/ممبار/.test(nm)?'ممبار':/لحم[ةه] مفروم/.test(nm)?'محاشي باللحمة المفرومة':/مستوي/.test(nm)?'محاشي مستوية':'محاشي ع التسوية'}
@@ -768,7 +768,7 @@ function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips'
 document.addEventListener('click',e=>{const b=e.target.closest('#vchips [data-sub],.stile[data-sub]');if(!b)return;SUB=+b.dataset.sub;const c=CATS.find(x=>x.key===CUR);if(c&&c.tiles)history.pushState({v:'cat',k:CUR,s:SUB},'','#c-'+CUR);renderList();scrollTo({top:0})});
 function show(v){VIEW=v;const home=v==='home';$('vHome').hidden=!home;$('vList').hidden=home;document.querySelectorAll('.nav [data-nav]').forEach(b=>b.setAttribute('aria-current',String(b.dataset.nav===(home?'home':v==='offers'?'offers':''))));if(!home)renderList();else renderHome()}
 function openCat(key,sub,push=true){const cc=ALL_CATS.find(x=>x.key===key);if(sub===undefined)sub=cc&&cc.tiles?-1:0;CUR=key;SUB=sub;$('q').value='';$('qClr').hidden=true;show('cat');scrollTo({top:0});if(push)history.pushState({v:'cat',k:key,s:sub},'','#c-'+key);const c=ALL_CATS.find(x=>x.key===key);T('open_category',{category:c?c.title:key})}
-function openOffers(push=true,fold){if(fold)FOLD=fold;$('q').value='';$('qClr').hidden=true;show('offers');scrollTo({top:0});if(push)history.pushState({v:'offers',f:FOLD},'','#offers-'+FOLD);T('open_folder',{folder:FOLD})}
+function openOffers(push=true,fold){if(fold&&FOLDERS.some(x=>x.k===fold))FOLD=fold;if(!FOLDERS.some(x=>x.k===FOLD))FOLD='bride';$('q').value='';$('qClr').hidden=true;show('offers');scrollTo({top:0});if(push)history.pushState({v:'offers',f:FOLD},'','#offers-'+FOLD);T('open_folder',{folder:FOLD})}
 function goHome(push=true){$('q').value='';$('qClr').hidden=true;show('home');if(push)history.pushState({v:'home'},'',location.pathname+location.search)}
 document.addEventListener('click',e=>{const s=e.target.closest('[data-sub][data-cat]');if(s){e.stopPropagation();openCat(s.dataset.cat,+s.dataset.sub);return}const c=e.target.closest('.cat[data-cat],.quick-cat[data-cat]');if(c)openCat(c.dataset.cat)});
 $('back').addEventListener('click',()=>{if(history.state&&history.state.v&&history.length>1)history.back();else goHome()});
