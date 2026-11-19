@@ -220,6 +220,9 @@ document.getElementById('share').onclick=async()=>{
 };
 
 const mv=document.getElementById('mv');
+/* ترتيب الأقسام داخل المنيو بنفس ترتيب شريط التنقل */
+const menuWrap=mv.querySelector('.mvi'),menuEnd=mv.querySelector('#mnone');
+['s-veg','s-chk','s-meat','s-mah','s-meal','s-duck','s-tray','s-rice','s-app','s-ext'].forEach(id=>{const section=document.getElementById(id);if(menuWrap&&section)menuWrap.insertBefore(section,menuEnd||null)});
 function route(){const h=location.hash;if(h==='#menu'||/^#s-/.test(h)){location.replace('index.html?src=card-menu#menu');return}mv.hidden=true}
 document.querySelectorAll('.mvc a').forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.getElementById(a.getAttribute('href').slice(1));el&&el.scrollIntoView({behavior:'smooth'})});
 const q2=document.getElementById('q2');
