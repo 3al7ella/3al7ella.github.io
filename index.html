@@ -802,7 +802,7 @@ document.addEventListener('click',e=>{if(e.target.id!=='againBtn')return;let L=n
 /* ---------- list views (category / offers / search) ---------- */
 let VIEW='home',CUR='',SUB=0;
 function itemHTML(p){const unit=p.isOffer?'':` <small>/ ${esc(p.unit)}</small>`;
- return `<article class="it">${noPh(p.img)?`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`:photoHTML(p)}<div class="ib"><h3>${esc(p.name)}</h3>${p.desc?`<p class="idesc">${esc(p.desc)}</p>`:''}<div class="ir"><span class="ip num">${fmt(p.price)} ج${unit}</span>${stepHTML(p.id)}</div></div></article>`}
+ return `<article class="it">${imageFor(p)?photoHTML(p):`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(p.name)}</h3>${p.desc?`<p class="idesc">${esc(p.desc)}</p>`:''}<div class="ir"><span class="ip num">${fmt(p.price)} ج${unit}</span>${stepHTML(p.id)}</div></div></article>`}
 function pairHTML(g){const first=g.v[g.order[0]];const photoProduct=g.order.map(k=>g.v[k]).find(p=>imageFor(p)); 
  return `<article class="it pair">${photoProduct?photoHTML(photoProduct):`<span class="ph" aria-hidden="true">${SEC_EMO[first.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(g.base)}</h3>${first.desc?`<p class="idesc">${esc(first.desc)}</p>`:''}<div class="vars">${g.order.map(k=>{const p=g.v[k];const q=cart[p.id]||0;const [t,s]=VLABEL[k];return `<div class="var${q?' on':''}"><span class="vl">${t}${s?`<small>${s}</small>`:''}</span><span class="vp num">${fmt(p.price)} ج</span>${stepHTML(p.id)}</div>`}).join('')}</div></div></article>`}
 const MEAL_MENU=[
