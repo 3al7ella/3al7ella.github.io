@@ -865,7 +865,7 @@ const SEARCH_ALIASES={
  'برجر':['برغر'],
  'برغر':['برجر']
 };
-function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=SEARCH_ALIASES[w]||[w];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
+function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=[w,...(SEARCH_ALIASES[w]||[])];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
  return {its:uniqueVisibleItems(items.filter(p=>hit(p.name+' '+p.desc+' '+p.section))),ofs:OFFERS.filter(o=>hit(o.title+' '+o.desc+' '+o.inc.map(x=>x[1]).join(' ')))}}
 function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips');let h='';
  if(VIEW==='search'){$('vTitle').textContent='نتايج البحث';$('vTitle').classList.remove('long');C.innerHTML='';const r=search(q);
