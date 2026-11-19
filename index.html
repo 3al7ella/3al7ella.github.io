@@ -242,6 +242,8 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 /* Compact product cards for faster mobile browsing */
 .it{min-width:0;flex-direction:column;gap:8px;padding:9px;border-radius:16px}
 .it .ph{width:100%;height:auto;aspect-ratio:4/3;border-radius:12px}
+.it .phbox{position:relative;width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--cream2)}.it .phbox .ph{width:100%;height:100%;aspect-ratio:auto;object-fit:cover}.it .phnote{position:absolute;right:6px;bottom:6px;background:rgba(42,26,18,.72);color:#fff;border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800}
+.it .phbox.broken img,.it .phbox.broken .phnote{display:none!important}.it .phbox.broken::after{content:attr(data-fallback);height:100%;display:grid;place-items:center;font-size:34px}
 .it .ib{width:100%;min-width:0}
 .it h3{font-size:14px;line-height:1.35}
 .it .idesc{-webkit-line-clamp:3;font-size:12px}
@@ -251,6 +253,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .it .step button{width:30px;height:30px}
 .it.pair{grid-column:1/-1;display:flex;flex-direction:row;gap:10px}
 .it.pair .ph{width:76px;height:76px;aspect-ratio:auto;flex:none}
+.it.pair .phbox{width:76px;min-width:76px;height:76px;aspect-ratio:1;flex:none;border-radius:14px}.it.pair .phbox .ph{width:100%;height:100%;aspect-ratio:auto;object-fit:cover}
 .it.pair .ib{flex:1;width:auto}
 .mm,.gtitle,.fsub,.empty,.stiles,.bxs,.cg,.rvgrid,.mfoot{grid-column:1/-1}
 .quick-title{margin:14px 0 8px;color:var(--brown);font-weight:900;font-size:14px}
@@ -607,7 +610,92 @@ const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replac
 const up5=v=>Math.round(v/5)*5;
 const HALF=u=>/كيلو/.test(u)&&!/نص|ربع|عبوة/.test(u);
 const isFile=k=>/^https?:\/\/|\.(webp|jpe?g|png)$/i.test(k||'');
+const EXTRA_IMG={
+ p007:"https://images.pexels.com/photos/8477053/pexels-photo-8477053.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p028:"https://images.pexels.com/photos/29333564/pexels-photo-29333564/free-photo-of-roast-duck-with-cranberry-sauce-and-garnishes.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p029:"https://images.pexels.com/photos/29333564/pexels-photo-29333564/free-photo-of-roast-duck-with-cranberry-sauce-and-garnishes.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p032:"https://images.pexels.com/photos/36958915/pexels-photo-36958915/free-photo-of-delicious-homemade-meatballs-in-tomato-sauce.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p034:"https://images.pexels.com/photos/36958915/pexels-photo-36958915/free-photo-of-delicious-homemade-meatballs-in-tomato-sauce.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p036:"https://images.pexels.com/photos/18606624/pexels-photo-18606624/free-photo-of-close-up-of-meat-and-livers.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p037:"https://images.pexels.com/photos/18606633/pexels-photo-18606633/free-photo-of-beef-at-butchery.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p038:"https://images.pexels.com/photos/18606633/pexels-photo-18606633/free-photo-of-beef-at-butchery.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p039:"https://images.pexels.com/photos/5779368/pexels-photo-5779368.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p040:"https://images.pexels.com/photos/18606633/pexels-photo-18606633/free-photo-of-beef-at-butchery.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p042:"https://images.pexels.com/photos/36958915/pexels-photo-36958915/free-photo-of-delicious-homemade-meatballs-in-tomato-sauce.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p063:"mix",
+ p064:"https://images.pexels.com/photos/9475288/pexels-photo-9475288.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p071:"https://images.pexels.com/photos/5792484/pexels-photo-5792484.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p072:"https://images.pexels.com/photos/6065915/pexels-photo-6065915.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p073:"https://images.pexels.com/photos/39019921/pexels-photo-39019921/free-photo-of-close-up-of-homemade-vegetable-soup-in-bowl.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p076:"m_pepper",
+ p077:"https://images.pexels.com/photos/9475288/pexels-photo-9475288.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p079:"spinach",
+ p146:"https://images.pexels.com/photos/9475288/pexels-photo-9475288.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p152:"meal",
+ p158:"https://images.pexels.com/photos/8477053/pexels-photo-8477053.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p159:"zucchinist",
+ p161:"https://images.pexels.com/photos/9475288/pexels-photo-9475288.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p209:"https://images.pexels.com/photos/5792484/pexels-photo-5792484.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p083:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p084:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p085:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p086:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p091:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p092:"https://images.pexels.com/photos/5724557/pexels-photo-5724557.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p096:"https://images.pexels.com/photos/39019921/pexels-photo-39019921/free-photo-of-close-up-of-homemade-vegetable-soup-in-bowl.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p111:"rice",
+ p177:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p178:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p179:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p180:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p181:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p182:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p183:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p184:"https://images.pexels.com/photos/19963516/pexels-photo-19963516/free-photo-of-potato-croquettes-and-a-bowl-of-dressing.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p185:"spinach",
+ p187:"https://images.pexels.com/photos/5792484/pexels-photo-5792484.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p196:"https://images.pexels.com/photos/18606633/pexels-photo-18606633/free-photo-of-beef-at-butchery.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p197:"https://images.pexels.com/photos/18606633/pexels-photo-18606633/free-photo-of-beef-at-butchery.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p215:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p216:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p217:"https://images.pexels.com/photos/5618067/pexels-photo-5618067.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p218:"https://images.pexels.com/photos/5984480/pexels-photo-5984480.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p219:"https://images.pexels.com/photos/7966389/pexels-photo-7966389.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p220:"https://images.pexels.com/photos/3693280/pexels-photo-3693280.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p221:"spinach",
+ p222:"https://images.pexels.com/photos/8696556/pexels-photo-8696556.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p224:"cabbagest",
+ p225:"cabbagest",
+ p226:"https://images.pexels.com/photos/20350155/pexels-photo-20350155/free-photo-of-stuffed-cabbage-rolls.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p227:"https://images.pexels.com/photos/20350155/pexels-photo-20350155/free-photo-of-stuffed-cabbage-rolls.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p228:"https://images.pexels.com/photos/38706545/pexels-photo-38706545.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p229:"https://images.pexels.com/photos/38706545/pexels-photo-38706545.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p230:"m_eggplant",
+ p231:"m_eggplant",
+ p232:"m_pepper",
+ p233:"m_pepper",
+ p234:"m_tomato",
+ p235:"m_tomato",
+ p236:"onionst",
+ p237:"onionst",
+ p241:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p242:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p243:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ p244:"https://images.pexels.com/photos/37182338/pexels-photo-37182338.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr001:"https://images.pexels.com/photos/6630111/pexels-photo-6630111.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr002:"https://images.pexels.com/photos/8668726/pexels-photo-8668726.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr003:"https://images.pexels.com/photos/7937023/pexels-photo-7937023.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr004:"https://images.pexels.com/photos/3119603/pexels-photo-3119603.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr005:"https://images.pexels.com/photos/2351813/pexels-photo-2351813.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr006:"https://images.pexels.com/photos/37461742/pexels-photo-37461742.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr007:"https://images.pexels.com/photos/37461742/pexels-photo-37461742.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr008:"https://images.pexels.com/photos/7937023/pexels-photo-7937023.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr009:"https://images.pexels.com/photos/37461742/pexels-photo-37461742.jpeg?auto=compress&cs=tinysrgb&w=700",
+ fr010:"https://images.pexels.com/photos/37461742/pexels-photo-37461742.jpeg?auto=compress&cs=tinysrgb&w=700"
+};
 const imgOf=k=>isFile(k)?k:(TH[k]||'');
+const imageFor=p=>{const own=imgOf(p.img);if(own)return {src:own,stock:false};const x=EXTRA_IMG[p.id];if(!x)return null;return {src:imgOf(x)||x,stock:/^https?:/.test(x)}};
+function photoHTML(p){const im=imageFor(p);return im?'<div class="phbox" data-fallback="'+(SEC_EMO[p.section]||'🍲')+'"><img class="ph" src="'+im.src+'" alt="'+esc((im.stock?'صورة توضيحية لـ ':'')+p.name)+'" loading="lazy" decoding="async" width="300" height="225" onerror="this.onerror=null;this.parentElement.classList.add(\'broken\')">'+(im.stock?'<small class="phnote">صورة توضيحية</small>':'')+'</div>':`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}
 function T(n,p){try{gtag('event',n,p||{})}catch(_){}}
 const SEC_EMO={'المحاشي':'🫑','محاشي ع التسوية':'🫑','محاشي مستوية':'🍲','محاشي باللحمة المفرومة':'🥩','ممبار':'🌭','جاهز على الحشو':'🥒','الخضار المتنضف':'🥬','فراخ متبلة':'🍗','مصنعات الفراخ':'🍗','مصنعات اللحمة':'🥩','الحمام والبط':'🕊️','المقبلات':'🥟','الوجبات':'🍱','صواني الفرن':'🥘','طواجن وطبيخ':'🍲','بولات وشوربة':'🥣','الرز المعمر':'🍚','مخللات وصوصات':'🫙','إضافات':'🧺','فواكه جاهزة':'🍓','فواكه سليمة فريش':'🍎'};
 
@@ -661,13 +749,14 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  buildPairs()}
 const offerOf=id=>OFFERS.find(o=>o.id===id);
 function buildPairs(){PAIRS={};PAIR_OF={};const by={};
- items.forEach(p=>{const m=p.name.match(/^(.*?)\s+(ع التسوية|على التسوية|مستوي)$/);let base,kind;
+ items.forEach(p=>{let m=p.name.match(/^(.*?)\s+(ع التسوية|على التسوية|مستوي)$/);let base,kind;
   if(m){base=m[1].trim();kind=/مستوي/.test(m[2])?'done':'raw'}
   else if(/^ممبار مسلوق/.test(p.name)){base='ممبار محشي';kind='boiled'}
+  else if((m=p.name.match(/^(.*?)\s+(كبيرة|كبير|وسط|صغيرة|صغير)$/))){base=m[1].trim();kind=/^(كبيرة|كبير)$/.test(m[2])?'large':/^(صغيرة|صغير)$/.test(m[2])?'small':'medium'}
   else{const z=p.name.match(/^(.*?)\s+—\s+(نص كيلو|كيلو)$/);if(!z)return;base=z[1].trim();kind=z[2]==='كيلو'?'kilo':'half'}
-  const key=p.section+'|'+base;(by[key]=by[key]||{base,section:p.section,v:{}}).v[kind]=p});
- Object.values(by).forEach(g=>{if(Object.keys(g.v).length<2)return;g.id='g'+Object.keys(PAIRS).length;g.order=['raw','done','boiled','half','kilo'].filter(k=>g.v[k]);PAIRS[g.id]=g;g.order.forEach(k=>PAIR_OF[g.v[k].id]=g.id)})}
-const VLABEL={raw:['ع التسوية','تطبخه في البيت'],done:['مستوي','جاهز للأكل'],boiled:['مسلوق جاهز ع التحمير','تحمّره وتقدّمه'],half:['نص كيلو',''],kilo:['كيلو','']};
+  const key=(kind==='raw'||kind==='done'?'mahshi':p.section)+'|'+base;(by[key]=by[key]||{base,section:p.section,v:{}}).v[kind]=p});
+ Object.values(by).forEach(g=>{if(Object.keys(g.v).length<2)return;g.id='g'+Object.keys(PAIRS).length;g.order=['raw','done','boiled','large','medium','small','half','kilo'].filter(k=>g.v[k]);PAIRS[g.id]=g;g.order.forEach(k=>PAIR_OF[g.v[k].id]=g.id)})}
+const VLABEL={raw:['ع التسوية','تطبخه في البيت'],done:['مستوي','جاهز للأكل'],boiled:['مسلوق جاهز ع التحمير','تحمّره وتقدّمه'],large:['كبير / كبيرة',''],medium:['وسط',''],small:['صغير / صغيرة',''],half:['نص كيلو',''],kilo:['كيلو','']};
 
 /* ---------- cart ---------- */
 let cart={};try{cart=JSON.parse(localStorage.getItem('alhella-cart')||'{}')||{}}catch(_){cart={}}
@@ -731,10 +820,10 @@ document.addEventListener('click',e=>{if(e.target.id!=='againBtn')return;let L=n
 
 /* ---------- list views (category / offers / search) ---------- */
 let VIEW='home',CUR='',SUB=0;
-function itemHTML(p){const im=noPh(p.img)?'':imgOf(p.img);const unit=p.isOffer?'':` <small>/ ${esc(p.unit)}</small>`;
- return `<article class="it">${im?`<img class="ph" src="${im}" alt="" loading="lazy" decoding="async" width="76" height="76">`:`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(p.name)}</h3>${p.desc?`<p class="idesc">${esc(p.desc)}</p>`:''}<div class="ir"><span class="ip num">${fmt(p.price)} ج${unit}</span>${stepHTML(p.id)}</div></div></article>`}
-function pairHTML(g){const first=g.v[g.order[0]];const im=imgOf(first.img)||g.order.map(k=>imgOf(g.v[k].img)).find(Boolean);
- return `<article class="it pair">${im?`<img class="ph" src="${im}" alt="" loading="lazy" decoding="async" width="76" height="76">`:`<span class="ph" aria-hidden="true">${SEC_EMO[first.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(g.base)}</h3>${first.desc?`<p class="idesc">${esc(first.desc)}</p>`:''}<div class="vars">${g.order.map(k=>{const p=g.v[k];const q=cart[p.id]||0;const [t,s]=VLABEL[k];return `<div class="var${q?' on':''}"><span class="vl">${t}${s?`<small>${s}</small>`:''}</span><span class="vp num">${fmt(p.price)} ج</span>${stepHTML(p.id)}</div>`}).join('')}</div></div></article>`}
+function itemHTML(p){const unit=p.isOffer?'':` <small>/ ${esc(p.unit)}</small>`;
+ return `<article class="it">${imageFor(p)?photoHTML(p):`<span class="ph" aria-hidden="true">${SEC_EMO[p.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(p.name)}</h3>${p.desc?`<p class="idesc">${esc(p.desc)}</p>`:''}<div class="ir"><span class="ip num">${fmt(p.price)} ج${unit}</span>${stepHTML(p.id)}</div></div></article>`}
+function pairHTML(g){const first=g.v[g.order[0]];const photoProduct=g.order.map(k=>g.v[k]).find(p=>imageFor(p)); 
+ return `<article class="it pair">${photoProduct?photoHTML(photoProduct):`<span class="ph" aria-hidden="true">${SEC_EMO[first.section]||'🍲'}</span>`}<div class="ib"><h3>${esc(g.base)}</h3>${first.desc?`<p class="idesc">${esc(first.desc)}</p>`:''}<div class="vars">${g.order.map(k=>{const p=g.v[k];const q=cart[p.id]||0;const [t,s]=VLABEL[k];return `<div class="var${q?' on':''}"><span class="vl">${t}${s?`<small>${s}</small>`:''}</span><span class="vp num">${fmt(p.price)} ج</span>${stepHTML(p.id)}</div>`}).join('')}</div></div></article>`}
 const MEAL_MENU=[
  {t:'وجبات ع الحلة',main:1,inc:'أرز بسمتي + ربع فرخة + سلطة',rows:[['p117','وجبة 1','+ 2 قطعة كفتة'],['p118','وجبة 2','+ 2 قطعة كفتة + 3 سمبوسك'],['p119','وجبة 3','+ 3 قطع كفتة + 3 سمبوسك + 3 محشي'],['p120','وجبة 4','+ 2 قطعة كفتة + مكرونة بشاميل']]},
  {t:'وجبات الفراخ',rows:[['p121','نص فرخة مشوية','+ ملوخية'],['p122','نص فرخة مشوية','+ أرز بالخلطة'],['p123','ربع فرخة مشوية','+ أرز + ملوخية'],['p124','كبسة فراخ','نص فرخة'],['p125','كبسة فراخ','فرخة كاملة'],['p126','صينية بطاطس','+ نص فرخة + أرز بالشعرية'],['p127','صينية بطاطس','+ فرخة كاملة + أرز'],['p128','فرخة محشية','أرز + خضار']]},
@@ -754,14 +843,30 @@ const SEARCH_ALIASES={
  'ملفوف':['كرنب'],
  'كوسا':['كوسه'],
  'دجاج':['فراخ'],
+ 'فراخ':['دجاج'],
+ 'فرخه':['فراخ'],
+ 'فرخة':['فراخ'],
  'موزاريلا':['موتزاريلا'],
+ 'موتزاريلا':['موزاريلا'],
  'جبن':['جبنه','موتزاريلا'],
  'محاشي':['محشي'],
  'محشي':['محاشي'],
  'صوص':['صوصات','صلصه'],
- 'صلصة':['صلصه','صوص']
+ 'صلصة':['صلصه','صوص'],
+ 'ثوم':['توم'],
+ 'توم':['ثوم'],
+ 'باذنجان':['بتنجان'],
+ 'بتنجان':['باذنجان'],
+ 'بفتيك':['بيفتيك'],
+ 'بيفتيك':['بفتيك'],
+ 'لحم':['لحمه'],
+ 'لحمه':['لحم'],
+ 'شاورما':['شاورمه'],
+ 'شاورمه':['شاورما'],
+ 'برجر':['برغر'],
+ 'برغر':['برجر']
 };
-function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=SEARCH_ALIASES[w]||[w];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
+function search(q){const words=NORM(q).split(' ').filter(Boolean);const hit=t=>{const n=NORM(t);return words.every(w=>{const opts=[w,...(SEARCH_ALIASES[w]||[])];return opts.some(opt=>n.includes(opt)||n.includes(opt.replace(/^ال/,'')))} )};
  return {its:uniqueVisibleItems(items.filter(p=>hit(p.name+' '+p.desc+' '+p.section))),ofs:OFFERS.filter(o=>hit(o.title+' '+o.desc+' '+o.inc.map(x=>x[1]).join(' ')))}}
 function renderList(){const q=$('q').value.trim();const L=$('list'),C=$('vchips');let h='';
  if(VIEW==='search'){$('vTitle').textContent='نتايج البحث';$('vTitle').classList.remove('long');C.innerHTML='';const r=search(q);
