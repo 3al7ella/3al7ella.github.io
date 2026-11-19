@@ -169,9 +169,11 @@ a{color:inherit}
 .frt{background:#2F8A3E;color:#fff;font-weight:900;font-size:12px;border-radius:20px;padding:2px 10px}
 .svp{align-self:flex-start;margin-top:6px;background:#FFE7D6;color:var(--org);font-weight:900;font-size:13.5px;border-radius:20px;padding:2px 12px}
 .bxl{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px 14px}
-.bxl.two{grid-template-columns:1fr 1fr}
-.bxl li{position:relative;padding-right:14px;font-weight:800;font-size:14px;line-height:1.45}
-.bxl li:before{content:"";position:absolute;right:0;top:.62em;width:6px;height:6px;border-radius:50%;background:#F48802}
+.bxl{grid-template-columns:1fr!important;gap:0;border-top:1px solid #f1e4d7}
+.bxl.two{grid-template-columns:1fr}
+.bxl li{position:relative;padding:8px 18px 8px 4px;font-weight:800;font-size:14px;line-height:1.55;border-bottom:1px dashed #eadbcd}
+.bxl li:last-child{border-bottom:0}
+.bxl li:before{content:"";position:absolute;right:3px;top:1.05em;width:7px;height:7px;border-radius:50%;background:#F48802}
 .bxf{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .gft{align-self:flex-start;background:var(--red);color:#fff;font-weight:900;font-size:13.5px;border-radius:10px;padding:4px 12px;transform:rotate(-2deg);box-shadow:0 4px 10px rgba(217,56,30,.25)}
 .bxr{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -949,8 +951,13 @@ function renderStoryRail(){
   return `<button class="bagc" type="button" data-story-id="${id}" aria-label="افتح ستوري ${esc(o.title)}"><span class="bimg">${im?`<img src="${im}" alt="" width="200" height="200" loading="lazy" onerror="this.remove();this.parentElement.textContent='${ico}'">`:`<i aria-hidden="true">${ico}</i>`}</span><b>${esc(o.title)}</b><small>${price}</small></button>`;
  }).join('');
 }
+function splitStoryIngredient(value){
+ const raw=String(value||'').trim();
+ const m=raw.match(/^(نص كيلو|نصف كيلو|ربع كيلو|تمن كيلو|كيلو ونصف|كيلو|نص|نصف|ربع|[0-9٠-٩]+(?:[.,٫][0-9٠-٩]+)?\\s*(?:كيلو|كجم|جم|جرام|أكياس|كيس|رغيف|رغيفين|جوز|طبق|عبوة|علبة|كيسين))\\s*(?:من)?\\s*(.+)$/);
+ return m?{qty:m[1].trim(),name:m[2].trim()}:{qty:'',name:raw};
+}
 function renderStoryIngredients(o,half=false){
- const rows=o&&o.inc.length?o.inc.map(x=>Array.isArray(x)?{qty:x[0],name:x[1]}:{qty:'',name:String(x)}):
+ const rows=o&&o.inc.length?o.inc.map(x=>Array.isArray(x)?{qty:x[0],name:x[1]}:splitStoryIngredient(x)):
   (half?[['نص كيلو','موز'],['نص كيلو','برتقال'],['نص كيلو','تفاح'],['نص كيلو','رمان']]:[['كيلو','موز'],['كيلو','برتقال'],['كيلو','تفاح'],['كيلو','رمان']]).map(x=>({qty:x[0],name:x[1]}));
  const count=rows.length;
  document.getElementById('storyIngredients').innerHTML='<div class="ing-head"><b>مكونات العرض</b><small>'+count+' مكونات</small></div><ul>'+rows.map(x=>'<li>'+(x.qty?'<span class="ing-qty">'+esc(String(x.qty))+'</span>':'')+'<span class="ing-name">'+esc(String(x.name))+'</span></li>').join('')+'</ul>';
