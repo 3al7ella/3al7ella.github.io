@@ -616,11 +616,10 @@ const QUICK_CATS=[
 const ALL_CATS=CATS.concat(QUICK_CATS.filter(c=>c.groups));
 const OGROUPS=[['all','كل العروض'],['bags','شنط ع الحلة'],['freezer','التفريز والتخزين'],['bride','صواني العروسة'],['boxes','بوكسات وعروض']];
 const FOLDERS=[
- {k:'bags',title:'🛍️ شنط ع الحلة',sub:'شنطة المحاشي وشنطة الخضار · كل شنطة لوحدها',gs:['bags']},
- {k:'freezer',title:'❄️ التفريز والتخزين',sub:'عروض الخضار والفريزر والتجهيز مرتبة عرضًا عرضًا',gs:['freezer','storage']},
  {k:'bride',title:'👰 صواني العروسة',sub:'كل صينية بمكوناتها وسعرها وتفاصيلها',gs:['bride']},
- {k:'boxes',title:'🎒 بوكسات وعروض ع الحلة',sub:'شنطة المدرسة وعرض الصاروخ وكل عرض لوحده',gs:['boxes']}];
-const FCHIP={bags:'🛍️ الشنط',freezer:'❄️ التفريز',bride:'👰 صواني العروسة',boxes:'🎒 البوكسات'};
+ {k:'freezer',title:'❄️ عروض التفريز والتخزين',sub:'كل عرض خضار وتفريز ظاهر لوحده بمكوناته وسعره',gs:['freezer','storage']},
+ {k:'boxes',title:'🍗 المصنعات والبوكسات',sub:'مصنعات اللحوم والفراخ، عرض الشهر، عرض الصاروخ، وشنطة المدرسة',gs:['boxes']}];
+const FCHIP={freezer:'❄️ التفريز',bride:'👰 صواني العروسة',boxes:'🍗 المصنعات والبوكسات'};
 const GT={bags:'🛍️ شنط ع الحلة',bride:'👰 صواني العروسة',freezer:'🧊 عروض الفريزر',storage:'📦 عروض التخزين',boxes:'🎒 بوكسات ع الحلة'};
 const GNOTE={freezer:'كل عرض بـ 100 ج بس',storage:'خزّني لبيتك بأقل سعر'};
 const OG_OF={'صواني عشا العروسة':'bride','بوكسات ع الحلة':'boxes','عروض الفريزر':'freezer','عروض التخزين':'storage','شنط ع الحلة':'bags'};
@@ -635,7 +634,7 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  const rs=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim())&&!['فواكه جاهزة','فواكه سليمة فريش'].includes(String(r[2]||'').trim()));
  const newIds=new Set(NEW_OFFERS.map(r=>r[0]));
  const extra=rows.filter(r=>newIds.has(r[0]));/* admin overrides on new offers */
- const ACTIVE_OFFER_IDS=new Set(['p330','p331','p305','p306','p308','p309','p310','p311','p316','p317','p318','p319','p303','p304']);
+ const ACTIVE_OFFER_IDS=new Set(['p330','p331','p332','p333','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p313','p314','p315','p316','p317','p318','p319']);
  const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>extra.find(x=>x[0]===r[0])||r);
  rs.concat(offers).forEach(r=>{const id=String(r[0]||'').trim(),type=String(r[1]||'').trim(),name=String(r[3]||'').trim(),price=num(r[5]);
   if(!id||!name||!(price>0)||!yes(r[6]))return;
@@ -989,10 +988,7 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
 let activeStory=null,storyHalf=false,ACTIVE_STORY_GROUP=null;
 let STORY_IDS=[];
 const STORY_GROUPS=[
- {key:'bags',title:'شنط ع الحلة',desc:'شنطة المحاشي وشنطة الخضار',icon:'🛍️',img:'bag-mahshi.webp',ids:['p330','p331']},
- {key:'freezer',title:'التفريز والتخزين',desc:'عروض الخضار والفريزر والتخزين',icon:'❄️',img:'f-beansbags.webp',ids:['p305','p306','p308','p309','p310','p311']},
- {key:'bride',title:'صواني العروسة',desc:'كل صينية بمكوناتها وتفاصيلها',icon:'👰',img:'bride-1.webp',ids:['p316','p317','p318','p319']},
- {key:'boxes',title:'بوكسات وعروض ع الحلة',desc:'شنطة المدرسة وعرض الصاروخ',icon:'🎒',img:'f-chburger.webp',ids:['p303','p304']}
+ {key:'bags',title:'شنط ع الحلة',desc:'شنطة المحاشي وشنطة الخضار وشنطة الفاكهة',icon:'🛍️',img:'bag-mahshi.webp',ids:['p330','p331','p332']}
 ];
 function renderStoryRail(){
  const el=document.getElementById('bagStrip'),area=document.querySelector('.story-area');
@@ -1030,8 +1026,10 @@ function showStory(id){
  document.getElementById('storyTitle').textContent=o.title;
  document.getElementById('storyDesc').textContent=o.desc||'عرض مميز من ع الحلة';
  renderStoryIngredients(o);
- document.getElementById('storySize').hidden=true;
+ document.getElementById('storySize').hidden=id!=='p332';
  document.getElementById('storyNoteWrap').hidden=true;
+ document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storySize==='full'?'true':'false'));
+ if(id==='p332'){document.getElementById('storySize').querySelector('[data-story-size="full"]').textContent='الشنطة كاملة · '+fmt(p.price)+' ج';document.getElementById('storySize').querySelector('[data-story-size="half"]').textContent='نص الكمية · '+fmt(byId.p333?byId.p333.price:125)+' ج';}
  document.getElementById('storyPrice').textContent='إجمالي العرض: '+fmt(p.price)+' جنيه';
  document.getElementById('storyAdd').textContent=o.pick?'اختار الأصناف':'أضف للسلة';
  storyModal.hidden=false;document.body.style.overflow='hidden';
@@ -1043,6 +1041,7 @@ document.getElementById('storyNext').addEventListener('click',()=>moveStory(1));
 document.getElementById('bagStrip').addEventListener('click',e=>{const b=e.target.closest('[data-story-group]');if(b)openStoryGroup(b.dataset.storyGroup)});
 storyModal.addEventListener('click',e=>{
  if(e.target.closest('[data-story-close]')){closeStory();return}
+ const size=e.target.closest('[data-story-size]');if(size&&activeStory==='p332'){storyHalf=size.dataset.storySize==='half';document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b===size?'true':'false'));const price=storyHalf?(byId.p333?byId.p333.price:125):byId.p332.price;document.getElementById('storyPrice').textContent='إجمالي العرض: '+fmt(price)+' جنيه';document.getElementById('storyTitle').textContent=storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش';renderStoryIngredients(storyHalf?offerOf('p333'):offerOf('p332'));return}
 });
 document.addEventListener('keydown',e=>{if(storyModal.hidden)return;if(e.key==='Escape')closeStory();else if(e.key==='ArrowRight')moveStory(1);else if(e.key==='ArrowLeft')moveStory(-1)});
 let storyTouchX=0;
@@ -1050,7 +1049,7 @@ document.getElementById('storyPhoto').addEventListener('touchstart',e=>{storyTou
 document.getElementById('storyPhoto').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-storyTouchX;if(Math.abs(dx)>55)moveStory(dx<0?1:-1)},{passive:true});
 function storyOrder(toWhatsApp){
  if(!activeStory)return;
- const id=activeStory,o=offerOf(id),p=byId[id];if(!o||!p)return;
+ const baseId=activeStory,fruit=baseId==='p332',half=fruit&&storyHalf,id=half?'p333':baseId,o=offerOf(id),p=byId[id];if(!o||!p)return;
  if(o.pick){closeStory();openOffer(id);return}
  const ingredients=o.inc.map(incTxt).join(' · ');
  if(toWhatsApp){
