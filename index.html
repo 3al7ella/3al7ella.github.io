@@ -634,7 +634,7 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  const rs=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim())&&!['فواكه جاهزة','فواكه سليمة فريش'].includes(String(r[2]||'').trim()));
  const newIds=new Set(NEW_OFFERS.map(r=>r[0]));
  const extra=rows.filter(r=>newIds.has(r[0]));/* admin overrides on new offers */
- const ACTIVE_OFFER_IDS=new Set(['p330','p331','p332','p333','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p313','p314','p315','p316','p317','p318','p319']);
+ const ACTIVE_OFFER_IDS=new Set(['p330','p331','p332','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p316','p317','p318','p319']);
  const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>extra.find(x=>x[0]===r[0])||r);
  rs.concat(offers).forEach(r=>{const id=String(r[0]||'').trim(),type=String(r[1]||'').trim(),name=String(r[3]||'').trim(),price=num(r[5]);
   if(!id||!name||!(price>0)||!yes(r[6]))return;
