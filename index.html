@@ -954,7 +954,10 @@ window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;if(s
  window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
  if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
 start(ROWS);
-loadSprite(SPR[0]).then(()=>{if(STARTED)window.reMenu()});
+// حمّل صور المنتجات بعد ظهور الصفحة وتفاعل العميل معها؛ معالجة الـ sprite على Canvas مكلفة على الموبايلات.
+const loadProductSprite=()=>loadSprite(SPR[0]).then(()=>{if(STARTED)window.reMenu()});
+if('requestIdleCallback' in window) requestIdleCallback(loadProductSprite,{timeout:2500});
+else setTimeout(loadProductSprite,1400);
 </script>
 <script>window.addEventListener('load',()=>setTimeout(()=>{const s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-EPB6MMGYDX';s.async=true;document.head.appendChild(s)},1200));window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-EPB6MMGYDX');</script>
 <script type="module">
