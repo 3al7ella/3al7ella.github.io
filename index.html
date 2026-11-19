@@ -409,11 +409,7 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 
 <section class="story-area" aria-label="عروض ع الحلة المؤقتة">
  <div class="story-heading"><b>عروض نازلة دلوقتي</b><span>افتح الستوري وشوف التفاصيل</span></div>
- <div class="bagstrip" id="bagStrip">
-  <button class="bagc" type="button" data-story-id="p330" aria-label="افتح ستوري شنطة المحاشي"><span class="bimg"><img src="bag-mahshi.webp" alt="" width="200" height="200"></span><b>شنطة المحاشي</b><small>250 ج</small></button>
-  <button class="bagc" type="button" data-story-id="p331" aria-label="افتح ستوري شنطة الخضار"><span class="bimg"><img src="bag-veg.webp" alt="" width="200" height="200"></span><b>شنطة الخضار</b><small>250 ج</small></button>
-  <button class="bagc fruit-bag" type="button" data-story-id="p332" aria-label="افتح ستوري فاكهة طازة فريش"><span class="bimg"><img src="https://images.pexels.com/photos/8426698/pexels-photo-8426698.jpeg?auto=compress&cs=tinysrgb&w=750" alt="" width="200" height="200" onerror="this.style.display='none';this.parentElement.textContent='🍌🍊🍎'"></span><b>فاكهة طازة فريش</b><small>من 125 ج</small></button>
- </div>
+ <div class="bagstrip" id="bagStrip" aria-live="polite"></div>
 </section>
 <div class="story-modal" id="storyModal" hidden role="dialog" aria-modal="true" aria-labelledby="storyTitle">
  <div class="story-backdrop" data-story-close></div>
@@ -639,7 +635,7 @@ function folderTile(f){const os=OFFERS.filter(o=>f.gs.includes(o.g));if(!os.leng
  const body=f.k!=='cheap'?os.map(o=>`<span class="fr2"><em>${esc(o.title)}</em><i></i><b class="num">${fmt(byId[o.id].price)} ج</b></span>`).join('')
   :f.gs.map(g=>{const L=os.filter(o=>o.g===g);if(!L.length)return '';const mn=Math.min(...L.map(o=>byId[o.id].price));return `<span class="fr2"><em>${GT[g]}</em><i></i><b>${L.length} عروض · من <span class="num">${fmt(mn)}</span> ج</b></span>`}).join('');
  return `<button type="button" class="fold f-${f.k}" data-fold="${f.k}"><span class="fh"><b>${esc(f.title)}</b><small>${esc(f.sub)}</small></span><span class="fb">${body}</span><span class="fgo">افتح الفولدر<b><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></b></span></button>`}
-function renderRail(){const el=$('folders');el.innerHTML=FOLDERS.map(folderTile).join('');$('offers').hidden=!OFFERS.length}
+function renderRail(){const el=$('folders');el.innerHTML=FOLDERS.map(folderTile).join('');$('offers').hidden=!OFFERS.length;renderStoryRail()}
 function cheapHTML(f){return f.gs.map(g=>{const L=OFFERS.filter(o=>o.g===g);if(!L.length)return '';
  return `<section class="cg"><div class="cgh"><b>${GT[g]}</b><span>${GNOTE[g]||''}</span></div>${L.map((o,i)=>{const p=byId[o.id];const im=imgOf(o.img);const q=qtyOf(o.id);
   return `<article class="crow"><span class="cn num">${i+1}</span>${im?`<img src="${im}" alt="" loading="lazy" decoding="async" width="58" height="58">`:'<span class="cim">🧊</span>'}<div class="cb"><h3>${esc(oName(o))}</h3><p>${esc(oSub(o))}</p></div><div class="cpr"><span class="pr num">${fmt(p.price)} ج</span>${o.before>p.price?`<s class="num">${fmt(o.before)} ج</s>`:''}${q&&!o.pick?stepHTML(o.id):''}<button type="button" class="btn sm" data-oadd="${o.id}">اطلب العرض</button></div></article>`}).join('')}</section>`}).join('')}
@@ -927,17 +923,29 @@ onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data(
  });
 })();
 let activeStory=null,storyHalf=false;
-const STORY_IDS=['p330','p331','p332'];
+let STORY_IDS=[];
+function renderStoryRail(){
+ const el=document.getElementById('bagStrip'),area=document.querySelector('.story-area');
+ if(!el||!area)return;
+ STORY_IDS=OFFERS.filter(o=>o.id!=='p333'&&byId[o.id]).map(o=>o.id);
+ area.hidden=!STORY_IDS.length;
+ el.innerHTML=STORY_IDS.map(id=>{
+  const o=offerOf(id),p=byId[id],im=imgOf(o.img);
+  const ico=o.g==='bride'?'👰':o.g==='freezer'?'🧊':o.g==='storage'?'📦':o.g==='boxes'?'🎁':'🛍️';
+  const price=id==='p332'?'من '+fmt(byId.p333?byId.p333.price:125)+' ج':fmt(p.price)+' ج';
+  return `<button class="bagc" type="button" data-story-id="${id}" aria-label="افتح ستوري ${esc(o.title)}"><span class="bimg">${im?`<img src="${im}" alt="" width="200" height="200" loading="lazy" onerror="this.remove();this.parentElement.textContent='${ico}'">`:`<i aria-hidden="true">${ico}</i>`}</span><b>${esc(o.title)}</b><small>${price}</small></button>`;
+ }).join('');
+}
 const storyModal=document.getElementById('storyModal');
 function showStory(id){
  const o=offerOf(id);if(!o)return;activeStory=id;storyHalf=false;
- const storyIndex=STORY_IDS.indexOf(id);
+ const storyIndex=STORY_IDS.indexOf(id),p=byId[id],fruit=id==='p332';
  document.getElementById('storyCounter').textContent=(storyIndex+1)+' / '+STORY_IDS.length;
  document.querySelector('.story-progress i').style.width=((storyIndex+1)/STORY_IDS.length*100)+'%';
- document.getElementById('storyPrev').disabled=storyIndex===0;
- document.getElementById('storyNext').disabled=storyIndex===STORY_IDS.length-1;
- const p=byId[id],fruit=id==='p332'||id==='p333';
- document.getElementById('storyPhoto').src=imgOf(o.img)||'';
+ document.getElementById('storyPrev').disabled=storyIndex<=0;
+ document.getElementById('storyNext').disabled=storyIndex<0||storyIndex===STORY_IDS.length-1;
+ const photo=document.getElementById('storyPhoto');photo.src=imgOf(o.img)||'';photo.alt=o.title;
+ document.querySelector('.story-brand').textContent='#ع_الحله · '+(o.sec||'عرض مؤقت');
  document.getElementById('storyTitle').textContent=o.title;
  document.getElementById('storyDesc').textContent=o.desc||'عرض مميز من ع الحلة';
  document.getElementById('storyIngredients').textContent=o.inc.length?o.inc.map(incTxt).join(' · '):o.desc;
@@ -945,7 +953,12 @@ function showStory(id){
  document.getElementById('storyNoteWrap').hidden=!fruit;
  document.getElementById('storyNote').value='';
  document.querySelectorAll('[data-story-size]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storySize==='full'?'true':'false'));
+ if(fruit){
+  document.querySelector('[data-story-size="full"]').textContent='الشنطة كاملة · '+fmt(p.price)+' ج';
+  document.querySelector('[data-story-size="half"]').textContent='نص الكمية · '+fmt(byId.p333?byId.p333.price:125)+' ج';
+ }
  document.getElementById('storyPrice').textContent='السعر: '+fmt(p.price)+' جنيه';
+ document.getElementById('storyAdd').textContent=o.pick?'اختار الأصناف':'أضف للسلة';
  storyModal.hidden=false;document.body.style.overflow='hidden';
 }
 function closeStory(){storyModal.hidden=true;document.body.style.overflow='';activeStory=null}
@@ -963,13 +976,14 @@ document.getElementById('storyPhoto').addEventListener('touchstart',e=>{storyTou
 document.getElementById('storyPhoto').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-storyTouchX;if(Math.abs(dx)>55)moveStory(dx<0?1:-1)},{passive:true});
 function storyOrder(toWhatsApp){
  if(!activeStory)return;
- const fruit=activeStory==='p332',id=fruit?(storyHalf?'p333':'p332'):activeStory;
+ const fruit=activeStory==='p332',baseId=activeStory,id=fruit?(storyHalf?'p333':'p332'):baseId;
  const o=offerOf(id),p=byId[id];if(!o||!p)return;
+ if(o.pick){const chosen=activeStory;closeStory();openOffer(chosen);return}
  const note=fruit?document.getElementById('storyNote').value.trim():'';
  const ingredients=fruit?(storyHalf?'نص كيلو موز + نص كيلو برتقال + نص كيلو تفاح + نص كيلو رمان':'كيلو موز + كيلو برتقال + كيلو تفاح + كيلو رمان'):o.inc.map(incTxt).join(' · ');
  const title=fruit?(storyHalf?'نص شنطة فاكهة طازة فريش':'شنطة فاكهة طازة فريش'):o.title;
  const extra=note?'\nتعديل العميل: '+note:'';
- if(toWhatsApp){const msg='طلب من #ع_الحله ❤️\n'+title+'\n'+ingredients+extra+'\nالسعر: '+fmt(p.price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
+ if(toWhatsApp){const msg='طلب من #ع_الحله ❤️\n'+title+'\n'+(ingredients||o.desc)+extra+'\nالسعر: '+fmt(p.price)+' جنيه\nبرجاء تأكيد الطلب.';window.open('https://wa.me/201275165496?text='+encodeURIComponent(msg),'_blank','noopener')}
  else{const key=id+(note?'::تعديل العميل: '+note:'');setQty(key,(cart[key]||0)+1);toast('اتضاف العرض للسلة ✓');closeStory()}
 }
 document.getElementById('storyAdd').addEventListener('click',()=>storyOrder(false));
