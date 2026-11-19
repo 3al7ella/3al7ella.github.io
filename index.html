@@ -298,7 +298,7 @@ footer{text-align:center;color:var(--mute);font-weight:700;font-size:13px;paddin
 .tot{display:flex;justify-content:space-between;font-weight:800;font-size:14px;color:var(--mute);margin-bottom:4px}
 .tot.big{color:var(--ink);font-weight:900;font-size:18px;margin:6px 0 10px}
 .cart-upsell{margin:12px 0;padding:12px;background:#FFF7E9;border:1px solid #EED5B5;border-radius:16px}.cart-upsell>b{display:block;color:#87350D;font-size:15px}.cart-upsell>small{display:block;color:#7A6455;font-size:12px;margin:2px 0 8px}.upsell-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px dashed #E4C9A8;font-size:13px;font-weight:800}.upsell-row strong{white-space:nowrap;color:#B3261A}.upsell-row button{border:0;border-radius:10px;background:#D9381E;color:#fff;padding:7px 12px;font-weight:900;white-space:nowrap}
-.hint{background:#FFF0E2;color:var(--org);border-radius:12px;padding:8px 12px;font-weight:900;font-size:13.5px;margin:8px 0 2px;text-align:center}
+.delivery-progress{margin:10px 0 4px;padding:12px;background:#FFF4E8;border:1px solid #F0D5B9;border-radius:14px;text-align:right;color:var(--org)}.delivery-progress .dp-copy b,.delivery-progress> b{display:block;font-size:14px;font-weight:900}.delivery-progress small{display:block;font-size:11.5px;font-weight:700;color:#80614C;margin-top:2px}.dp-track{height:9px;margin:9px 0 5px;background:#F0DFCF;border-radius:99px;overflow:hidden;direction:rtl}.dp-track span{display:block;height:100%;background:linear-gradient(90deg,#E9A04C,#D83B20);border-radius:99px;transition:width .25s ease}.delivery-progress .dp-foot{font-size:10.5px}.delivery-progress.is-free{background:#EAF5E9;border-color:#CDE5CC;color:#276B39}.delivery-progress.is-free small{color:#47764F}.hint{background:#FFF0E2;color:var(--org);border-radius:12px;padding:8px 12px;font-weight:900;font-size:13.5px;margin:8px 0 2px;text-align:center}
 .hint.ok{background:#E5F3E7;color:var(--ok)}
 .ln{background:#fff;border-radius:16px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
 .ln .lt{flex:1;min-width:0;font-weight:900;font-size:14.5px;line-height:1.35}
@@ -829,7 +829,14 @@ function cartUpsellHTML(){
  if(!picks.length)return '';
  return '<section class="cart-upsell"><b>🍲 كمّل طلب المحشي</b><small>إضافات ممكن تحتاجها — اختار اللي يناسبك</small>'+picks.map(p=>'<div class="upsell-row"><span>'+esc(p.name)+' <strong>'+fmt(p.price)+' ج</strong></span><button type="button" data-upsell="'+esc(p.id)+'">+ أضف</button></div>').join('')+'</section>';
 }
-function hintHTML(){const s=sub();if(!count())return '';if(isFree())return `<p class="hint ok">🎉 التوصيل مجاني${freeDel()?' مع العرض':''}</p>`;return `<p class="hint">🚚 فاضلك <b class="num">${fmt(FREE_OVER-s)} ج</b> والتوصيل يبقى مجاني</p>`}
+function hintHTML(){
+ const s=sub();
+ if(!count())return '';
+ if(freeDel())return '<div class="delivery-progress is-free"><b>🎉 التوصيل مجاني مع العرض</b><small>استمتع بطلبك — التوصيل محسوب مجانًا</small></div>';
+ if(s>=FREE_OVER)return '<div class="delivery-progress is-free"><b>🎉 مبروك! التوصيل مجاني</b><small>وصلت للحد المطلوب للتوصيل المجاني</small></div>';
+ const remain=Math.max(0,FREE_OVER-s),pct=Math.max(0,Math.min(100,s/FREE_OVER*100));
+ return '<div class="delivery-progress"><div class="dp-copy"><b>🚚 فاضلك '+fmt(remain)+' جنيه</b><small>وزوّد طلبك عشان التوصيل يبقى مجاني</small></div><div class="dp-track" role="progressbar" aria-label="التقدم نحو التوصيل المجاني" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(pct)+'"><span style="width:'+pct.toFixed(1)+'%"></span></div><small class="dp-foot">وصلت لـ '+Math.round(pct)+'٪ من حد التوصيل المجاني ('+fmt(FREE_OVER)+' جنيه)</small></div>';
+}
 function totals(big){const s=sub(),d=delFee();return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(s+d)} ج</span></div>`:''}`}
 function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment>نسخ الرقم</button></div>';return ''}
 function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
