@@ -34,6 +34,16 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <body>
 <header><div class="headrow"><div><div class="brand">3AL7ELLA · نظام داخلي</div><h1>إدارة العملاء والفواتير</h1><div class="sub">أكل بيتي حقيقي · تنظيم الطلبات وسجل العملاء</div></div><div class="pill">نسخة تأسيسية</div></div></header>
 <main>
+<section class="card" id="auth-card">
+<h2>دخول فريق ع الحلة</h2>
+<p class="hint">الدخول مخصص لحساب المدير المعتمد فقط. سنرسل رابط دخول لمرة واحدة إلى بريدك.</p>
+<label for="login-email">البريد الإلكتروني</label>
+<input id="login-email" type="email" autocomplete="email" value="Hamdyuwk1@gmail.com" readonly>
+<button class="primary" id="send-link">إرسال رابط الدخول</button>
+<p class="hint" id="auth-message" aria-live="polite"></p>
+<button class="secondary" id="sign-out" style="display:none;width:100%">تسجيل الخروج</button>
+</section>
+<div id="app-shell" style="display:none">
 <nav class="tabs" aria-label="الأقسام"><button class="tab active" type="button">فاتورة جديدة</button><button class="tab" type="button" onclick="alert('قسم العملاء سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">العملاء</button><button class="tab" type="button" onclick="alert('سجل الفواتير سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">الفواتير</button></nav>
 <section class="card">
 <h2>استقبال رسالة العميل</h2>
@@ -53,7 +63,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <div class="notice">الأسعار والإجمالي غير محسوبين تلقائيًا في هذه المرحلة؛ يلزم مطابقة الأصناف مع قائمة الأسعار المعتمدة.</div>
 <button class="secondary" type="button" onclick="window.print()" style="width:100%;margin-top:12px">طباعة المسودة / حفظ PDF</button>
 </section>
-<footer>ع الحلة · نظام داخلي للفريق فقط</footer>
+<footer>ع الحلة · نظام داخلي للفريق فقط</footer></div>
 </main>
 <script>
 const raw=document.getElementById('raw');
