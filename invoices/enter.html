@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e94b1b">
+<title>دخول ع الحلة</title>
+<style>
+:root{color-scheme:light;--orange:#e94b1b;--red:#a92f20;--cream:#fff4e5;--ink:#292522;--muted:#756d66;--line:#eadfd3}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;background:linear-gradient(160deg,#fff8ef,#f4e9dc);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);display:grid;place-items:center;padding:20px}
+main{width:min(100%,420px)}.brand{text-align:center;margin-bottom:22px}.mark{width:76px;height:76px;border-radius:50%;background:var(--cream);border:2px solid #f0c4a8;display:grid;place-items:center;margin:0 auto 12px;color:var(--red);font-weight:900;font-size:25px;box-shadow:0 8px 24px #6b35121a}.brand small{color:var(--muted);letter-spacing:2px}.brand h1{margin:5px 0;font-size:26px}.brand p{margin:0;color:var(--muted);font-size:13px}
+.card{background:#fffdfa;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 14px 40px #65330e12}h2{font-size:19px;margin:0 0 6px}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 18px}
+label{display:block;font-weight:750;font-size:13px;margin:14px 0 7px}input{width:100%;border:1px solid #dfd4c9;border-radius:13px;padding:14px;background:white;color:var(--ink);font:inherit;font-size:16px;outline:none}input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #e94b1b18}
+.email{background:#f8f4ef;color:#5d554e;direction:ltr;text-align:left}.pass-wrap{position:relative}.pass-wrap input{padding-left:64px}.show{position:absolute;left:7px;top:7px;padding:8px 10px;border:0;background:var(--cream);color:var(--red);border-radius:9px;font-weight:700}
+button.enter{width:100%;border:0;border-radius:13px;background:var(--orange);color:white;padding:15px;font:inherit;font-weight:850;margin-top:19px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}
+.msg{min-height:24px;margin:12px 0 0;font-size:13px;line-height:1.6;color:var(--red)}.secure{text-align:center;color:#857b72;font-size:11px;margin:16px 0 0}.foot{text-align:center;color:#8b8178;font-size:11px;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+ <div class="brand"><div class="mark">ع الحلة</div><small>3AL7ELLA · TEAM ACCESS</small><h1>أهلاً بيك</h1><p>الدخول لإدارة العملاء والفواتير</p></div>
+ <section class="card">
+  <h2>دخول سريع</h2>
+  <p class="hint">استخدم نفس حساب المالك الحالي. بعد أول دخول ناجح، الجهاز هيفتكر الجلسة ومش هتحتاج تدخل كلمة المرور كل مرة.</p>
+  <form id="login-form">
+   <label for="email">البريد الإلكتروني</label>
+   <input class="email" id="email" type="email" value="Hamdyuwk1@gmail.com" readonly autocomplete="username">
+   <label for="password">كلمة المرور</label>
+   <div class="pass-wrap"><input id="password" type="password" placeholder="اكتب كلمة المرور" autocomplete="current-password" required><button class="show" id="toggle" type="button">إظهار</button></div>
+   <button class="enter" id="submit" type="submit">دخول للنظام</button>
+  </form>
+  <p class="msg" id="message" role="status" aria-live="polite"></p>
+  <p class="secure">🔒 دخول آمن بنفس صلاحيات حسابك الحالي</p>
+ </section>
+ <div class="foot">ع الحلة · نظام داخلي للفريق فقط</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const URL='https://nxdghlshuumicvsottoy.supabase.co';
+const KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
+const DEST='./index.html';
+const msg=document.getElementById('message');
+const btn=document.getElementById('submit');
+const client=window.supabase?.createClient(URL,KEY);
+if(!client){msg.textContent='تعذر تحميل خدمة الدخول. راجع اتصال الإنترنت ثم أعد المحاولة.'}
+else{
+ client.auth.getSession().then(async({data,error})=>{
+  if(error||!data.session)return;
+  const {data:profile}=await client.from('profiles').select('role,active').eq('id',data.session.user.id).maybeSingle();
+  if(profile?.active===true&&['owner','admin','staff','viewer'].includes(profile.role))location.replace(DEST);
+ });
+ document.getElementById('toggle').addEventListener('click',()=>{
+  const p=document.getElementById('password'),show=p.type==='password';p.type=show?'text':'password';document.getElementById('toggle').textContent=show?'إخفاء':'إظهار';
+ });
+ document.getElementById('login-form').addEventListener('submit',async e=>{
+  e.preventDefault();if(btn.disabled)return;
+  const password=document.getElementById('password').value;
+  btn.disabled=true;btn.textContent='جارٍ التحقق...';msg.textContent='';
+  const {data,error}=await client.auth.signInWithPassword({email:'hamdyuwk1@gmail.com',password});
+  if(error){msg.textContent=error.message==='Invalid login credentials'?'بيانات الدخول غير صحيحة. راجع كلمة المرور.':'تعذر الدخول: '+error.message;btn.disabled=false;btn.textContent='دخول للنظام';return}
+  const {data:profile,error:profileError}=await client.from('profiles').select('role,active').eq('id',data.user.id).maybeSingle();
+  if(profileError||!profile||profile.active!==true||!['owner','admin','staff','viewer'].includes(profile.role)){
+   await client.auth.signOut();msg.textContent='الحساب غير مفعّل للدخول. لم يتم تغيير أي صلاحيات.';btn.disabled=false;btn.textContent='دخول للنظام';return;
+  }
+  msg.textContent='تم الدخول بنجاح. بنفتح النظام...';location.replace(DEST);
+ });
+}
+</script>
+</body>
+</html>
