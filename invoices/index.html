@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e94b1b">
+<meta name="description" content="ع الحلة – إدارة العملاء والفواتير">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>ع الحلة | العملاء والفواتير</title>
+<style>
+:root{--orange:#e94b1b;--red:#a92f20;--cream:#fff4e5;--ink:#292522;--muted:#756d66;--line:#eadfd3;--paper:#fffdfa;--green:#287a51}
+*{box-sizing:border-box}body{margin:0;background:#f7f2ec;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+header{background:var(--orange);color:white;padding:20px 18px 24px;border-radius:0 0 24px 24px;box-shadow:0 4px 18px #7a2b171c}
+.brand{font-size:13px;opacity:.9}.headrow{display:flex;justify-content:space-between;align-items:center;gap:12px}.headrow h1{font-size:23px;margin:7px 0 4px}.sub{font-size:13px;opacity:.92}
+.pill{border:1px solid #ffffff70;border-radius:30px;padding:7px 11px;font-size:11px;white-space:nowrap}
+main{max-width:760px;margin:auto;padding:16px 14px 42px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 16px}
+.tab{border:1px solid var(--line);background:white;border-radius:13px;padding:12px 5px;color:var(--muted);font-weight:700;font-size:13px}
+.tab.active{background:var(--cream);border-color:#edb18f;color:var(--red)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 4px 14px #5b35100a}
+h2{font-size:17px;margin:0 0 6px}.hint{font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 13px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+input,textarea,select{width:100%;border:1px solid #dfd4c9;border-radius:12px;padding:12px;background:white;color:var(--ink);font:inherit;font-size:14px;outline:none}
+textarea{min-height:145px;resize:vertical;line-height:1.7}input:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px #e94b1b18}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:12px;padding:13px 15px;font:inherit;font-weight:800;cursor:pointer}
+.primary{background:var(--orange);color:white;width:100%;margin-top:13px}.secondary{background:var(--cream);color:var(--red);border:1px solid #efc5aa}
+.result{display:none}.result.show{display:block}.notice{background:#fff4df;border:1px solid #f0d49b;border-radius:12px;padding:11px 12px;color:#72501b;font-size:12px;line-height:1.7;margin-top:12px}
+.status{font-size:12px;color:var(--green);font-weight:700}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.headrow h1{font-size:20px}}
+</style>
+</head>
+<body>
+<header><div class="headrow"><div><div class="brand">3AL7ELLA · نظام داخلي</div><h1>إدارة العملاء والفواتير</h1><div class="sub">أكل بيتي حقيقي · تنظيم الطلبات وسجل العملاء</div></div><div class="pill">نسخة تأسيسية</div></div></header>
+<main>
+<nav class="tabs" aria-label="الأقسام"><button class="tab active" type="button">فاتورة جديدة</button><button class="tab" type="button" onclick="alert('قسم العملاء سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">العملاء</button><button class="tab" type="button" onclick="alert('سجل الفواتير سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">الفواتير</button></nav>
+<section class="card">
+<h2>استقبال رسالة العميل</h2>
+<p class="hint">الصق رسالة واتساب كما وصلتك. جهّز مسودة أولية للمراجعة قبل اعتماد أي فاتورة.</p>
+<label for="raw">رسالة العميل</label>
+<textarea id="raw" placeholder="مثال: الاسم، رقم الموبايل، العنوان، والأصناف المطلوبة..."></textarea>
+<button class="primary" id="parse">استخراج بيانات المسودة</button>
+<div class="notice">تنبيه: هذه النسخة لا تحفظ بيانات ولا ترسل شيئًا للحسابات بعد. الحفظ والمزامنة لن يتفعّلا إلا بعد تأمين تسجيل الدخول وربط قاعدة البيانات.</div>
+</section>
+<section class="card result" id="review">
+<div class="row"><h2>مراجعة المسودة</h2><span class="status">غير معتمدة</span></div>
+<p class="hint">راجع وعدّل البيانات يدويًا. لا تعتمد المسودة قبل التأكد من رقم الهاتف والأسعار والتفاصيل.</p>
+<div class="grid"><div><label for="name">اسم العميل</label><input id="name" placeholder="اسم العميل"></div><div><label for="phone">رقم الهاتف</label><input id="phone" inputmode="tel" placeholder="01xxxxxxxxx"></div></div>
+<label for="address">العنوان</label><input id="address" placeholder="العنوان بالتفصيل">
+<label for="items">الأصناف والكميات كما وردت</label><textarea id="items" placeholder="اكتب الأصناف والكميات..."></textarea>
+<label for="notes">ملاحظات / موعد التسليم</label><input id="notes" placeholder="أي تفاصيل إضافية">
+<div class="notice">الأسعار والإجمالي غير محسوبين تلقائيًا في هذه المرحلة؛ يلزم مطابقة الأصناف مع قائمة الأسعار المعتمدة.</div>
+<button class="secondary" type="button" onclick="window.print()" style="width:100%;margin-top:12px">طباعة المسودة / حفظ PDF</button>
+</section>
+<footer>ع الحلة · نظام داخلي للفريق فقط</footer>
+</main>
+<script>
+const raw=document.getElementById('raw');
+document.getElementById('parse').addEventListener('click',()=>{
+ const t=raw.value.trim(); if(!t){alert('الصق رسالة العميل الأول.');return}
+ const digits=s=>s.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+ const text=digits(t); const m=text.match(/(?:\+?20|0020|0)?1[0125]\d{8}/);
+ document.getElementById('phone').value=m?m[0]:'';
+ const lines=t.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+ document.getElementById('name').value='';
+ document.getElementById('address').value='';
+ document.getElementById('items').value=lines.join('\n');
+ document.getElementById('notes').value='';
+ document.getElementById('review').classList.add('show');
+ document.getElementById('review').scrollIntoView({behavior:'smooth',block:'start'});
+});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+</script>
+</body></html>
