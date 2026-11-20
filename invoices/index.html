@@ -44,14 +44,16 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <button class="secondary" id="sign-out" style="display:none;width:100%">تسجيل الخروج</button>
 </section>
 <div id="app-shell" style="display:none">
-<nav class="tabs" aria-label="الأقسام"><button class="tab active" type="button">فاتورة جديدة</button><button class="tab" type="button" onclick="alert('قسم العملاء سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">العملاء</button><button class="tab" type="button" onclick="alert('سجل الفواتير سيتفعل بعد ربط قاعدة البيانات وتسجيل الدخول.')">الفواتير</button></nav>
+<nav class="tabs" aria-label="الأقسام"><button class="tab active" data-view="new" type="button">فاتورة جديدة</button><button class="tab" data-view="customers" type="button">العملاء</button><button class="tab" data-view="invoices" type="button">الفواتير</button></nav>
+<section class="card" id="customers-view" style="display:none"><div class="row"><h2>ملفات العملاء</h2><button class="secondary" id="refresh-customers">تحديث</button></div><input id="customer-search" placeholder="بحث بالاسم أو الهاتف"><div id="customers-list" class="hint"></div></section>
+<section class="card" id="invoices-view" style="display:none"><div class="row"><h2>سجل الفواتير</h2><button class="secondary" id="refresh-invoices">تحديث</button></div><div id="invoices-list" class="hint"></div></section>
 <section class="card">
 <h2>استقبال رسالة العميل</h2>
 <p class="hint">الصق رسالة واتساب كما وصلتك. جهّز مسودة أولية للمراجعة قبل اعتماد أي فاتورة.</p>
 <label for="raw">رسالة العميل</label>
 <textarea id="raw" placeholder="مثال: الاسم، رقم الموبايل، العنوان، والأصناف المطلوبة..."></textarea>
 <button class="primary" id="parse">استخراج بيانات المسودة</button>
-<div class="notice">تنبيه: هذه النسخة لا تحفظ بيانات ولا ترسل شيئًا للحسابات بعد. الحفظ والمزامنة لن يتفعّلا إلا بعد تأمين تسجيل الدخول وربط قاعدة البيانات.</div>
+<div class="notice">راجع بيانات العميل والأصناف قبل الاعتماد. لا يتم الحفظ إلا بعد موافقتك.</div>
 </section>
 <section class="card result" id="review">
 <div class="row"><h2>مراجعة المسودة</h2><span class="status">غير معتمدة</span></div>
@@ -60,7 +62,11 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <label for="address">العنوان</label><input id="address" placeholder="العنوان بالتفصيل">
 <label for="items">الأصناف والكميات كما وردت</label><textarea id="items" placeholder="اكتب الأصناف والكميات..."></textarea>
 <label for="notes">ملاحظات / موعد التسليم</label><input id="notes" placeholder="أي تفاصيل إضافية">
-<div class="notice">الأسعار والإجمالي غير محسوبين تلقائيًا في هذه المرحلة؛ يلزم مطابقة الأصناف مع قائمة الأسعار المعتمدة.</div>
+<label for="priced-items">الأصناف والأسعار (سطر لكل صنف: الاسم | الكمية | الوحدة | سعر الوحدة)</label><textarea id="priced-items" placeholder="محشي كرنب | 2 | كيلو | 180"></textarea>
+<div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="0"></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
+<div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
+<div class="notice">راجع الأسعار يدويًا من المنيو المعتمد. لن يتم تخمين سعر أو تعديل المنيو تلقائيًا.</div>
+<div class="row"><strong>الإجمالي: <span id="invoice-total">0.00</span> جنيه</strong><button class="primary" id="approve-invoice" style="width:auto">اعتماد وحفظ</button></div><p id="save-message" class="hint" aria-live="polite"></p>
 <button class="secondary" type="button" onclick="window.print()" style="width:100%;margin-top:12px">طباعة المسودة / حفظ PDF</button>
 </section>
 <footer>ع الحلة · نظام داخلي للفريق فقط</footer></div>
@@ -135,4 +141,37 @@ document.getElementById('parse').addEventListener('click',()=>{
 });
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 </script>
-</body></html>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>(Number(n)||0).toFixed(2);
+const views={new:['raw','review'],customers:['customers-view'],invoices:['invoices-view']};
+function show(k){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===k));Object.entries(views).forEach(([key,ids])=>ids.forEach(id=>$(id).style.display=key===k?'block':'none'));if(k==='customers')loadCustomers();if(k==='invoices')loadInvoices()}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
+function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:Number(p[1]),unit:p[2]||'',unit_price:Number(p[3]),notes:''}})}
+function totals(){const subtotal=items().reduce((a,x)=>a+x.quantity*x.unit_price,0),delivery_fee=Number($('delivery-fee').value||0),discount=Number($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
+['priced-items','delivery-fee','discount'].forEach(id=>$(id).addEventListener('input',()=>{$('invoice-total').textContent=money(totals().total)}));
+$('approve-invoice').addEventListener('click',async()=>{
+const msg=$('save-message'),it=items(),t=totals(),phone=normalizeEgyptPhone($('phone').value);
+if(!$('name').value.trim()){msg.textContent='اسم العميل مطلوب.';return}
+if($('phone').value.trim()&&!phone){msg.textContent='رقم الهاتف غير صحيح.';return}
+if(!it.length||it.some(x=>!x.name||!(x.quantity>0)||!(x.unit_price>=0))){msg.textContent='راجع سطور الأصناف: الاسم والكمية والسعر مطلوبة.';return}
+if(t.total<0){msg.textContent='الإجمالي غير صحيح.';return}
+if(!confirm('هل راجعت البيانات والأسعار وتوافق على اعتماد الفاتورة؟'))return;
+const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
+const btn=$('approve-invoice');btn.disabled=true;msg.textContent='جارٍ الحفظ...';
+const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
+const {data,error}=await supabaseClient.rpc('approve_and_save_invoice',{p_invoice:payload});btn.disabled=false;
+if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
+msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
+$('raw').value='';$('priced-items').value='';$('review').classList.remove('show');$('invoice-total').textContent='0.00';
+});
+let customerRows=[];
+async function loadCustomers(){const box=$('customers-list');box.textContent='جارٍ تحميل العملاء...';const {data,error}=await supabaseClient.from('customers').select('full_name,primary_phone,normalized_phone,orders_count,lifetime_value').order('updated_at',{ascending:false}).limit(500);if(error){box.textContent='خطأ تحميل العملاء: '+error.message;return}customerRows=data||[];renderCustomers()}
+function renderCustomers(){const q=$('customer-search').value.trim().toLowerCase(),rows=customerRows.filter(x=>(x.full_name||'').toLowerCase().includes(q)||(x.normalized_phone||'').includes(q));$('customers-list').innerHTML=rows.length?rows.map(x=>'<div class="card"><b>'+esc(x.full_name)+'</b><div class="hint">'+esc(x.primary_phone||'')+' · فواتير: '+x.orders_count+' · إجمالي: '+money(x.lifetime_value)+' جنيه</div></div>').join(''):'لا يوجد عملاء.'}
+$('customer-search').addEventListener('input',renderCustomers);$('refresh-customers').addEventListener('click',loadCustomers);
+async function loadInvoices(){const box=$('invoices-list');box.textContent='جارٍ تحميل الفواتير...';const {data,error}=await supabaseClient.from('invoices').select('invoice_number,invoice_date,status,customer_snapshot,totals_snapshot').order('invoice_date',{ascending:false}).limit(500);if(error){box.textContent='خطأ تحميل الفواتير: '+error.message;return}box.innerHTML=data?.length?data.map(x=>'<div class="card"><b>فاتورة '+x.invoice_number+'</b><div class="hint">'+esc(x.customer_snapshot?.name)+' · '+esc(x.customer_snapshot?.phone)+'<br>'+new Date(x.invoice_date).toLocaleString('ar-EG')+' · '+money(x.totals_snapshot?.total)+' جنيه · '+esc(x.status)+'</div></div>').join(''):'لا توجد فواتير.'}
+$('refresh-invoices').addEventListener('click',loadInvoices);
+})();
+</script></body></html>
