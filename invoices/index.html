@@ -69,6 +69,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <script>
 const SUPABASE_URL='https://nxdghlshuumicvsottoy.supabase.co';
 const SUPABASE_KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
+const AUTH_REDIRECT_URL='https://3al7ella.github.io/invoices/';
 const authMessage=document.getElementById('auth-message');
 const authCard=document.getElementById('auth-card');
 const appShell=document.getElementById('app-shell');
@@ -91,7 +92,7 @@ if(window.supabase?.createClient){
  supabaseClient.auth.getSession().then(({data})=>activate(data.session));
  document.getElementById('send-link').addEventListener('click',async()=>{
   authMessage.textContent='جارٍ إرسال رابط الدخول...';
-  const {error}=await supabaseClient.auth.signInWithOtp({email:'Hamdyuwk1@gmail.com',options:{emailRedirectTo:location.href,shouldCreateUser:true}});
+  const {error}=await supabaseClient.auth.signInWithOtp({email:'hamdyuwk1@gmail.com',options:{emailRedirectTo:AUTH_REDIRECT_URL,shouldCreateUser:false}});
   authMessage.textContent=error?'تعذر إرسال الرابط: '+error.message:'تم طلب رابط الدخول. افتح بريدك واضغط الرابط للعودة للنظام.';
  });
  signOutButton.addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload()});
