@@ -89,7 +89,7 @@ let supabaseClient=null;
 if(window.supabase?.createClient){
  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
  const activate=async(session)=>{
-  if(!session){appShell.style.display='none';authCard.style.display='block';return}
+  if(!session){location.replace('./enter.html');return}
   const {data:profile,error}=await supabaseClient.from('profiles').select('role,active').eq('id',session.user.id).maybeSingle();
   if(error||!profile||profile.active!==true||!['owner','admin','staff','viewer'].includes(profile.role)){
    await supabaseClient.auth.signOut();
