@@ -1,0 +1,12 @@
+{
+  "name": "ع الحلة – إدارة العملاء والفواتير",
+  "short_name": "ع الحلة فواتير",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f2ec",
+  "theme_color": "#e94b1b",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
