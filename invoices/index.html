@@ -41,8 +41,9 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <input id="login-email" type="email" autocomplete="username" value="Hamdyuwk1@gmail.com" readonly>
 <label for="login-password">كلمة المرور</label>
 <input id="login-password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-<button class="primary" id="login-button">دخول</button>
-<button class="secondary" id="reset-password" style="width:100%;margin-top:9px">إنشاء / استعادة كلمة المرور</button>
+<button class="primary" id="login-button">دخول بكلمة المرور</button>
+<button class="secondary" id="magic-login" style="width:100%;margin-top:9px">دخول مباشر برابط على الإيميل</button>
+<button class="secondary" id="reset-password" style="width:100%;margin-top:9px">استعادة كلمة المرور</button>
 <div id="recovery-box" style="display:none"><label for="new-password">كلمة المرور الجديدة</label><input id="new-password" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل"><button class="primary" id="save-password">حفظ كلمة المرور</button></div>
 <p class="hint" id="auth-message" aria-live="polite"></p>
 <button class="secondary" id="sign-out" style="display:none;width:100%">تسجيل الخروج</button>
@@ -107,6 +108,11 @@ if(window.supabase?.createClient){
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
   if(error){authMessage.textContent='تعذر الدخول: '+error.message;return}
   await activate(data.session);
+ });
+ document.getElementById('magic-login').addEventListener('click',async()=>{
+  authMessage.textContent='جارٍ إرسال رابط الدخول...';
+  const {error}=await supabaseClient.auth.signInWithOtp({email:'hamdyuwk1@gmail.com',options:{shouldCreateUser:false,emailRedirectTo:AUTH_REDIRECT_URL}});
+  authMessage.textContent=error?'تعذر إرسال رابط الدخول: '+error.message:'تم إرسال رابط دخول آمن إلى بريد المدير. افتح الرسالة واضغط الرابط، وسيتم فتح النظام مباشرة.';
  });
  document.getElementById('reset-password').addEventListener('click',async()=>{
   authMessage.textContent='جارٍ إرسال رابط إعداد كلمة المرور إلى بريد المدير...';
