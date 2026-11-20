@@ -47,7 +47,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <nav class="tabs" aria-label="الأقسام"><button class="tab active" data-view="new" type="button">فاتورة جديدة</button><button class="tab" data-view="customers" type="button">العملاء</button><button class="tab" data-view="invoices" type="button">الفواتير</button></nav>
 <section class="card" id="customers-view" style="display:none"><div class="row"><h2>ملفات العملاء</h2><button class="secondary" id="refresh-customers">تحديث</button></div><input id="customer-search" placeholder="بحث بالاسم أو الهاتف"><div id="customers-list" class="hint"></div></section>
 <section class="card" id="invoices-view" style="display:none"><div class="row"><h2>سجل الفواتير</h2><button class="secondary" id="refresh-invoices">تحديث</button></div><div id="invoices-list" class="hint"></div></section>
-<section class="card">
+<section class="card" id="new-invoice-view">
 <h2>استقبال رسالة العميل</h2>
 <p class="hint">الصق رسالة واتساب كما وصلتك. جهّز مسودة أولية للمراجعة قبل اعتماد أي فاتورة.</p>
 <label for="raw">رسالة العميل</label>
@@ -146,7 +146,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 (function(){
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>(Number(n)||0).toFixed(2);
-const views={new:['raw','review'],customers:['customers-view'],invoices:['invoices-view']};
+const views={new:['new-invoice-view','review'],customers:['customers-view'],invoices:['invoices-view']};
 function show(k){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===k));Object.entries(views).forEach(([key,ids])=>ids.forEach(id=>$(id).style.display=key===k?'block':'none'));if(k==='customers')loadCustomers();if(k==='invoices')loadInvoices()}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
 function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:Number(p[1]),unit:p[2]||'',unit_price:Number(p[3]),notes:''}})}
