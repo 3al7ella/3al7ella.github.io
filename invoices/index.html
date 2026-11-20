@@ -36,10 +36,14 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <main>
 <section class="card" id="auth-card">
 <h2>دخول فريق ع الحلة</h2>
-<p class="hint">الدخول مخصص لحساب المدير المعتمد فقط. سنرسل رابط دخول لمرة واحدة إلى بريدك.</p>
+<p class="hint">ادخل بنفس طريقة موقع الحسابات: البريد الإلكتروني وكلمة المرور. هنحتفظ بتسجيل الدخول على جهازك.</p>
 <label for="login-email">البريد الإلكتروني</label>
-<input id="login-email" type="email" autocomplete="email" value="Hamdyuwk1@gmail.com" readonly>
-<button class="primary" id="send-link">إرسال رابط الدخول</button>
+<input id="login-email" type="email" autocomplete="username" value="Hamdyuwk1@gmail.com" readonly>
+<label for="login-password">كلمة المرور</label>
+<input id="login-password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
+<button class="primary" id="login-button">دخول</button>
+<button class="secondary" id="reset-password" style="width:100%;margin-top:9px">إنشاء / استعادة كلمة المرور</button>
+<div id="recovery-box" style="display:none"><label for="new-password">كلمة المرور الجديدة</label><input id="new-password" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل"><button class="primary" id="save-password">حفظ كلمة المرور</button></div>
 <p class="hint" id="auth-message" aria-live="polite"></p>
 <button class="secondary" id="sign-out" style="display:none;width:100%">تسجيل الخروج</button>
 </section>
@@ -94,12 +98,27 @@ if(window.supabase?.createClient){
   authMessage.textContent='تم تسجيل الدخول بنجاح.';
   authCard.style.display='none';appShell.style.display='block';signOutButton.style.display='block';
  };
- supabaseClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>activate(session),0)});
+ supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){document.getElementById('recovery-box').style.display='block';authMessage.textContent='اكتب كلمة مرور جديدة للحساب.'}else setTimeout(()=>activate(session),0)});
  supabaseClient.auth.getSession().then(({data})=>activate(data.session));
- document.getElementById('send-link').addEventListener('click',async()=>{
-  authMessage.textContent='جارٍ إرسال رابط الدخول...';
-  const {error}=await supabaseClient.auth.signInWithOtp({email:'hamdyuwk1@gmail.com',options:{emailRedirectTo:AUTH_REDIRECT_URL,shouldCreateUser:false}});
-  authMessage.textContent=error?'تعذر إرسال الرابط: '+error.message:'تم طلب رابط الدخول. افتح بريدك واضغط الرابط للعودة للنظام.';
+ document.getElementById('login-button').addEventListener('click',async()=>{
+  const email='hamdyuwk1@gmail.com',password=document.getElementById('login-password').value;
+  if(!password){authMessage.textContent='اكتب كلمة المرور.';return}
+  authMessage.textContent='جارٍ تسجيل الدخول...';
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){authMessage.textContent='تعذر الدخول: '+error.message;return}
+  await activate(data.session);
+ });
+ document.getElementById('reset-password').addEventListener('click',async()=>{
+  authMessage.textContent='جارٍ إرسال رابط إعداد كلمة المرور إلى بريد المدير...';
+  const {error}=await supabaseClient.auth.resetPasswordForEmail('hamdyuwk1@gmail.com',{redirectTo:AUTH_REDIRECT_URL});
+  authMessage.textContent=error?'تعذر إرسال الرابط: '+error.message:'تم إرسال رابط إعداد كلمة المرور. استخدمه مرة واحدة فقط، وبعدها الدخول هيكون بالبريد وكلمة المرور.';
+ });
+ document.getElementById('save-password').addEventListener('click',async()=>{
+  const password=document.getElementById('new-password').value;
+  if(password.length<8){authMessage.textContent='كلمة المرور لازم تكون 8 أحرف على الأقل.';return}
+  const {error}=await supabaseClient.auth.updateUser({password});
+  authMessage.textContent=error?'تعذر حفظ كلمة المرور: '+error.message:'تم حفظ كلمة المرور. سجل دخولك بها من الآن.';
+  if(!error)document.getElementById('recovery-box').style.display='none';
  });
  signOutButton.addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload()});
 }else{authMessage.textContent='تعذر تحميل خدمة تسجيل الدخول. تأكد من الاتصال بالإنترنت وأعد فتح الصفحة.'}
