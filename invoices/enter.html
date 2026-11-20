@@ -21,14 +21,8 @@ button.enter{width:100%;border:0;border-radius:13px;background:var(--orange);col
  <div class="brand"><div class="mark">ع الحلة</div><small>3AL7ELLA · TEAM ACCESS</small><h1>أهلاً بيك</h1><p>الدخول لإدارة العملاء والفواتير</p></div>
  <section class="card">
   <h2>دخول سريع</h2>
-  <p class="hint">استخدم نفس حساب المالك الحالي. بعد أول دخول ناجح، الجهاز هيفتكر الجلسة ومش هتحتاج تدخل كلمة المرور كل مرة.</p>
-  <form id="login-form">
-   <label for="email">البريد الإلكتروني</label>
-   <input class="email" id="email" type="email" value="Hamdyuwk1@gmail.com" readonly autocomplete="username">
-   <label for="password">كلمة المرور</label>
-   <div class="pass-wrap"><input id="password" type="password" placeholder="اكتب كلمة المرور" autocomplete="current-password" required><button class="show" id="toggle" type="button">إظهار</button></div>
-   <button class="enter" id="submit" type="submit">دخول للنظام</button>
-  </form>
+  <p class="hint">ادخل بحساب Google المصرّح له. مش هتحتاج كلمة مرور منفصلة للنظام أو رسالة استعادة على البريد.</p>
+  <button class="enter" id="google-login" type="button">🌐 الدخول باستخدام Google</button>
   <p class="msg" id="message" role="status" aria-live="polite"></p>
   <p class="secure">🔒 دخول آمن بنفس صلاحيات حسابك الحالي</p>
  </section>
@@ -40,7 +34,7 @@ const URL='https://nxdghlshuumicvsottoy.supabase.co';
 const KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
 const DEST='./index.html';
 const msg=document.getElementById('message');
-const btn=document.getElementById('submit');
+const btn=document.getElementById('google-login');
 const client=window.supabase?.createClient(URL,KEY);
 if(!client){msg.textContent='تعذر تحميل خدمة الدخول. راجع اتصال الإنترنت ثم أعد المحاولة.'}
 else{
@@ -49,20 +43,12 @@ else{
   const {data:profile}=await client.from('profiles').select('role,active').eq('id',data.session.user.id).maybeSingle();
   if(profile?.active===true&&['owner','admin','staff','viewer'].includes(profile.role))location.replace(DEST);
  });
- document.getElementById('toggle').addEventListener('click',()=>{
-  const p=document.getElementById('password'),show=p.type==='password';p.type=show?'text':'password';document.getElementById('toggle').textContent=show?'إخفاء':'إظهار';
- });
- document.getElementById('login-form').addEventListener('submit',async e=>{
-  e.preventDefault();if(btn.disabled)return;
-  const password=document.getElementById('password').value;
-  btn.disabled=true;btn.textContent='جارٍ التحقق...';msg.textContent='';
-  const {data,error}=await client.auth.signInWithPassword({email:'hamdyuwk1@gmail.com',password});
-  if(error){msg.textContent=error.message==='Invalid login credentials'?'بيانات الدخول غير صحيحة. راجع كلمة المرور.':'تعذر الدخول: '+error.message;btn.disabled=false;btn.textContent='دخول للنظام';return}
-  const {data:profile,error:profileError}=await client.from('profiles').select('role,active').eq('id',data.user.id).maybeSingle();
-  if(profileError||!profile||profile.active!==true||!['owner','admin','staff','viewer'].includes(profile.role)){
-   await client.auth.signOut();msg.textContent='الحساب غير مفعّل للدخول. لم يتم تغيير أي صلاحيات.';btn.disabled=false;btn.textContent='دخول للنظام';return;
-  }
-  msg.textContent='تم الدخول بنجاح. بنفتح النظام...';location.replace(DEST);
+ const authError=new URLSearchParams(location.search).get('error_description');
+ if(authError)msg.textContent='تعذر إكمال دخول Google: '+authError;
+ btn.addEventListener('click',async()=>{
+  if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ فتح Google...';msg.textContent='';
+  const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://3al7ella.github.io/invoices/enter.html',queryParams:{prompt:'select_account'}}});
+  if(error){msg.textContent='تعذر بدء دخول Google: '+error.message;btn.disabled=false;btn.textContent='🌐 الدخول باستخدام Google';}
  });
 }
 </script>
