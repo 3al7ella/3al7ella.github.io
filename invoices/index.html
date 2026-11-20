@@ -65,7 +65,37 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 </section>
 <footer>ع الحلة · نظام داخلي للفريق فقط</footer></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL='https://nxdghlshuumicvsottoy.supabase.co';
+const SUPABASE_KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
+const authMessage=document.getElementById('auth-message');
+const authCard=document.getElementById('auth-card');
+const appShell=document.getElementById('app-shell');
+const signOutButton=document.getElementById('sign-out');
+let supabaseClient=null;
+if(window.supabase?.createClient){
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const activate=async(session)=>{
+  if(!session){appShell.style.display='none';authCard.style.display='block';return}
+  const {data:profile,error}=await supabaseClient.from('profiles').select('role,active').eq('id',session.user.id).maybeSingle();
+  if(error||!profile||profile.active!==true||!['owner','admin','staff','viewer'].includes(profile.role)){
+   await supabaseClient.auth.signOut();
+   authMessage.textContent='الحساب غير معتمد لدخول النظام. تواصل مع المدير.';
+   return;
+  }
+  authMessage.textContent='تم تسجيل الدخول بنجاح.';
+  authCard.style.display='none';appShell.style.display='block';signOutButton.style.display='block';
+ };
+ supabaseClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>activate(session),0)});
+ supabaseClient.auth.getSession().then(({data})=>activate(data.session));
+ document.getElementById('send-link').addEventListener('click',async()=>{
+  authMessage.textContent='جارٍ إرسال رابط الدخول...';
+  const {error}=await supabaseClient.auth.signInWithOtp({email:'Hamdyuwk1@gmail.com',options:{emailRedirectTo:location.href,shouldCreateUser:true}});
+  authMessage.textContent=error?'تعذر إرسال الرابط: '+error.message:'تم طلب رابط الدخول. افتح بريدك واضغط الرابط للعودة للنظام.';
+ });
+ signOutButton.addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload()});
+}else{authMessage.textContent='تعذر تحميل خدمة تسجيل الدخول. تأكد من الاتصال بالإنترنت وأعد فتح الصفحة.'}
 const raw=document.getElementById('raw');
 const toLatinDigits=s=>String(s||'').replace(/[٠-٩۰-۹]/g,ch=>{
  const a='٠١٢٣٤٥٦٧٨٩',p='۰۱۲۳۴۵۶۷۸۹';const i=a.indexOf(ch);return String(i>=0?i:p.indexOf(ch));
