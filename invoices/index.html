@@ -57,16 +57,38 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 </main>
 <script>
 const raw=document.getElementById('raw');
+const toLatinDigits=s=>String(s||'').replace(/[٠-٩۰-۹]/g,ch=>{
+ const a='٠١٢٣٤٥٦٧٨٩',p='۰۱۲۳۴۵۶۷۸۹';const i=a.indexOf(ch);return String(i>=0?i:p.indexOf(ch));
+});
+const normalizeEgyptPhone=value=>{
+ let d=toLatinDigits(value).replace(/[^0-9]/g,'');
+ if(d.startsWith('0020'))d=d.slice(4);
+ else if(d.startsWith('20')&&d.length===12)d=d.slice(2);
+ if(d.length===10&&/^1[0125]/.test(d))d='0'+d;
+ return /^01[0125][0-9]{8}$/.test(d)?d:'';
+};
+const labeled=(lines,patterns)=>{
+ const i=lines.findIndex(line=>patterns.some(p=>p.test(line)));
+ if(i<0)return '';
+ return lines[i].replace(/^[^:：-]+[:：-]\s*/,'').trim();
+};
 document.getElementById('parse').addEventListener('click',()=>{
  const t=raw.value.trim(); if(!t){alert('الصق رسالة العميل الأول.');return}
- const digits=s=>s.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
- const text=digits(t); const m=text.match(/(?:\+?20|0020|0)?1[0125]\d{8}/);
- document.getElementById('phone').value=m?m[0]:'';
  const lines=t.split(/\n+/).map(x=>x.trim()).filter(Boolean);
- document.getElementById('name').value='';
- document.getElementById('address').value='';
- document.getElementById('items').value=lines.join('\n');
- document.getElementById('notes').value='';
+ const name=labeled(lines,[/^(?:اسم العميل|الاسم|اسم)\s*[:：-]/i]);
+ const address=labeled(lines,[/^(?:عنوان التوصيل|العنوان بالتفصيل|العنوان)\s*[:：-]/i]);
+ const phoneLine=lines.find(x=>/(?:رقم(?:\s*(?:الموبايل|الهاتف|التليفون))?|موبايل|تليفون|phone)\s*[:：-]/i.test(x))||'';
+ const phoneCandidate=phoneLine||toLatinDigits(t);
+ const match=toLatinDigits(phoneCandidate).match(/(?:\+?20|0020|0)?1[0125][0-9\s().-]{8,14}/);
+ const phone=normalizeEgyptPhone(match?match[0]:'');
+ const notes=labeled(lines,[/^(?:ملاحظات|ميعاد التسليم|موعد التسليم)\s*[:：-]/i]);
+ const excluded=/^(?:اسم العميل|الاسم|اسم|عنوان التوصيل|العنوان بالتفصيل|العنوان|رقم(?:\s*(?:الموبايل|الهاتف|التليفون))?|موبايل|تليفون|phone|ملاحظات|ميعاد التسليم|موعد التسليم)\s*[:：-]/i;
+ const itemLines=lines.filter(line=>!excluded.test(line));
+ document.getElementById('name').value=name;
+ document.getElementById('phone').value=phone;
+ document.getElementById('address').value=address;
+ document.getElementById('items').value=itemLines.join('\n')||t;
+ document.getElementById('notes').value=notes;
  document.getElementById('review').classList.add('show');
  document.getElementById('review').scrollIntoView({behavior:'smooth',block:'start'});
 });
