@@ -132,7 +132,7 @@ Do not auto-generate historical attendance or payroll entries until the current 
 - Core tables: `profiles`, `customers`, `customer_addresses`, `orders`, `order_items`, `invoices`, `product_catalog`, import review tables, and audit log.
 - Active catalog seeded from the current storefront menu: 220 active products/offers across 25 categories. The invoice UI can select current catalog items and validate their current price at save time. Owner/admin can refresh the catalog from the live menu; inactive menu entries are deactivated in the CRM catalog.
 - Customer matching uses normalized Egyptian mobile number, protected by a unique partial index.
-- Invoice approval validates the mobile number, item totals, delivery/discount arithmetic, and selected catalog prices; it also stores the delivery address in the customer's address book.
+- Invoice approval requires every line item to come from the approved catalog, validates the mobile number, item totals, delivery/discount arithmetic, and current catalog prices; it also stores the delivery address in the customer's address book.
 - Invoice saves carry a client request UUID protected by a unique index, so retrying the same save request returns the already-created invoice instead of duplicating it.
 - The app has a print/PDF layout for drafts and saved invoices.
 - The invoice RPC runs as SECURITY INVOKER, is executable by authenticated users only, and separately checks active owner/admin/staff role. Product catalog writes are restricted to owner/admin.
