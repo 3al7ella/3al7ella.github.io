@@ -51,12 +51,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <section class="card" id="auth-card">
 <h2>التحقق من الدخول</h2>
 <p class="hint" id="auth-message" aria-live="polite">جارٍ التحقق من جلسة الدخول الآمنة...</p>
-<div hidden>
-<label for="login-email">البريد الإلكتروني</label><input id="login-email" type="email" value="Hamdyuwk1@gmail.com" readonly>
-<label for="login-password">كلمة المرور</label><input id="login-password" type="password">
-<button id="login-button" type="button">دخول</button><button id="magic-login" type="button">رابط دخول</button><button id="reset-password" type="button">استعادة</button>
-<div id="recovery-box"><input id="new-password" type="password"><button id="save-password" type="button">حفظ</button></div>
-</div>
+
 </section>
 <div id="app-shell" style="display:none">
 <div class="row" style="justify-content:space-between;flex-wrap:wrap;margin:0 0 12px"><button class="secondary" id="print-last-invoice" type="button" hidden>طباعة آخر فاتورة</button><button class="secondary" id="sign-out" type="button" style="display:none">تسجيل الخروج</button></div>
@@ -91,7 +86,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
  <button class="secondary" id="sync-menu" type="button" hidden>تحديث الأصناف والأسعار من المنيو</button>
 </div>
 <p class="hint" id="product-message" aria-live="polite">كل صنف لازم يتختار من المنيو المعتمد؛ النظام بيراجع السعر تلقائيًا قبل الحفظ.</p>
-<div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="60"><label class="inline-check"><input id="free-delivery" type="checkbox"> توصيل مجاني مع عرض فراخ</label></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
+<div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="60"><label class="inline-check"><input id="free-delivery" type="checkbox"> أؤكد أن الطلب ضمن عرض فراخ يشمل التوصيل المجاني</label></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
 <p class="hint">التوصيل 60 جنيه افتراضيًا، ومجاني تلقائيًا عند وصول الأصناف إلى 1000 جنيه أو عند تحديد عرض فراخ يشمل التوصيل.</p>
 <div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
 <div class="notice">لا يمكن اعتماد صنف خارج كتالوج المنيو. النظام يراجع السعر المعتمد تلقائيًا ويرفض أي سعر مختلف.</div>
@@ -105,7 +100,6 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <script>
 const SUPABASE_URL='https://nxdghlshuumicvsottoy.supabase.co';
 const SUPABASE_KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
-const AUTH_REDIRECT_URL='https://3al7ella.github.io/invoices/';
 const authMessage=document.getElementById('auth-message');
 const authCard=document.getElementById('auth-card');
 const appShell=document.getElementById('app-shell');
@@ -126,33 +120,8 @@ if(window.supabase?.createClient){
   authCard.style.display='none';appShell.style.display='block';signOutButton.style.display='block';
   document.dispatchEvent(new CustomEvent('crm:ready',{detail:{role:profile.role}}));
  };
- supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){document.getElementById('recovery-box').style.display='block';authMessage.textContent='اكتب كلمة مرور جديدة للحساب.'}else setTimeout(()=>activate(session),0)});
+ supabaseClient.auth.onAuthStateChange((event,session)=>setTimeout(()=>activate(session),0));
  supabaseClient.auth.getSession().then(({data})=>activate(data.session));
- document.getElementById('login-button').addEventListener('click',async()=>{
-  const email='hamdyuwk1@gmail.com',password=document.getElementById('login-password').value;
-  if(!password){authMessage.textContent='اكتب كلمة المرور.';return}
-  authMessage.textContent='جارٍ تسجيل الدخول...';
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){authMessage.textContent='تعذر الدخول: '+error.message;return}
-  await activate(data.session);
- });
- document.getElementById('magic-login').addEventListener('click',async()=>{
-  authMessage.textContent='جارٍ إرسال رابط الدخول...';
-  const {error}=await supabaseClient.auth.signInWithOtp({email:'hamdyuwk1@gmail.com',options:{shouldCreateUser:false,emailRedirectTo:AUTH_REDIRECT_URL}});
-  authMessage.textContent=error?'تعذر إرسال رابط الدخول: '+error.message:'تم إرسال رابط دخول آمن إلى بريد المدير. افتح الرسالة واضغط الرابط، وسيتم فتح النظام مباشرة.';
- });
- document.getElementById('reset-password').addEventListener('click',async()=>{
-  authMessage.textContent='جارٍ إرسال رابط إعداد كلمة المرور إلى بريد المدير...';
-  const {error}=await supabaseClient.auth.resetPasswordForEmail('hamdyuwk1@gmail.com',{redirectTo:AUTH_REDIRECT_URL});
-  authMessage.textContent=error?'تعذر إرسال الرابط: '+error.message:'تم إرسال رابط إعداد كلمة المرور. استخدمه مرة واحدة فقط، وبعدها الدخول هيكون بالبريد وكلمة المرور.';
- });
- document.getElementById('save-password').addEventListener('click',async()=>{
-  const password=document.getElementById('new-password').value;
-  if(password.length<8){authMessage.textContent='كلمة المرور لازم تكون 8 أحرف على الأقل.';return}
-  const {error}=await supabaseClient.auth.updateUser({password});
-  authMessage.textContent=error?'تعذر حفظ كلمة المرور: '+error.message:'تم حفظ كلمة المرور. سجل دخولك بها من الآن.';
-  if(!error)document.getElementById('recovery-box').style.display='none';
- });
  signOutButton.addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload()});
 }else{authMessage.textContent='تعذر تحميل خدمة تسجيل الدخول. تأكد من الاتصال بالإنترنت وأعد فتح الصفحة.'}
 const raw=document.getElementById('raw');
@@ -235,12 +204,13 @@ if(!$('name').value.trim()){msg.textContent='اسم العميل مطلوب.';re
 if(!phone){msg.textContent='رقم موبايل مصري صحيح مطلوب لربط ملف العميل.';return}
 if(!it.length||it.some(x=>!x.name||!x.product_id||!(x.quantity>0)||!(x.unit_price>=0)||!Number.isFinite(x.quantity)||!Number.isFinite(x.unit_price))){msg.textContent='اختار كل الأصناف من المنيو المعتمد، وراجع الكمية والسعر.';return}
 if(t.subtotal+t.delivery_fee<t.discount||t.total<0){msg.textContent='الخصم أكبر من قيمة الفاتورة.';return}
+if(t.subtotal<1000&&t.delivery_fee===0&&!$('free-delivery').checked){msg.textContent='التوصيل المجاني الأقل من 1000 جنيه يحتاج تأكيد عرض فراخ يشمل التوصيل.';return}
 if(!confirm('هل راجعت البيانات والأسعار وتوافق على اعتماد الفاتورة؟'))return;
 const btn=$('approve-invoice');btn.disabled=true;
 try{
  const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
  msg.textContent='جارٍ الحفظ...';
- const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
+ const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,free_delivery_chicken_offer:$('free-delivery').checked,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
  const fingerprint=JSON.stringify(payload);
  let requestId;
  const createRequestId=()=>window.crypto?.randomUUID?window.crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)});
