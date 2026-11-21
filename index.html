@@ -1042,19 +1042,21 @@ async function sendOrder(){if(window.__CLOSED)return;
  try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
  const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(text);
  LAST={ref:REF,url,text};
- // افتح واتساب فور ضغطة العميل حتى لا يمنع المتصفح النافذة بعد انتظار الحفظ.
- const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
  const sendBtn=$('send');if(sendBtn)sendBtn.disabled=true;
+ // نفتح نافذة فاضية في نفس لحظة الضغطة عشان المتصفح ما يمنعهاش، وما نحوّلهاش لواتساب إلا بعد ما الأوردر يتسجل فعلًا.
+ let waWin=null;try{waWin=window.open('about:blank','_blank')}catch(_){}
  try{
   if(!window.FB||typeof FB.newId!=='function'||typeof FB.save!=='function')throw new Error('Firebase is not ready');
   const oid=FB.newId();
   const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),total:s+d,src:'site'+(SRC?'-'+SRC:'')};
   await FB.save(oid,payload);
+  if(waWin&&!waWin.closed){waWin.location.href=url}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
   T('purchase',{transaction_id:oid,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
   if(F.area)T('order_area',{area:F.area});
   STEP=4;
  }catch(err){
   console.error('Order save failed:',err);
+  if(waWin&&!waWin.closed)try{waWin.close()}catch(_){}
   STEP=5;
  }
  drawSheet();
