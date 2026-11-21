@@ -136,6 +136,7 @@ Do not auto-generate historical attendance or payroll entries until the current 
 - Invoice saves carry a client request UUID protected by a unique index, so retrying the same save request returns the already-created invoice instead of duplicating it.
 - The app has a print/PDF layout for drafts and saved invoices.
 - Invoice delivery defaults to 60 EGP, becomes free automatically when the item subtotal reaches 1,000 EGP, and can be marked free for an approved chicken offer; the server enforces the 1,000 EGP threshold.
+- The final invoice total is rounded to the nearest 5 EGP, and the rounding adjustment is saved in the invoice totals snapshot.
 - The invoice RPC runs as SECURITY INVOKER, is executable by authenticated users only, and separately checks active owner/admin/staff role. Product catalog writes are restricted to owner/admin.
 - 80 imported WhatsApp rows remain pending review. They have not been approved or imported into customers/orders/invoices.
 - Current CRM customer/order/invoice tables are empty; no production invoices have been created through this CRM yet.
