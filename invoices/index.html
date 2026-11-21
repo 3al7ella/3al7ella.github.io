@@ -209,9 +209,10 @@ function printMarkup(invoiceNo,status){
  const delivery=$('delivery-date').value,windowText=$('delivery-window').value.trim(),notes=$('notes').value.trim();
  return '<div dir="rtl"><h1>ع الحلة</h1><div class="meta">محاشي · خضار · وجبات | أكل بيتي حقيقي<br>فاتورة رقم: '+esc(invoiceNo)+' · '+esc(status)+'<br>'+new Date().toLocaleString('ar-EG')+'</div><p><b>العميل:</b> '+esc(name)+'<br><b>الموبايل:</b> '+esc(phone)+'<br><b>العنوان:</b> '+esc(address)+'<br><b>التسليم:</b> '+esc(delivery)+' '+esc(windowText)+'</p><table><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>'+lines+'</tbody></table><div class="totals"><div>قيمة الأصناف: '+money(t.subtotal)+' جنيه</div><div>التوصيل: '+money(t.delivery_fee)+' جنيه</div><div>الخصم: '+money(t.discount)+' جنيه</div><div class="grand">الإجمالي: '+money(t.total)+' جنيه</div></div>'+(notes?'<p>ملاحظات: '+esc(notes)+'</p>':'')+'<p style="margin-top:24px;font-size:12px">شكرًا لثقتكم في ع الحلة ❤️</p></div>';
 }
+let lastSavedPrintMarkup='';
 function printDraft(){ $('invoice-print-area').innerHTML=printMarkup('مسودة','غير معتمدة');window.print(); }
 $('print-draft').addEventListener('click',printDraft);
-$('print-last-invoice').addEventListener('click',()=>window.print());
+$('print-last-invoice').addEventListener('click',()=>{if(lastSavedPrintMarkup){$('invoice-print-area').innerHTML=lastSavedPrintMarkup;window.print()}});
 
 $('approve-invoice').addEventListener('click',async()=>{
 const msg=$('save-message'),it=items(),t=totals(),phone=normalizeEgyptPhone($('phone').value);
@@ -239,7 +240,8 @@ try{
  if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
  msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
  try{sessionStorage.removeItem('alhella-invoice-pending')}catch(e){}
- $('invoice-print-area').innerHTML=printMarkup(data.invoice_number,'معتمدة');
+ lastSavedPrintMarkup=printMarkup(data.invoice_number,'معتمدة');
+ $('invoice-print-area').innerHTML=lastSavedPrintMarkup;
  $('print-last-invoice').hidden=false;
  $('raw').value='';$('priced-items').value='';$('name').value='';$('phone').value='';$('address').value='';$('notes').value='';$('delivery-date').value='';$('delivery-window').value='';
  $('review').classList.remove('show');$('review').style.display='none';$('invoice-total').textContent='0.00';
