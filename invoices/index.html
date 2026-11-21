@@ -203,7 +203,7 @@ function show(k){document.querySelectorAll('[data-view]').forEach(b=>b.classList
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
 const num=s=>Number(toLatinDigits(s).replace(/,/g,'').trim());
 function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:num(p[1]),unit:p[2]||'',unit_price:num(p[3]),product_id:p[4]||null,notes:''}})}
-function totals(){const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0),delivery_fee=num($('delivery-fee').value||0),discount=num($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
+function totals(){const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0),delivery_fee=num($('delivery-fee').value||0),discount=num($('discount').value||0),beforeRounding=subtotal+delivery_fee-discount,total=Math.round(beforeRounding/5)*5;return {subtotal,delivery_fee,discount,total,rounding_adjustment:Math.round((total-beforeRounding)*100)/100}}
 let manualDeliveryFee=null;
 function applyDeliveryRule(){
  const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0);
@@ -221,7 +221,7 @@ function printMarkup(invoiceNo,status){
  const it=items(),t=totals(),name=$('name').value.trim(),phone=normalizeEgyptPhone($('phone').value),address=$('address').value.trim();
  const lines=it.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.quantity)+' '+esc(x.unit)+'</td><td>'+money(x.unit_price)+'</td><td>'+money(Math.round(x.quantity*x.unit_price*100)/100)+'</td></tr>').join('');
  const delivery=$('delivery-date').value,windowText=$('delivery-window').value.trim(),notes=$('notes').value.trim();
- return '<div dir="rtl"><h1>ع الحلة</h1><div class="meta">محاشي · خضار · وجبات | أكل بيتي حقيقي<br>فاتورة رقم: '+esc(invoiceNo)+' · '+esc(status)+'<br>'+new Date().toLocaleString('ar-EG')+'</div><p><b>العميل:</b> '+esc(name)+'<br><b>الموبايل:</b> '+esc(phone)+'<br><b>العنوان:</b> '+esc(address)+'<br><b>التسليم:</b> '+esc(delivery)+' '+esc(windowText)+'</p><table><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>'+lines+'</tbody></table><div class="totals"><div>قيمة الأصناف: '+money(t.subtotal)+' جنيه</div><div>التوصيل: '+money(t.delivery_fee)+' جنيه</div><div>الخصم: '+money(t.discount)+' جنيه</div><div class="grand">الإجمالي: '+money(t.total)+' جنيه</div></div>'+(notes?'<p>ملاحظات: '+esc(notes)+'</p>':'')+'<p style="margin-top:24px;font-size:12px">شكرًا لثقتكم في ع الحلة ❤️</p></div>';
+ return '<div dir="rtl"><h1>ع الحلة</h1><div class="meta">محاشي · خضار · وجبات | أكل بيتي حقيقي<br>فاتورة رقم: '+esc(invoiceNo)+' · '+esc(status)+'<br>'+new Date().toLocaleString('ar-EG')+'</div><p><b>العميل:</b> '+esc(name)+'<br><b>الموبايل:</b> '+esc(phone)+'<br><b>العنوان:</b> '+esc(address)+'<br><b>التسليم:</b> '+esc(delivery)+' '+esc(windowText)+'</p><table><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>'+lines+'</tbody></table><div class="totals"><div>قيمة الأصناف: '+money(t.subtotal)+' جنيه</div><div>التوصيل: '+money(t.delivery_fee)+' جنيه</div><div>الخصم: '+money(t.discount)+' جنيه</div><div>تقريب الحساب: '+money(t.rounding_adjustment)+' جنيه</div><div class="grand">الإجمالي: '+money(t.total)+' جنيه</div></div>'+(notes?'<p>ملاحظات: '+esc(notes)+'</p>':'')+'<p style="margin-top:24px;font-size:12px">شكرًا لثقتكم في ع الحلة ❤️</p></div>';
 }
 let lastSavedPrintMarkup='';
 function printDraft(){ $('invoice-print-area').innerHTML=printMarkup('مسودة','غير معتمدة');window.print(); }
@@ -234,7 +234,7 @@ if(window.crmRole==='viewer'){msg.textContent='صلاحية المشاهدة ل�
 if(!$('name').value.trim()){msg.textContent='اسم العميل مطلوب.';return}
 if(!phone){msg.textContent='رقم موبايل مصري صحيح مطلوب لربط ملف العميل.';return}
 if(!it.length||it.some(x=>!x.name||!x.product_id||!(x.quantity>0)||!(x.unit_price>=0)||!Number.isFinite(x.quantity)||!Number.isFinite(x.unit_price))){msg.textContent='اختار كل الأصناف من المنيو المعتمد، وراجع الكمية والسعر.';return}
-if(t.total<0){msg.textContent='الإجمالي غير صحيح.';return}
+if(t.subtotal+t.delivery_fee<t.discount||t.total<0){msg.textContent='الخصم أكبر من قيمة الفاتورة.';return}
 if(!confirm('هل راجعت البيانات والأسعار وتوافق على اعتماد الفاتورة؟'))return;
 const btn=$('approve-invoice');btn.disabled=true;
 try{
