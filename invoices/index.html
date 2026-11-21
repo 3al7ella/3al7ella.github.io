@@ -267,7 +267,7 @@ function renderProductOptions(){
  const q=$('product-search').value.trim().toLowerCase(),select=$('product-picker');
  select.replaceChildren(new Option('اختار صنفًا...',''));
  const filtered=catalogRows.filter(x=>(x.name||'').toLowerCase().includes(q)||(x.category||'').toLowerCase().includes(q));
- filtered.slice(0,150).forEach(x=>select.add(new Option(x.name+' — '+x.unit+' — '+money(x.current_price)+' جنيه',x.id)));
+ filtered.slice(0,150).forEach(x=>select.add(new Option(x.name+' — '+x.category+' — '+x.unit+' — '+money(x.current_price)+' جنيه',x.id)));
  if(filtered.length>150)$('product-message').textContent='اكتب اسمًا أدق لعرض نتائج أقل.';
 }
 async function loadProductCatalog(){
