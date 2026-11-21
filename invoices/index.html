@@ -35,20 +35,17 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <header><div class="headrow"><div><div class="brand">3AL7ELLA · نظام داخلي</div><h1>إدارة العملاء والفواتير</h1><div class="sub">أكل بيتي حقيقي · تنظيم الطلبات وسجل العملاء</div></div><div class="pill">نسخة تأسيسية</div></div></header>
 <main>
 <section class="card" id="auth-card">
-<h2>دخول فريق ع الحلة</h2>
-<p class="hint">ادخل بنفس طريقة موقع الحسابات: البريد الإلكتروني وكلمة المرور. هنحتفظ بتسجيل الدخول على جهازك.</p>
-<label for="login-email">البريد الإلكتروني</label>
-<input id="login-email" type="email" autocomplete="username" value="Hamdyuwk1@gmail.com" readonly>
-<label for="login-password">كلمة المرور</label>
-<input id="login-password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-<button class="primary" id="login-button">دخول بكلمة المرور</button>
-<button class="secondary" id="magic-login" style="width:100%;margin-top:9px">دخول مباشر برابط على الإيميل</button>
-<button class="secondary" id="reset-password" style="width:100%;margin-top:9px">استعادة كلمة المرور</button>
-<div id="recovery-box" style="display:none"><label for="new-password">كلمة المرور الجديدة</label><input id="new-password" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل"><button class="primary" id="save-password">حفظ كلمة المرور</button></div>
-<p class="hint" id="auth-message" aria-live="polite"></p>
-<button class="secondary" id="sign-out" style="display:none;width:100%">تسجيل الخروج</button>
+<h2>التحقق من الدخول</h2>
+<p class="hint" id="auth-message" aria-live="polite">جارٍ التحقق من جلسة الدخول الآمنة...</p>
+<div hidden>
+<label for="login-email">البريد الإلكتروني</label><input id="login-email" type="email" value="Hamdyuwk1@gmail.com" readonly>
+<label for="login-password">كلمة المرور</label><input id="login-password" type="password">
+<button id="login-button" type="button">دخول</button><button id="magic-login" type="button">رابط دخول</button><button id="reset-password" type="button">استعادة</button>
+<div id="recovery-box"><input id="new-password" type="password"><button id="save-password" type="button">حفظ</button></div>
+</div>
 </section>
 <div id="app-shell" style="display:none">
+<div class="row" style="justify-content:flex-end;margin:0 0 12px"><button class="secondary" id="sign-out" type="button" style="display:none">تسجيل الخروج</button></div>
 <nav class="tabs" aria-label="الأقسام"><button class="tab active" data-view="new" type="button">فاتورة جديدة</button><button class="tab" data-view="customers" type="button">العملاء</button><button class="tab" data-view="invoices" type="button">الفواتير</button></nav>
 <section class="card" id="customers-view" style="display:none"><div class="row"><h2>ملفات العملاء</h2><button class="secondary" id="refresh-customers">تحديث</button></div><input id="customer-search" placeholder="بحث بالاسم أو الهاتف"><div id="customers-list" class="hint"></div></section>
 <section class="card" id="invoices-view" style="display:none"><div class="row"><h2>سجل الفواتير</h2><button class="secondary" id="refresh-invoices">تحديث</button></div><div id="invoices-list" class="hint"></div></section>
