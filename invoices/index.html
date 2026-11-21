@@ -214,7 +214,7 @@ function applyDeliveryRule(){
 function updateInvoiceTotal(){applyDeliveryRule();$('invoice-total').textContent=money(totals().total)}
 $('priced-items').addEventListener('input',updateInvoiceTotal);
 $('discount').addEventListener('input',updateInvoiceTotal);
-$('delivery-fee').addEventListener('input',()=>{if($('delivery-fee').dataset.auto!=='true')manualDeliveryFee=num($('delivery-fee').value);$('invoice-total').textContent=money(totals().total)});
+$('delivery-fee').addEventListener('input',()=>{if($('delivery-fee').dataset.auto!=='true')manualDeliveryFee=num($('delivery-fee').value);updateInvoiceTotal()});
 $('free-delivery').addEventListener('change',updateInvoiceTotal);
 updateInvoiceTotal();
 function printMarkup(invoiceNo,status){
