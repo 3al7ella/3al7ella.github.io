@@ -28,6 +28,19 @@ button{border:0;border-radius:12px;padding:13px 15px;font:inherit;font-weight:80
 .result{display:none}.result.show{display:block}.notice{background:#fff4df;border:1px solid #f0d49b;border-radius:12px;padding:11px 12px;color:#72501b;font-size:12px;line-height:1.7;margin-top:12px}
 .status{font-size:12px;color:var(--green);font-weight:700}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
+.print-sheet{display:none}
+@media print{
+ body{background:#fff!important}
+ body *{visibility:hidden!important}
+ #invoice-print-area,#invoice-print-area *{visibility:visible!important}
+ #invoice-print-area{display:block!important;position:absolute;inset:0;width:100%;margin:0;padding:24px;border:0;box-shadow:none;background:#fff;color:#222}
+ #invoice-print-area h1{font-size:25px;margin:0 0 4px;color:#a92f20}
+ #invoice-print-area .meta{font-size:12px;color:#555;margin:4px 0 18px}
+ #invoice-print-area table{width:100%;border-collapse:collapse;margin:16px 0}
+ #invoice-print-area th,#invoice-print-area td{border:1px solid #ddd;padding:8px;text-align:right;font-size:12px}
+ #invoice-print-area .totals{max-width:320px;margin-right:auto;line-height:2}
+ #invoice-print-area .grand{font-size:18px;font-weight:900;border-top:2px solid #a92f20;padding-top:8px}
+}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.headrow h1{font-size:20px}}
 </style>
 </head>
@@ -45,7 +58,7 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 </div>
 </section>
 <div id="app-shell" style="display:none">
-<div class="row" style="justify-content:flex-end;margin:0 0 12px"><button class="secondary" id="sign-out" type="button" style="display:none">تسجيل الخروج</button></div>
+<div class="row" style="justify-content:space-between;flex-wrap:wrap;margin:0 0 12px"><button class="secondary" id="print-last-invoice" type="button" hidden>طباعة آخر فاتورة</button><button class="secondary" id="sign-out" type="button" style="display:none">تسجيل الخروج</button></div>
 <nav class="tabs" aria-label="الأقسام"><button class="tab active" data-view="new" type="button">فاتورة جديدة</button><button class="tab" data-view="customers" type="button">العملاء</button><button class="tab" data-view="invoices" type="button">الفواتير</button></nav>
 <section class="card" id="customers-view" style="display:none"><div class="row"><h2>ملفات العملاء</h2><button class="secondary" id="refresh-customers">تحديث</button></div><input id="customer-search" placeholder="بحث بالاسم أو الهاتف"><div id="customers-list" class="hint"></div></section>
 <section class="card" id="invoices-view" style="display:none"><div class="row"><h2>سجل الفواتير</h2><button class="secondary" id="refresh-invoices">تحديث</button></div><div id="invoices-list" class="hint"></div></section>
@@ -81,10 +94,11 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
 <div class="notice">راجع الأسعار يدويًا من المنيو المعتمد. لن يتم تخمين سعر أو تعديل المنيو تلقائيًا.</div>
 <div class="row"><strong>الإجمالي: <span id="invoice-total">0.00</span> جنيه</strong><button class="primary" id="approve-invoice" style="width:auto">اعتماد وحفظ</button></div><p id="save-message" class="hint" aria-live="polite"></p>
-<button class="secondary" type="button" onclick="window.print()" style="width:100%;margin-top:12px">طباعة المسودة / حفظ PDF</button>
+<button class="secondary" id="print-draft" type="button" style="width:100%;margin-top:12px">طباعة المسودة / حفظ PDF</button>
 </section>
 <footer>ع الحلة · نظام داخلي للفريق فقط</footer></div>
 </main>
+<section id="invoice-print-area" class="print-sheet" aria-hidden="true"></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://nxdghlshuumicvsottoy.supabase.co';
@@ -189,6 +203,16 @@ const num=s=>Number(toLatinDigits(s).replace(/,/g,'').trim());
 function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:num(p[1]),unit:p[2]||'',unit_price:num(p[3]),product_id:p[4]||null,notes:''}})}
 function totals(){const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0),delivery_fee=num($('delivery-fee').value||0),discount=num($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
 ['priced-items','delivery-fee','discount'].forEach(id=>$(id).addEventListener('input',()=>{$('invoice-total').textContent=money(totals().total)}));
+function printMarkup(invoiceNo,status){
+ const it=items(),t=totals(),name=$('name').value.trim(),phone=normalizeEgyptPhone($('phone').value),address=$('address').value.trim();
+ const lines=it.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.quantity)+' '+esc(x.unit)+'</td><td>'+money(x.unit_price)+'</td><td>'+money(Math.round(x.quantity*x.unit_price*100)/100)+'</td></tr>').join('');
+ const delivery=$('delivery-date').value,windowText=$('delivery-window').value.trim(),notes=$('notes').value.trim();
+ return '<div dir="rtl"><h1>ع الحلة</h1><div class="meta">محاشي · خضار · وجبات | أكل بيتي حقيقي<br>فاتورة رقم: '+esc(invoiceNo)+' · '+esc(status)+'<br>'+new Date().toLocaleString('ar-EG')+'</div><p><b>العميل:</b> '+esc(name)+'<br><b>الموبايل:</b> '+esc(phone)+'<br><b>العنوان:</b> '+esc(address)+'<br><b>التسليم:</b> '+esc(delivery)+' '+esc(windowText)+'</p><table><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>'+lines+'</tbody></table><div class="totals"><div>قيمة الأصناف: '+money(t.subtotal)+' جنيه</div><div>التوصيل: '+money(t.delivery_fee)+' جنيه</div><div>الخصم: '+money(t.discount)+' جنيه</div><div class="grand">الإجمالي: '+money(t.total)+' جنيه</div></div>'+(notes?'<p>ملاحظات: '+esc(notes)+'</p>':'')+'<p style="margin-top:24px;font-size:12px">شكرًا لثقتكم في ع الحلة ❤️</p></div>';
+}
+function printDraft(){ $('invoice-print-area').innerHTML=printMarkup('مسودة','غير معتمدة');window.print(); }
+$('print-draft').addEventListener('click',printDraft);
+$('print-last-invoice').addEventListener('click',()=>window.print());
+
 $('approve-invoice').addEventListener('click',async()=>{
 const msg=$('save-message'),it=items(),t=totals(),phone=normalizeEgyptPhone($('phone').value);
 if(window.crmRole==='viewer'){msg.textContent='صلاحية المشاهدة لا تسمح باعتماد الفواتير.';return}
@@ -200,10 +224,16 @@ if(!confirm('هل راجعت البيانات والأسعار وتوافق عل
 const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
 const btn=$('approve-invoice');btn.disabled=true;msg.textContent='جارٍ الحفظ...';
 const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
-const {data,error}=await supabaseClient.rpc('approve_and_save_invoice',{p_invoice:payload});btn.disabled=false;
-if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
-msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
-$('raw').value='';$('priced-items').value='';$('review').classList.remove('show');$('invoice-total').textContent='0.00';
+try{
+ const {data,error}=await supabaseClient.rpc('approve_and_save_invoice',{p_invoice:payload});
+ if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
+ msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
+ $('invoice-print-area').innerHTML=printMarkup(data.invoice_number,'معتمدة');
+ $('print-last-invoice').hidden=false;
+ $('raw').value='';$('priced-items').value='';$('name').value='';$('phone').value='';$('address').value='';$('notes').value='';$('delivery-date').value='';$('delivery-window').value='';
+ $('review').classList.remove('show');$('review').style.display='none';$('invoice-total').textContent='0.00';
+ await Promise.all([loadInvoices(),loadCustomers()]);
+}catch(e){msg.textContent='تعذر إكمال الحفظ: '+(e?.message||'خطأ اتصال')}finally{btn.disabled=false}
 });
 let catalogRows=[];
 function renderProductOptions(){
