@@ -365,7 +365,13 @@ function renderHistoryAndAudit(){ const orders=fromStartRows("orders").filter(x=
  const months=[...new Set([...orders,...expenses,...labor].map(monthOf).filter(m=>/^\\d{4}-\\d{2}$/.test(m)))].sort().reverse();
  $("historyMonths").innerHTML=months.map(m=>{const o=orders.filter(x=>monthOf(x)===m),e=expenses.filter(x=>monthOf(x)===m),l=labor.filter(x=>monthOf(x)===m);return '<div class="history-month"><b>'+esc(m)+'</b><div class="muted">الأوردرات: '+o.length+' · العمالة المسجلة: '+l.length+' حركة</div><div class="row"><span>الإيرادات</span><b>'+money(o.reduce((s,x)=>s+(Number(x.total)||0),0))+'</b></div><div class="row"><span>المصروفات المسجلة</span><b>'+money(e.reduce((s,x)=>s+(Number(x.amount)||0),0))+'</b></div></div>'}).join("")||'<p class="muted">لا توجد سجلات من تاريخ بداية التشغيل.</p>';
  const detailMonth=$("purchaseMonthDetail")?.value||today().slice(0,7),purchases=expenses.filter(x=>isPurchase(x)&&monthOf(x)===detailMonth),itemMap={};
- purchases.forEach(x=>{const item=String(x.item||x.name||"بند غير محدد").trim()||"بند غير محدد",qtyText=String(x.qty??x.quantity??"").trim(),key=item+"||"+qtyText,a=itemMap[key]||(itemMap[key]={item,qtyText,amount:0,count:0,dates:[]});a.amount+=Number(x.amount)||0;a.count++;if(x.date)a.dates.push(x.date);});
+ purchases.forEach(x=>{
+  const detailRows=Array.isArray(x.items)&&x.items.length?x.items:[{item:x.item||x.name||"بند غير محدد",qty:x.qty??x.quantity,amount:x.amount}];
+  detailRows.forEach(it=>{
+   const item=String(it.item||it.name||"بند غير محدد").trim()||"بند غير محدد",qtyText=String(it.qty??it.quantity??"").trim(),key=item+"||"+qtyText,a=itemMap[key]||(itemMap[key]={item,qtyText,amount:0,count:0,dates:[]});
+   a.amount+=Number(it.amount)||0;a.count++;if(x.date)a.dates.push(x.date);
+  });
+ });
  $("purchaseDetailTotal").textContent=money(purchases.reduce((s,x)=>s+(Number(x.amount)||0),0));$("purchaseDetailItemsCount").textContent=Object.keys(itemMap).length;
  $("purchaseDetailRows").innerHTML=Object.values(itemMap).sort((a,b)=>b.amount-a.amount).map(x=>'<div class="item"><div><b>'+esc(x.item)+'</b><div class="muted">'+(x.qtyText?"الكمية المسجلة: "+esc(x.qtyText):"الكمية غير محددة في السجل")+' · '+x.count+' مرة شراء · '+esc([...new Set(x.dates)].join("، "))+'</div></div><b>'+money(x.amount)+'</b></div>').join("")||'<p class="muted">لا توجد مشتريات مسجلة للشهر.</p>';
  const badOrders=fromStartRows("orders").filter(x=>orderStatusLabel(x)!=="ملغي"&&(!String(x.date||"").trim()||!String(x.customer||"").trim()||!(Number(x.total)>0)||!String(x.phone||"").trim()));
