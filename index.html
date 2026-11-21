@@ -1167,7 +1167,7 @@ function renderStoryRail(){
  if(!el||!area)return;
  const groups=STORY_GROUPS.map(g=>({...g,offers:g.ids.map(id=>offerOf(id)).filter(Boolean)})).filter(g=>g.offers.length);
  area.hidden=!groups.length;
- el.innerHTML=groups.map(g=>`<button class="bagc story-group" type="button" data-story-group="${g.key}" aria-label="افتح ستوري ${esc(g.title)}"><span class="bimg"><img src="${g.img}" alt="" width="200" height="200" loading="lazy" onerror="this.remove();this.parentElement.textContent='${g.icon}'"></span><b>${esc(g.title)}</b><small>شاهد العرض</small></button>`).join('');
+ el.innerHTML=groups.map(g=>`<button class="bagc story-group" type="button" data-story-group="${g.key}" aria-label="افتح ستوري ${esc(g.title)}"><span class="bimg"><img src="${g.img}" alt="" width="200" height="200" loading="lazy" onerror="this.parentElement.textContent='${g.icon}'"></span><b>${esc(g.title)}</b><small>شاهد العرض</small></button>`).join('');
 }
 function openStoryGroup(key){
  const g=STORY_GROUPS.find(x=>x.key===key);if(!g)return;
