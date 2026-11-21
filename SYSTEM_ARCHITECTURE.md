@@ -123,3 +123,21 @@ Do not auto-generate historical attendance or payroll entries until the current 
 - No payroll generation or staff identity merging until historical records are reconciled.
 - No claims of automatic order synchronization until an end-to-end test proves the same order appears once in both systems and subsequent status updates are reflected.
 - Test on a small, controlled sample before enabling production-wide automation.
+
+## 9. Customer CRM and invoices — added 21 November 2026
+
+### Current verified setup
+- CRM / invoice app: `https://3al7ella.github.io/invoices/`; Google sign-in page: `/invoices/enter.html`.
+- Separate Supabase project: `3al7ella-crm` (`nxdghlshuumicvsottoy`), not the accounting ledger project.
+- Core tables: `profiles`, `customers`, `customer_addresses`, `orders`, `order_items`, `invoices`, `product_catalog`, import review tables, and audit log.
+- Active catalog seeded from the current storefront menu: 220 active products/offers across 25 categories. The invoice UI can select current catalog items and validate their current price at save time. Owner/admin can refresh the catalog from the live menu; inactive menu entries are deactivated in the CRM catalog.
+- Customer matching uses normalized Egyptian mobile number, protected by a unique partial index.
+- Invoice approval validates the mobile number, item totals, delivery/discount arithmetic, and selected catalog prices; it also stores the delivery address in the customer's address book.
+- The invoice RPC runs as SECURITY INVOKER, is executable by authenticated users only, and separately checks active owner/admin/staff role. Product catalog writes are restricted to owner/admin.
+- 80 imported WhatsApp rows remain pending review. They have not been approved or imported into customers/orders/invoices.
+- Current CRM customer/order/invoice tables are empty; no production invoices have been created through this CRM yet.
+
+### Authentication and integration status
+- The site code uses Supabase Google OAuth and checks the `profiles` role after sign-in.
+- Google OAuth is not confirmed active until a Web OAuth Client ID/Secret are configured in Google Cloud and the Google provider is enabled in Supabase. Do not claim login is production-ready before a real owner sign-in test.
+- No automatic synchronization between this CRM and the accounting ledger or Firebase storefront/kitchen has been implemented or verified. Keep the systems separate until an explicit, idempotent sync contract is designed and tested.
