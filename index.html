@@ -997,40 +997,29 @@ function invoice(){
  const ent=Object.entries(cart),s=sub(),d=delFee(),total=s+d;
  if(!REF)REF=refCode();
  const L='━━━━━━━━━━━━━━━━━━';
- const date=new Date().toLocaleString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
- const lines=ent.map(([k,q],i)=>{
+ const date=new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'});
+ const lines=ent.map(([k,q])=>{
   const p=byId[pidOf(k)];
   const qty=qtx(q,p.unit)+(p.unit?' '+p.unit:'');
-  const unitLabel=p.isOffer?'سعر العرض':'سعر الوحدة';
-  return [(i+1)+') '+lineName(k),'   الكمية: '+qty,'   '+unitLabel+': '+fmt(p.price)+' جنيه','   إجمالي الصنف: '+fmt(lineTotal(p,q))+' جنيه'].join('\n');
+  return '• '+lineName(k)+' — '+qty+' — '+fmt(lineTotal(p,q))+' ج';
  });
- const deliveryLabel=d?fmt(d)+' جنيه':(freeDel()?'مجاني مع عرض مؤهل':'مجاني لتجاوز حد التوصيل المجاني');
+ const deliveryLabel=d?fmt(d)+' ج':'مجاني';
  return [
-  '🧾 فاتورة طلب من #ع_الحله',
-  'رقم الطلب: '+REF,
-  'تاريخ الطلب: '+date,
+  '🧾 #ع_الحله | فاتورة طلب',
+  'رقم الطلب: '+REF+'  •  '+date,
   L,
-  '👤 بيانات العميل',
-  'الاسم: '+F.name,
-  'الموبايل: '+F.phone,
-  'المنطقة: '+F.area,
-  'العنوان: '+F.addr,
-  'موعد التسليم المفضل: '+(F.when||'يُحدد بالتأكيد'),
-  L,
-  '🛒 تفاصيل الأصناف ('+ent.length+' صنف)',
+  '👤 '+F.name+'  |  '+F.phone,
+  '📍 '+F.area+' — '+F.addr,
+  '🛒 الأصناف',
   ...lines,
   L,
-  'ملخص الحساب',
-  'إجمالي الأصناف: '+fmt(s)+' جنيه',
+  'الأصناف: '+fmt(s)+' ج',
   'التوصيل: '+deliveryLabel,
-  'الإجمالي المطلوب: '+fmt(total)+' جنيه',
-  L,
-  '💳 طريقة الدفع: '+F.pay,
-  F.pay==='كاش'?'الدفع عند الاستلام':(F.pay==='إنستاباي'?'InstaPay: hamdymohamed12@instapay\nرقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.':'التحويل على رقم ع الحلة: 01275165496\nبعد التحويل يُرجى إرسال صورة التحويل على واتساب.'),
-  F.note?'📝 ملاحظات الطلب: '+F.note:'',
-  L,
-  '⏰ الأصناف العادية تُطلب قبلها بيوم، وأصناف نفس اليوم متاحة قبل 2 ظهرًا.',
-  'برجاء مراجعة الفاتورة وتأكيد الطلب ❤️'
+  '💰 الإجمالي: '+fmt(total)+' جنيه',
+  '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':''),
+  F.when?'🕒 موعد التسليم: '+F.when:'',
+  F.note?'📝 ملاحظة: '+F.note:'',
+  '❤️ شكرًا لطلبك من ع الحلة'
  ].filter(Boolean).join('\n')
 }
  $('shBody').addEventListener('click',e=>{const payCopy=e.target.closest('[data-copy-payment]');if(payCopy){const value=payCopy.dataset.copyPayment||'01275165496';copy(value);toast(value.includes('@')?'عنوان InstaPay اتنسخ ✓':'رقم الدفع اتنسخ ✓');return}const clear=e.target.closest('[data-clear-cart]');if(clear){if(window.confirm('متأكد إنك عايز تفضّي السلة بالكامل؟')){cart={};save();drawSheet();toast('السلة بقت فاضية')}return}const u=e.target.closest('[data-upsell]');if(u){const id=u.dataset.upsell;if(byId[id]){setQty(id,(cart[id]||0)+stepOf(byId[id]));drawSheet();toast('اتضافت الإضافة للسلة ✓')}return}const r=e.target.closest('[data-rm]');if(r){const k=r.dataset.rm,q=cart[k];setQty(k,0);drawSheet();undo('اتشال من السلة',()=>{setQty(k,q);drawSheet()});return}
