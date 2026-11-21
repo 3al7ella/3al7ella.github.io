@@ -67,7 +67,16 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
 <label for="address">العنوان</label><input id="address" placeholder="العنوان بالتفصيل">
 <label for="items">الأصناف والكميات كما وردت</label><textarea id="items" placeholder="اكتب الأصناف والكميات..."></textarea>
 <label for="notes">ملاحظات / موعد التسليم</label><input id="notes" placeholder="أي تفاصيل إضافية">
-<label for="priced-items">الأصناف والأسعار (سطر لكل صنف: الاسم | الكمية | الوحدة | سعر الوحدة)</label><textarea id="priced-items" placeholder="محشي كرنب | 2 | كيلو | 180"></textarea>
+<label for="priced-items">الأصناف والأسعار (سطر لكل صنف: الاسم | الكمية | الوحدة | سعر الوحدة)</label><textarea id="priced-items" placeholder="اختار الأصناف من المنيو تحت أو اكتب صنفًا يدويًا للمراجعة..."></textarea>
+<div class="grid">
+ <div><label for="product-search">بحث في المنيو</label><input id="product-search" placeholder="اكتب اسم الصنف أو القسم"></div>
+ <div><label for="product-picker">الصنف من المنيو</label><select id="product-picker"><option value="">اختار صنفًا...</option></select></div>
+</div>
+<div class="grid">
+ <div><label for="product-quantity">الكمية</label><input id="product-quantity" type="number" min="0.01" step="0.01" value="1"></div>
+ <div><label>إضافة للفاتورة</label><button class="secondary" id="add-product-line" type="button" style="width:100%">إضافة بالسعر المعتمد</button></div>
+</div>
+<p class="hint" id="product-message" aria-live="polite">أسعار الأصناف مأخوذة من المنيو الحالي. لو اتغير سعر في المنيو لازم تحديث الكتالوج قبل اعتماد الفاتورة.</p>
 <div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="0"></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
 <div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
 <div class="notice">راجع الأسعار يدويًا من المنيو المعتمد. لن يتم تخمين سعر أو تعديل المنيو تلقائيًا.</div>
@@ -96,8 +105,10 @@ if(window.supabase?.createClient){
    authMessage.textContent='الحساب غير معتمد لدخول النظام. تواصل مع المدير.';
    return;
   }
+  window.crmRole=profile.role;
   authMessage.textContent='تم تسجيل الدخول بنجاح.';
   authCard.style.display='none';appShell.style.display='block';signOutButton.style.display='block';
+  document.dispatchEvent(new CustomEvent('crm:ready',{detail:{role:profile.role}}));
  };
  supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){document.getElementById('recovery-box').style.display='block';authMessage.textContent='اكتب كلمة مرور جديدة للحساب.'}else setTimeout(()=>activate(session),0)});
  supabaseClient.auth.getSession().then(({data})=>activate(data.session));
@@ -171,17 +182,19 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 (function(){
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>(Number(n)||0).toFixed(2);
-const views={new:['new-invoice-view','review'],customers:['customers-view'],invoices:['invoices-view']};
-function show(k){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===k));Object.entries(views).forEach(([key,ids])=>ids.forEach(id=>$(id).style.display=key===k?'block':'none'));if(k==='customers')loadCustomers();if(k==='invoices')loadInvoices()}
+const views={new:['new-invoice-view'],customers:['customers-view'],invoices:['invoices-view']};
+function show(k){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===k));Object.entries(views).forEach(([key,ids])=>ids.forEach(id=>$(id).style.display=key===k?'block':'none'));$('review').style.display=(k==='new'&&$('review').classList.contains('show'))?'block':'none';if(k==='customers')loadCustomers();if(k==='invoices')loadInvoices()}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
-function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:Number(p[1]),unit:p[2]||'',unit_price:Number(p[3]),notes:''}})}
-function totals(){const subtotal=items().reduce((a,x)=>a+x.quantity*x.unit_price,0),delivery_fee=Number($('delivery-fee').value||0),discount=Number($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
+const num=s=>Number(toLatinDigits(s).replace(/,/g,'').trim());
+function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:num(p[1]),unit:p[2]||'',unit_price:num(p[3]),product_id:p[4]||null,notes:''}})}
+function totals(){const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0),delivery_fee=num($('delivery-fee').value||0),discount=num($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
 ['priced-items','delivery-fee','discount'].forEach(id=>$(id).addEventListener('input',()=>{$('invoice-total').textContent=money(totals().total)}));
 $('approve-invoice').addEventListener('click',async()=>{
 const msg=$('save-message'),it=items(),t=totals(),phone=normalizeEgyptPhone($('phone').value);
+if(window.crmRole==='viewer'){msg.textContent='صلاحية المشاهدة لا تسمح باعتماد الفواتير.';return}
 if(!$('name').value.trim()){msg.textContent='اسم العميل مطلوب.';return}
-if($('phone').value.trim()&&!phone){msg.textContent='رقم الهاتف غير صحيح.';return}
-if(!it.length||it.some(x=>!x.name||!(x.quantity>0)||!(x.unit_price>=0))){msg.textContent='راجع سطور الأصناف: الاسم والكمية والسعر مطلوبة.';return}
+if(!phone){msg.textContent='رقم موبايل مصري صحيح مطلوب لربط ملف العميل.';return}
+if(!it.length||it.some(x=>!x.name||!(x.quantity>0)||!(x.unit_price>=0)||!Number.isFinite(x.quantity)||!Number.isFinite(x.unit_price))){msg.textContent='راجع سطور الأصناف: الاسم والكمية والسعر مطلوبة.';return}
 if(t.total<0){msg.textContent='الإجمالي غير صحيح.';return}
 if(!confirm('هل راجعت البيانات والأسعار وتوافق على اعتماد الفاتورة؟'))return;
 const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
@@ -192,6 +205,44 @@ if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
 msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
 $('raw').value='';$('priced-items').value='';$('review').classList.remove('show');$('invoice-total').textContent='0.00';
 });
+let catalogRows=[];
+function renderProductOptions(){
+ const q=$('product-search').value.trim().toLowerCase(),select=$('product-picker');
+ select.replaceChildren(new Option('اختار صنفًا...',''));
+ const filtered=catalogRows.filter(x=>(x.name||'').toLowerCase().includes(q)||(x.category||'').toLowerCase().includes(q));
+ filtered.slice(0,150).forEach(x=>select.add(new Option(x.name+' — '+x.unit+' — '+money(x.current_price)+' جنيه',x.id)));
+ if(filtered.length>150)$('product-message').textContent='اكتب اسمًا أدق لعرض نتائج أقل.';
+}
+async function loadProductCatalog(){
+ if(!supabaseClient)return;
+ const box=$('product-message');box.textContent='جارٍ تحميل الأصناف والأسعار المعتمدة...';
+ const {data,error}=await supabaseClient.from('product_catalog').select('id,name,category,unit,current_price,active').eq('active',true).order('category').order('name').limit(1000);
+ if(error){box.textContent='تعذر تحميل كتالوج المنيو: '+error.message;return}
+ catalogRows=data||[];renderProductOptions();box.textContent='تم تحميل '+catalogRows.length+' صنف وعرض نشط من المنيو.';
+}
+$('product-search').addEventListener('input',renderProductOptions);
+$('product-picker').addEventListener('change',()=>{
+ const p=catalogRows.find(x=>x.id===$('product-picker').value);
+ $('product-message').textContent=p?(p.name+' · '+p.unit+' · '+money(p.current_price)+' جنيه'):'اختار صنفًا من المنيو.';
+});
+$('add-product-line').addEventListener('click',()=>{
+ const p=catalogRows.find(x=>x.id===$('product-picker').value),q=num($('product-quantity').value);
+ if(!p){$('product-message').textContent='اختار الصنف الأول.';return}
+ if(!(q>0)||!Number.isFinite(q)){$('product-message').textContent='اكتب كمية صحيحة.';return}
+ const line=[p.name,q,p.unit,Number(p.current_price),p.id].join(' | ');
+ $('priced-items').value+=($('priced-items').value.trim()?'\n':'')+line;
+ $('priced-items').dispatchEvent(new Event('input'));
+ $('product-message').textContent='اتضاف '+p.name+' للفاتورة بالسعر الموجود في المنيو.';
+});
+function applyRole(role){
+ if(role==='viewer'){
+  const tab=document.querySelector('[data-view="new"]');if(tab)tab.hidden=true;
+  $('approve-invoice').disabled=true;show('customers');
+ }
+ loadProductCatalog();
+}
+document.addEventListener('crm:ready',e=>applyRole(e.detail?.role||window.crmRole));
+if(window.crmRole)applyRole(window.crmRole);
 let customerRows=[];
 async function loadCustomers(){const box=$('customers-list');box.textContent='جارٍ تحميل العملاء...';const {data,error}=await supabaseClient.from('customers').select('full_name,primary_phone,normalized_phone,orders_count,lifetime_value').order('updated_at',{ascending:false}).limit(500);if(error){box.textContent='خطأ تحميل العملاء: '+error.message;return}customerRows=data||[];renderCustomers()}
 function renderCustomers(){const q=$('customer-search').value.trim().toLowerCase(),rows=customerRows.filter(x=>(x.full_name||'').toLowerCase().includes(q)||(x.normalized_phone||'').includes(q));$('customers-list').innerHTML=rows.length?rows.map(x=>'<div class="card"><b>'+esc(x.full_name)+'</b><div class="hint">'+esc(x.primary_phone||'')+' · فواتير: '+x.orders_count+' · إجمالي: '+money(x.lifetime_value)+' جنيه</div></div>').join(''):'لا يوجد عملاء.'}
