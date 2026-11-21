@@ -12,7 +12,7 @@ main{width:min(100%,420px)}.brand{text-align:center;margin-bottom:22px}.mark{wid
 .card{background:#fffdfa;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 14px 40px #65330e12}h2{font-size:19px;margin:0 0 6px}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 18px}
 label{display:block;font-weight:750;font-size:13px;margin:14px 0 7px}input{width:100%;border:1px solid #dfd4c9;border-radius:13px;padding:14px;background:white;color:var(--ink);font:inherit;font-size:16px;outline:none}input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #e94b1b18}
 .email{background:#f8f4ef;color:#5d554e;direction:ltr;text-align:left}.pass-wrap{position:relative}.pass-wrap input{padding-left:64px}.show{position:absolute;left:7px;top:7px;padding:8px 10px;border:0;background:var(--cream);color:var(--red);border-radius:9px;font-weight:700}
-button.enter{width:100%;border:0;border-radius:13px;background:var(--orange);color:white;padding:15px;font:inherit;font-weight:850;margin-top:19px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}
+a.enter{display:block;width:100%;border:0;border-radius:13px;background:var(--orange);color:white;padding:15px;font:inherit;font-weight:850;margin-top:19px;text-align:center;text-decoration:none;cursor:pointer}a.enter:active{transform:scale(.99)}
 .msg{min-height:24px;margin:12px 0 0;font-size:13px;line-height:1.6;color:var(--red)}.secure{text-align:center;color:#857b72;font-size:11px;margin:16px 0 0}.foot{text-align:center;color:#8b8178;font-size:11px;margin-top:18px}
 </style>
 </head>
@@ -22,7 +22,7 @@ button.enter{width:100%;border:0;border-radius:13px;background:var(--orange);col
  <section class="card">
   <h2>دخول سريع</h2>
   <p class="hint">ادخل بحساب Google المصرّح له. مش هتحتاج كلمة مرور منفصلة للنظام أو رسالة استعادة على البريد.</p>
-  <button class="enter" id="google-login" type="button">🌐 الدخول باستخدام Google</button>
+  <a class="enter" id="google-login" href="https://nxdghlshuumicvsottoy.supabase.co/auth/v1/authorize?provider=google&amp;redirect_to=https%3A%2F%2F3al7ella.github.io%2Finvoices%2Fenter.html&amp;prompt=select_account">🌐 الدخول باستخدام Google</a>
   <p class="msg" id="message" role="status" aria-live="polite"></p>
   <p class="secure">🔒 دخول آمن بنفس صلاحيات حسابك الحالي</p>
  </section>
@@ -34,7 +34,6 @@ const URL='https://nxdghlshuumicvsottoy.supabase.co';
 const KEY='sb_publishable_mDCVVKC3Mg0GQDjrpDG1pQ_JRbYI5xt';
 const DEST='./index.html';
 const msg=document.getElementById('message');
-const btn=document.getElementById('google-login');
 const client=window.supabase?.createClient(URL,KEY);
 if(!client){msg.textContent='تعذر تحميل خدمة الدخول. راجع اتصال الإنترنت ثم أعد المحاولة.'}
 else{
@@ -54,20 +53,7 @@ else{
  if(authError||authCode){
   const detail=authError||authCode;
   msg.textContent='Google لم يكمل تسجيل الدخول: '+detail;
-  btn.disabled=false;btn.textContent='🌐 إعادة محاولة الدخول باستخدام Google';
  }
- btn.addEventListener('click',async()=>{
-  if(btn.disabled)return;
-  btn.disabled=true;btn.textContent='جارٍ فتح Google...';msg.textContent='';
-  try{
-   const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://3al7ella.github.io/invoices/enter.html',queryParams:{prompt:'select_account'}}});
-   if(error)throw error;
-   msg.textContent='تم طلب فتح Google. لو ما ظهرتش صفحة اختيار الحساب، حدّث الصفحة وحاول مرة واحدة.';
-  }catch(error){
-   msg.textContent='تعذر بدء دخول Google: '+(error?.message||'خطأ غير معروف');
-   btn.disabled=false;btn.textContent='🌐 إعادة محاولة الدخول باستخدام Google';
-  }
- });
 }
 </script>
 </body>
