@@ -221,13 +221,24 @@ if(!phone){msg.textContent='رقم موبايل مصري صحيح مطلوب ل�
 if(!it.length||it.some(x=>!x.name||!(x.quantity>0)||!(x.unit_price>=0)||!Number.isFinite(x.quantity)||!Number.isFinite(x.unit_price))){msg.textContent='راجع سطور الأصناف: الاسم والكمية والسعر مطلوبة.';return}
 if(t.total<0){msg.textContent='الإجمالي غير صحيح.';return}
 if(!confirm('هل راجعت البيانات والأسعار وتوافق على اعتماد الفاتورة؟'))return;
-const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
-const btn=$('approve-invoice');btn.disabled=true;msg.textContent='جارٍ الحفظ...';
-const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
+const btn=$('approve-invoice');btn.disabled=true;
 try{
+ const {data:{session}}=await supabaseClient.auth.getSession();if(!session){msg.textContent='انتهت الجلسة. سجل الدخول من جديد.';return}
+ msg.textContent='جارٍ الحفظ...';
+ const payload={customer_name:$('name').value.trim(),phone,address:$('address').value.trim(),items:it,...t,delivery_date:$('delivery-date').value,delivery_window:$('delivery-window').value.trim(),notes:$('notes').value.trim(),raw_text:$('raw').value};
+ const fingerprint=JSON.stringify(payload);
+ let requestId;
+ const createRequestId=()=>window.crypto?.randomUUID?window.crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)});
+ try{
+  const saved=JSON.parse(sessionStorage.getItem('alhella-invoice-pending')||'null');
+  requestId=saved?.fingerprint===fingerprint?saved.id:createRequestId();
+  sessionStorage.setItem('alhella-invoice-pending',JSON.stringify({fingerprint,id:requestId}));
+ }catch(e){requestId=createRequestId()}
+ payload.request_id=requestId;
  const {data,error}=await supabaseClient.rpc('approve_and_save_invoice',{p_invoice:payload});
  if(error){msg.textContent='لم يتم الحفظ: '+error.message;return}
  msg.textContent='تم حفظ الفاتورة رقم '+data.invoice_number+' بإجمالي '+money(data.total)+' جنيه.';
+ try{sessionStorage.removeItem('alhella-invoice-pending')}catch(e){}
  $('invoice-print-area').innerHTML=printMarkup(data.invoice_number,'معتمدة');
  $('print-last-invoice').hidden=false;
  $('raw').value='';$('priced-items').value='';$('name').value='';$('phone').value='';$('address').value='';$('notes').value='';$('delivery-date').value='';$('delivery-window').value='';
