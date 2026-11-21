@@ -21,6 +21,7 @@ main{max-width:760px;margin:auto;padding:16px 14px 42px}.tabs{display:grid;grid-
 h2{font-size:17px;margin:0 0 6px}.hint{font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 13px}
 label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
 input,textarea,select{width:100%;border:1px solid #dfd4c9;border-radius:12px;padding:12px;background:white;color:var(--ink);font:inherit;font-size:14px;outline:none}
+.inline-check{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;margin-top:8px}.inline-check input{width:auto;margin:0}
 textarea{min-height:145px;resize:vertical;line-height:1.7}input:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px #e94b1b18}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 button{border:0;border-radius:12px;padding:13px 15px;font:inherit;font-weight:800;cursor:pointer}
@@ -90,7 +91,8 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
  <button class="secondary" id="sync-menu" type="button" hidden>تحديث الأصناف والأسعار من المنيو</button>
 </div>
 <p class="hint" id="product-message" aria-live="polite">كل صنف لازم يتختار من المنيو المعتمد؛ النظام بيراجع السعر تلقائيًا قبل الحفظ.</p>
-<div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="0"></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
+<div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="60"><label class="inline-check"><input id="free-delivery" type="checkbox"> توصيل مجاني مع عرض فراخ</label></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
+<p class="hint">التوصيل 60 جنيه افتراضيًا، ومجاني تلقائيًا عند وصول الأصناف إلى 1000 جنيه أو عند تحديد عرض فراخ يشمل التوصيل.</p>
 <div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
 <div class="notice">لا يمكن اعتماد صنف خارج كتالوج المنيو. النظام يراجع السعر المعتمد تلقائيًا ويرفض أي سعر مختلف.</div>
 <div class="row"><strong>الإجمالي: <span id="invoice-total">0.00</span> جنيه</strong><button class="primary" id="approve-invoice" style="width:auto">اعتماد وحفظ</button></div><p id="save-message" class="hint" aria-live="polite"></p>
@@ -202,7 +204,19 @@ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',(
 const num=s=>Number(toLatinDigits(s).replace(/,/g,'').trim());
 function items(){return $('priced-items').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split('|').map(y=>y.trim());return {name:p[0]||'',quantity:num(p[1]),unit:p[2]||'',unit_price:num(p[3]),product_id:p[4]||null,notes:''}})}
 function totals(){const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0),delivery_fee=num($('delivery-fee').value||0),discount=num($('discount').value||0);return {subtotal,delivery_fee,discount,total:subtotal+delivery_fee-discount}}
-['priced-items','delivery-fee','discount'].forEach(id=>$(id).addEventListener('input',()=>{$('invoice-total').textContent=money(totals().total)}));
+let manualDeliveryFee=null;
+function applyDeliveryRule(){
+ const subtotal=items().reduce((a,x)=>a+Math.round(x.quantity*x.unit_price*100)/100,0);
+ const free=subtotal>=1000||$('free-delivery').checked;
+ if(free){$('delivery-fee').value='0';$('delivery-fee').dataset.auto='true';}
+ else if($('delivery-fee').dataset.auto==='true'){$('delivery-fee').value=String(manualDeliveryFee===null?60:manualDeliveryFee);$('delivery-fee').dataset.auto='false';}
+}
+function updateInvoiceTotal(){applyDeliveryRule();$('invoice-total').textContent=money(totals().total)}
+$('priced-items').addEventListener('input',updateInvoiceTotal);
+$('discount').addEventListener('input',updateInvoiceTotal);
+$('delivery-fee').addEventListener('input',()=>{if($('delivery-fee').dataset.auto!=='true')manualDeliveryFee=num($('delivery-fee').value);$('invoice-total').textContent=money(totals().total)});
+$('free-delivery').addEventListener('change',updateInvoiceTotal);
+updateInvoiceTotal();
 function printMarkup(invoiceNo,status){
  const it=items(),t=totals(),name=$('name').value.trim(),phone=normalizeEgyptPhone($('phone').value),address=$('address').value.trim();
  const lines=it.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.quantity)+' '+esc(x.unit)+'</td><td>'+money(x.unit_price)+'</td><td>'+money(Math.round(x.quantity*x.unit_price*100)/100)+'</td></tr>').join('');
@@ -243,7 +257,7 @@ try{
  lastSavedPrintMarkup=printMarkup(data.invoice_number,'معتمدة');
  $('invoice-print-area').innerHTML=lastSavedPrintMarkup;
  $('print-last-invoice').hidden=false;
- $('raw').value='';$('priced-items').value='';$('name').value='';$('phone').value='';$('address').value='';$('notes').value='';$('delivery-date').value='';$('delivery-window').value='';
+ $('raw').value='';$('priced-items').value='';$('name').value='';$('phone').value='';$('address').value='';$('notes').value='';$('delivery-date').value='';$('delivery-window').value='';$('free-delivery').checked=false;manualDeliveryFee=null;$('delivery-fee').dataset.auto='false';$('delivery-fee').value='60';
  $('review').classList.remove('show');$('review').style.display='none';$('invoice-total').textContent='0.00';
  await Promise.all([loadInvoices(),loadCustomers()]);
 }catch(e){msg.textContent='تعذر إكمال الحفظ: '+(e?.message||'خطأ اتصال')}finally{btn.disabled=false}
