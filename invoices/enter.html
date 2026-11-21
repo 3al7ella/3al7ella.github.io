@@ -47,13 +47,26 @@ else{
   msg.textContent='الحساب ده مش مفعّل لدخول نظام الفواتير. راجع صلاحيات الحساب مع المدير.';
  });
  const params=new URLSearchParams(location.search);
- const authError=params.get('error_description');
+ const hashParams=new URLSearchParams(location.hash.replace(/^#/,''));
+ const authError=params.get('error_description')||hashParams.get('error_description');
+ const authCode=params.get('error_code')||hashParams.get('error_code');
  if(params.get('access')==='denied')msg.textContent='الحساب غير معتمد لدخول نظام الفواتير.';
- if(authError)msg.textContent='تعذر إكمال دخول Google: '+authError;
+ if(authError||authCode){
+  const detail=authError||authCode;
+  msg.textContent='Google لم يكمل تسجيل الدخول: '+detail;
+  btn.disabled=false;btn.textContent='🌐 إعادة محاولة الدخول باستخدام Google';
+ }
  btn.addEventListener('click',async()=>{
-  if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ فتح Google...';msg.textContent='';
-  const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://3al7ella.github.io/invoices/enter.html',queryParams:{prompt:'select_account'}}});
-  if(error){msg.textContent='تعذر بدء دخول Google: '+error.message;btn.disabled=false;btn.textContent='🌐 الدخول باستخدام Google';}
+  if(btn.disabled)return;
+  btn.disabled=true;btn.textContent='جارٍ فتح Google...';msg.textContent='';
+  try{
+   const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://3al7ella.github.io/invoices/enter.html',queryParams:{prompt:'select_account'}}});
+   if(error)throw error;
+   msg.textContent='تم طلب فتح Google. لو ما ظهرتش صفحة اختيار الحساب، حدّث الصفحة وحاول مرة واحدة.';
+  }catch(error){
+   msg.textContent='تعذر بدء دخول Google: '+(error?.message||'خطأ غير معروف');
+   btn.disabled=false;btn.textContent='🌐 إعادة محاولة الدخول باستخدام Google';
+  }
  });
 }
 </script>
