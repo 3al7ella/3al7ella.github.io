@@ -73,6 +73,9 @@ footer{text-align:center;color:#8b8178;font-size:11px;padding:12px}
  <div><label for="product-quantity">الكمية</label><input id="product-quantity" type="number" min="0.01" step="0.01" value="1"></div>
  <div><label>إضافة للفاتورة</label><button class="secondary" id="add-product-line" type="button" style="width:100%">إضافة بالسعر المعتمد</button></div>
 </div>
+<div class="row" style="justify-content:flex-start;flex-wrap:wrap;margin-top:8px">
+ <button class="secondary" id="sync-menu" type="button" hidden>تحديث الأصناف والأسعار من المنيو</button>
+</div>
 <p class="hint" id="product-message" aria-live="polite">أسعار الأصناف مأخوذة من المنيو الحالي. لو اتغير سعر في المنيو لازم تحديث الكتالوج قبل اعتماد الفاتورة.</p>
 <div class="grid"><div><label for="delivery-fee">التوصيل</label><input id="delivery-fee" type="number" min="0" value="0"></div><div><label for="discount">الخصم</label><input id="discount" type="number" min="0" value="0"></div></div>
 <div class="grid"><div><label for="delivery-date">تاريخ التسليم</label><input id="delivery-date" type="date"></div><div><label for="delivery-window">موعد التسليم</label><input id="delivery-window" placeholder="الفترة"></div></div>
@@ -231,11 +234,51 @@ $('add-product-line').addEventListener('click',()=>{
  $('priced-items').dispatchEvent(new Event('input'));
  $('product-message').textContent='اتضاف '+p.name+' للفاتورة بالسعر الموجود في المنيو.';
 });
+async function syncMenuCatalog(){
+ const btn=$('sync-menu'),box=$('product-message');
+ btn.disabled=true;box.textContent='جارٍ قراءة المنيو الحالي...';
+ try{
+  const response=await fetch('../index.html',{cache:'no-store'});
+  if(!response.ok)throw new Error('تعذر فتح المنيو الحالي');
+  const source=await response.text(),at=source.indexOf('ROWS=');
+  if(at<0)throw new Error('لم يتم العثور على بيانات المنيو');
+  const start=source.indexOf('[',at),depth0=start;
+  let depth=0,inString=false,escaped=false,quote='';
+  let end=-1;
+  for(let i=depth0;i<source.length;i++){
+   const ch=source[i];
+   if(inString){if(escaped){escaped=false;continue}if(ch==='\\'){escaped=true;continue}if(ch===quote)inString=false;continue}
+   if(ch==='"'||ch==="'"){inString=true;quote=ch;continue}
+   if(ch==='[')depth++;
+   if(ch===']'){depth--;if(depth===0){end=i+1;break}}
+  }
+  if(end<0)throw new Error('بيانات المنيو غير مكتملة');
+  const rows=JSON.parse(source.slice(start,end));
+  const active=rows.filter(x=>x[6]==='نعم'&&x[0]&&x[3]&&x[4]&&Number.isFinite(Number(x[5])));
+  if(!active.length)throw new Error('لم يتم العثور على أصناف نشطة');
+  const records=active.map(x=>({name:x[3],normalized_name:String(x[3]).trim().toLowerCase()+'|'+x[0],category:x[2],unit:x[4],current_price:Number(x[5]),active:true,aliases:[],requires_preparation_choice:false,preparation_options:[],notes:'مزامن من المنيو الحالي ('+x[0]+' · '+x[1]+')'}));
+  const {error:upsertError}=await supabaseClient.from('product_catalog').upsert(records,{onConflict:'normalized_name'});
+  if(upsertError)throw upsertError;
+  const {data:existing,error:readError}=await supabaseClient.from('product_catalog').select('id,notes').like('notes','مزامن من المنيو الحالي%').limit(1000);
+  if(readError)throw readError;
+  const activeIds=new Set(active.map(x=>String(x[0])));
+  const stale=(existing||[]).filter(x=>{const m=String(x.notes||'').match(/\((p\d+)\s*·/);return m&&!activeIds.has(m[1])}).map(x=>x.id);
+  if(stale.length){
+   const {error:deactivateError}=await supabaseClient.from('product_catalog').update({active:false}).in('id',stale);
+   if(deactivateError)throw deactivateError;
+  }
+  await loadProductCatalog();
+  box.textContent='تم تحديث '+active.length+' صنف وعرض من المنيو، وإيقاف '+stale.length+' صنف غير نشط.';
+ }catch(e){box.textContent='تعذر تحديث المنيو: '+(e?.message||'خطأ غير معروف')}
+ finally{btn.disabled=false}
+}
+$('sync-menu').addEventListener('click',syncMenuCatalog);
 function applyRole(role){
  if(role==='viewer'){
   const tab=document.querySelector('[data-view="new"]');if(tab)tab.hidden=true;
   $('approve-invoice').disabled=true;show('customers');
  }
+ if(role==='owner'||role==='admin')$('sync-menu').hidden=false;
  loadProductCatalog();
 }
 document.addEventListener('crm:ready',e=>applyRole(e.detail?.role||window.crmRole));
