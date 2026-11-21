@@ -1122,9 +1122,7 @@ window.reMenu=()=>{if(STARTED)start(window.__BASE)};
 window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;if(st.delivery>=0&&st.delivery!==undefined)DEF_DEL=+st.delivery;$('freeTxt').textContent=fmt(FREE_OVER);
  window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
  if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
-start(ROWS);
-// لا نعالج صورة الـ sprite عند فتح الصفحة؛ تُحمّل عند دخول العميل إلى قسم منتجات فقط.
-if(VIEW==='cat')ensureProductSprite();
+// Start after the story controls and their data are initialized below.
 </script>
 <script>window.addEventListener('load',()=>setTimeout(()=>{const s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-EPB6MMGYDX';s.async=true;document.head.appendChild(s)},1200));window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-EPB6MMGYDX');</script>
 <script type="module">
@@ -1235,6 +1233,10 @@ function storyOrder(toWhatsApp){
  }
 }
 document.getElementById('storyAdd').addEventListener('click',()=>storyOrder(false));
-document.getElementById('storyWa').addEventListener('click',()=>storyOrder(true));</script>
+document.getElementById('storyWa').addEventListener('click',()=>storyOrder(true));
+start(ROWS);
+// لا نعالج صورة الـ sprite عند فتح الصفحة؛ تُحمّل عند دخول العميل إلى قسم منتجات فقط.
+if(VIEW==='cat')ensureProductSprite();
+</script>
 </body>
-</html>
+                         </html>
