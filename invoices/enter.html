@@ -39,11 +39,16 @@ const client=window.supabase?.createClient(URL,KEY);
 if(!client){msg.textContent='تعذر تحميل خدمة الدخول. راجع اتصال الإنترنت ثم أعد المحاولة.'}
 else{
  client.auth.getSession().then(async({data,error})=>{
-  if(error||!data.session)return;
-  const {data:profile}=await client.from('profiles').select('role,active').eq('id',data.session.user.id).maybeSingle();
-  if(profile?.active===true&&['owner','admin','staff','viewer'].includes(profile.role))location.replace(DEST);
+  if(error){msg.textContent='تعذر التحقق من جلسة الدخول: '+error.message;return}
+  if(!data.session)return;
+  const {data:profile,error:profileError}=await client.from('profiles').select('role,active').eq('id',data.session.user.id).maybeSingle();
+  if(!profileError&&profile?.active===true&&['owner','admin','staff','viewer'].includes(profile.role)){location.replace(DEST);return}
+  await client.auth.signOut();
+  msg.textContent='الحساب ده مش مفعّل لدخول نظام الفواتير. راجع صلاحيات الحساب مع المدير.';
  });
- const authError=new URLSearchParams(location.search).get('error_description');
+ const params=new URLSearchParams(location.search);
+ const authError=params.get('error_description');
+ if(params.get('access')==='denied')msg.textContent='الحساب غير معتمد لدخول نظام الفواتير.';
  if(authError)msg.textContent='تعذر إكمال دخول Google: '+authError;
  btn.addEventListener('click',async()=>{
   if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ فتح Google...';msg.textContent='';
