@@ -11,19 +11,19 @@
 .daily-offer__terms{font-size:13px;line-height:1.8;font-weight:700;margin:4px 0 10px}
 .daily-offer__period{display:flex;flex-wrap:wrap;gap:2px 18px;border-top:1px solid #EAD6BE;padding-top:10px;margin:8px 0 0;font-size:13px;line-height:1.9;font-weight:800;color:#744B31}
 .daily-offer__period small{flex-basis:100%;font:inherit;font-size:12px}
-.daily-offer__image{display:block;width:38%;max-width:360px;object-fit:cover;align-self:stretch}
+.daily-offer__image{display:block;width:38%;height:auto;max-width:360px;object-fit:contain;align-self:center}
 .card [data-daily-offer]{width:100%;margin:0 0 18px}
 .card .daily-offer{display:block}
 .card .daily-offer__copy{padding:18px 20px}
 .card .daily-offer__title{font-size:26px}
-.card .daily-offer__image{width:100%;max-width:none;max-height:220px;aspect-ratio:16/9}
+.card .daily-offer__image{width:100%;height:auto;max-width:none;max-height:none;aspect-ratio:auto}
 @media(max-width:600px){
  .daily-offer{display:block;border-radius:20px}
  .daily-offer__copy{padding:18px 20px}
  .daily-offer__title{font-size:26px}
  .daily-offer__items{font-size:15px}
  .daily-offer__price{font-size:38px}
- .daily-offer__image{width:100%;max-width:none;max-height:220px;aspect-ratio:16/9}
+ .daily-offer__image{width:100%;height:auto;max-width:none;max-height:none;aspect-ratio:auto}
 }
 
 .daily-offer__contact{display:inline-block;margin-top:14px;padding:10px 20px;border-radius:13px;background:#B5161E;color:#fff;text-decoration:none;font-size:16px;font-weight:900;line-height:1.6}
