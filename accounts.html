@@ -290,12 +290,15 @@ function getStockRows(){
   const related=grouped.get(it.id)||[];
   const counts=related.filter(m=>m.type==="count").sort((a,b)=>(String(a.date||"")+" "+String(a.createdAt||"")).localeCompare(String(b.date||"")+" "+String(b.createdAt||"")));
   const base=counts.find(m=>String(m.date||"").slice(0,10)==="2026-11-06")||null;
-  let balance=null,lastDate=base?.date||"";
+  let balance=null,lastDate=base?.date||"",invalidMovement=false;
   if(base){
    balance=Number(base.qty)||0;
    const baselineKey=String(base.date||"")+" "+String(base.createdAt||"");
-   related.filter(m=>m!==base&&m.type!=="count"&&(String(m.date||"")+" "+String(m.createdAt||""))>baselineKey).forEach(m=>{
-    const rawQty=Number(m.qty)||0;
+   const postBase=related.filter(m=>m!==base&&m.type!=="count"&&(String(m.date||"")+" "+String(m.createdAt||""))>baselineKey);
+   invalidMovement=postBase.some(m=>m.qty===null||m.qty===undefined||String(m.qty).trim()===""||!Number.isFinite(Number(m.qty)));
+   postBase.forEach(m=>{
+    const rawQty=Number(m.qty);
+    if(!Number.isFinite(rawQty))return;
     const qty=it.id==="si-grapeleaf"&&/ربع كيلو/.test(String(m.unit||""))?rawQty*0.25:rawQty;
     if(m.type==="in")balance+=qty;
     else if(m.type==="out"||m.type==="waste")balance-=qty;
@@ -303,9 +306,10 @@ function getStockRows(){
     else if(m.type==="adjust")balance=qty;
     if(String(m.date||"")>lastDate)lastDate=m.date;
    });
+   if(invalidMovement)balance=null;
   }
-  const status=it.onDemand?"onDemand":!base?"unknown":String(base.date||"")<"2026-11-06"?"review":balance<=0?"empty":it.min>0&&balance<=it.min?"low":"available";
-  return {...it,name:base?.name||it.name,balance,base,lastDate,status,unit:stockUnit(it.id,it.unit,base)};
+  const status=it.onDemand?"onDemand":!base?"unknown":invalidMovement||String(base.date||"")<"2026-11-06"?"review":balance<=0?"empty":it.min>0&&balance<=it.min?"low":"available";
+  return {...it,name:base?.name||it.name,balance,base,lastDate,status,invalidMovement,unit:stockUnit(it.id,it.unit,base)};
  }).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
 }
 function renderStockDashboard(){
@@ -319,7 +323,7 @@ function renderStockDashboard(){
  const statusText={available:"رصيد موجب دفتري",low:"قرب يخلص حسب الدفتر",empty:"رصيد صفري دفتري",review:"محتاج مراجعة جرد",unknown:"غير مجرود",onDemand:"حسب الطلب"};
  $("stockList").innerHTML=visible.map(x=>{
   const bal=x.balance===null?"—":(Number(x.balance).toLocaleString("ar-EG",{maximumFractionDigits:3})+" "+x.unit);
-  const detail=x.base?("جرد الأساس "+x.base.date+" · "+(x.lastDate&&x.lastDate!==x.base.date?"آخر حركة "+x.lastDate:"رصيد الجرد")):(x.onDemand?"يُشترى عند الطلب":"لا يوجد جرد افتتاحي معتمد");
+  const detail=x.base?(x.invalidMovement?("جرد الأساس "+x.base.date+" · توجد حركة بكمية غير محددة؛ الرصيد يحتاج مراجعة"):("جرد الأساس "+x.base.date+" · "+(x.lastDate&&x.lastDate!==x.base.date?"آخر حركة "+x.lastDate:"رصيد الجرد"))):(x.onDemand?"يُشترى عند الطلب":"لا يوجد جرد افتتاحي معتمد");
   return '<div class="stock-card '+(x.status==="empty"?"empty-card":x.status==="low"?"low-card":x.status==="review"?"review-card":"")+'"><div class="row"><b>'+esc(x.name)+'</b><span class="stock-status '+(x.status==="available"?"ok":x.status==="empty"?"empty":x.status==="unknown"?"unknown":x.status==="onDemand"?"demand":x.status==="review"?"review":"")+'">'+statusText[x.status]+'</span></div><div class="stock-balance">'+esc(bal)+'</div><div class="stock-meta">'+esc(detail)+'</div></div>';
  }).join("")||'<p class="muted">مفيش أصناف مطابقة للبحث أو التصنيف.</p>';
  const opts=rows.map(x=>'<option value="'+esc(x.name)+'"></option>').join("");
