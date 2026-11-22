@@ -1,4 +1,5 @@
 // Supported Egyptian order formats only. All interpretation stays in this browser.
+import {parseFormattedInvoice} from './formatted-parser.js';
 import {asciiDigits} from './intake.js';
 import {adaptExtraction} from './extraction-adapter.js';
 const units='كيلوجرام|كيلو|كجم|كغ|جرام|جم|قطعة|قطعه|قطع|علبة|علبه|علب|طبق|أطباق|صينية|صينيه|صواني|فرخات|فراخ|فرخة|فرخه|دجاجة|دجاج';
@@ -15,6 +16,7 @@ function* orderSegments(raw){
 }
 export function parseSupportedOrder(raw,normalizePhone){
  if(typeof raw!=='string'||!raw.trim()||raw.length>20000)throw Error('الصق طلبًا واحدًا، بحد أقصى ٢٠ ألف حرف.');
+ const formatted=parseFormattedInvoice(raw,normalizePhone);if(formatted)return formatted;
  const proposal={schema_version:1,customer_names:[],addresses:[],phones:[],items:[],quoted_subtotal:null,delivery_fee:null,discount:null,notes:[],unresolved:[]};
  const localIssues=[],contactParts=[],extras={},assumed=[],moneyValues={};
  const span=(start,end)=>({start,end});const fact=(start,end,value=raw.slice(start,end))=>({value,evidence:span(start,end)});

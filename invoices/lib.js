@@ -23,7 +23,7 @@ export const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<
 export const money=value=>!Number.isFinite(Number(value||0))?'قيمة غير صالحة':Number(value||0).toLocaleString('ar-EG',{minimumFractionDigits:2,maximumFractionDigits:2})+' جنيه';
 export function normalizePhone(value){let s=String(value||'').replace(/[٠-٩۰-۹]/g,x=>String('٠١٢٣٤٥٦٧٨٩'.includes(x)?'٠١٢٣٤٥٦٧٨٩'.indexOf(x):'۰۱۲۳۴۵۶۷۸۹'.indexOf(x)));if(/[,،;/\n]|[a-z]/i.test(s))return '';s=s.replace(/[\s().-]/g,'');if(/^00201[0125]\d{8}$/.test(s))s='+'+s.slice(2);if(/^201[0125]\d{8}$/.test(s))s='+'+s;if(/^01[0125]\d{8}$/.test(s))s='+20'+s.slice(1);return /^\+201[0125]\d{8}$/.test(s)?s:''}
 export function lineAmount(quantity,price){const scaled=(value,places)=>{const s=String(value),m=s.match(/^(\d+)(?:\.(\d+))?$/);if(!m||((m[2]||'').length>places))return null;return BigInt(m[1])*10n**BigInt(places)+BigInt(((m[2]||'')+'0'.repeat(places)).slice(0,places))};const q=scaled(quantity,3),p=scaled(price,2);if(q===null||p===null)return NaN;return Number((q*p+500n)/1000n)/100}
-export const states={draft:'مسودة',review:'تحت المراجعة',rejected:'مرفوضة',approved:'معتمدة',sent:'مرسلة',cancelled:'ملغاة'};
+export const states={draft:'مسودة',review:'تحت المراجعة',rejected:'مرفوضة',ready:'جاهزة للإرسال',approved:'معتمدة',sent:'مرسلة',cancelled:'ملغاة'};
 export const badge=s=>`<span class="badge ${esc(s)}">${states[s]||esc(s)}</span>`;
 export const dateLabel=s=>s?new Date(s.length===10?s+'T12:00:00':s).toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):'لم يحدد';
 export function download(blob,name){const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),2000)}

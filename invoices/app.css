@@ -36,3 +36,6 @@ body{overflow-wrap:anywhere}.row>*{min-width:0}.invoice-line .row>span{flex:1;ov
 @media(max-width:640px){.analysis-overview{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.analysis-overview strong{font-size:22px}.analysis-overview>div{padding:10px}.analysis-controls,.analysis-advanced .analysis-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.analysis-search{grid-column:1/-1}.analysis-controls label{font-size:12px}.analysis-controls select{font-size:14px;padding:10px 8px}.analysis-shortcuts button{flex:1 1 100%;font-size:14px}.analysis-metrics strong{font-size:14px}.analysis-metrics>div{padding:10px}.analysis-controls input{min-width:0}.offer-card .analysis-metrics span{font-size:11px}}
 
 @media(max-width:640px){.analysis-shortcuts{flex-wrap:nowrap;gap:6px}.analysis-shortcuts button{flex:1 1 0;min-width:0;font-size:12px;padding:10px 5px}.analysis-overview{margin:14px 0}.analysis-controls{margin:14px 0}}
+
+/* Keep the sending and recording steps distinct on phones. */
+.wide-actions [data-action="confirm-sent"]{grid-column:1/-1}
