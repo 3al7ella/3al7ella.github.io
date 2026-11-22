@@ -120,7 +120,7 @@ export async function imageBlobs(i){
    else if(c.t==='dots'){ctx.fillStyle=LINE;for(let dx=c.x0;dx<c.x1;dx+=16){ctx.beginPath();ctx.arc(dx,c.y,2.6,0,7);ctx.fill()}}
    else if(c.t==='logo'){ctx.save();ctx.beginPath();ctx.arc(c.cx,c.cy,c.r,0,7);ctx.clip();ctx.drawImage(logo,c.cx-c.r,c.cy-c.r,c.r*2,c.r*2);ctx.restore();ctx.lineWidth=5;ctx.strokeStyle='#f0e2cf';ctx.beginPath();ctx.arc(c.cx,c.cy,c.r,0,7);ctx.stroke()}
   }
-  const blob=await new Promise(resolve=>out.toBlob(resolve,'image/jpeg',0.90));if(!blob)throw Error('تعذر تجهيز صورة الفاتورة');pages.push(blob)
+  const blob=await new Promise(resolve=>out.toBlob(resolve,'image/webp',0.90));if(!blob)throw Error('تعذر تجهيز صورة الفاتورة');pages.push(blob)
  }return pages;
 }
-export async function saveImages(i){const blobs=await imageBlobs(i);blobs.forEach((b,k)=>download(b,`${i.invoice_number||'invoice-review'}-${k+1}.${b.type==='image/jpeg'?'jpg':'png'}`));return blobs}
+export async function saveImages(i){const blobs=await imageBlobs(i);blobs.forEach((b,k)=>download(b,`${i.invoice_number||'invoice-review'}-${k+1}.${b.type==='image/webp'?'jpg':'png'}`));return blobs}
