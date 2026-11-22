@@ -3,9 +3,6 @@
   'use strict';
   const mounts = [...document.querySelectorAll('[data-daily-offer]')];
   if (!mounts.length) return;
-  const cairo = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Africa/Cairo', hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
   const dates = new Intl.DateTimeFormat('ar-EG', {
     timeZone: 'Africa/Cairo', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'
   });
@@ -21,10 +18,19 @@
         offer.price > 100000 || (offer.terms && !text(offer.terms, 300))) return null;
     const start = timestamp(offer.start), end = timestamp(offer.end);
     if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start ||
-        end - start < 23 * 3600000 || end - start > 25 * 3600000 ||
-        cairo.format(start) !== '12:00:00' || cairo.format(end) !== '12:00:00') return null;
+        end - start > 25 * 3600000) return null;
     // Local raster images only, no external tracking URLs or SVG markup.
     const image = typeof offer.image === 'string' && /^(?:assets\/menu\/)?[a-zA-Z0-9_-]+\.(?:webp|jpg|jpeg|png)$/.test(offer.image) ? offer.image : '';
+    // The canonical link is generated when the daily data entry is prepared.
+    // Reject an old link if the title, items, price or destination changed.
+    const orderMessage = 'عايز أطلب ' + offer.title + '\n' + offer.items.join(' + ') + '\nسعر العرض: ' + offer.price + ' جنيه';
+    try {
+      const link = new URL(offer.orderLink);
+      if (link.protocol !== 'https:' || link.hostname !== 'wa.me' || link.pathname !== '/201275165496' ||
+          link.hash || link.username || link.password || link.port ||
+          [...link.searchParams.keys()].some(key => key !== 'text') ||
+          link.searchParams.getAll('text').length !== 1 || link.searchParams.get('text') !== orderMessage) return null;
+    } catch (_) { return null; }
     return { ...offer, startTime: start, endTime: end, image };
   }
   function el(tag, className, content) {
@@ -56,8 +62,15 @@
       copy.append(price);
       if (offer.terms) copy.append(el('p', 'daily-offer__terms', offer.terms));
       const period = el('p', 'daily-offer__period');
-      period.append(el('span', '', 'من ' + dates.format(offer.startTime)), el('span', '', 'لحد ' + dates.format(offer.endTime)), el('small', '', 'من ١٢ الظهر لـ١٢ الظهر • بتوقيت مصر'));
+      period.append(el('span', '', 'من ' + dates.format(offer.startTime)), el('span', '', 'لحد ' + dates.format(offer.endTime)), el('small', '', 'بتوقيت مصر'));
       copy.append(period);
+      const contact = el('a', 'daily-offer__contact', 'اطلب العرض');
+      contact.href = offer.orderLink;
+      contact.target = '_blank'; contact.rel = 'noopener';
+      contact.addEventListener('click', event => {
+        if (Date.now() < offer.startTime || Date.now() >= offer.endTime) { event.preventDefault(); render(); }
+      });
+      copy.append(contact);
       article.append(copy);
       if (offer.image) {
         const image = el('img', 'daily-offer__image');
@@ -88,7 +101,7 @@
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) { render(); refresh(); }
   });
-  // Public static data only. Preloaded entries switch at noon without a page reload.
+  // Public static data only. Preloaded entries switch at their configured boundaries without a reload.
   setInterval(refresh, 3600000);
   refresh();
 })();
