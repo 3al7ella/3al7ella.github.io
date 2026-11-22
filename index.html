@@ -482,21 +482,21 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 
 
 /* Floating install logo has its own space beside the fixed navigation. */
-.menu-install-visible .nav{padding-left:86px;min-height:80px;align-items:center}
-body.menu-install-visible{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-body.menu-install-visible.hascart{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
-.menu-install-visible .cbar{bottom:calc(90px + env(safe-area-inset-bottom,0px))}
-.menu-install{position:fixed;bottom:calc(7px + env(safe-area-inset-bottom,0px));left:12px;z-index:42;width:66px}
-.menu-install button{border:0;padding:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;color:#FFE0A0;font:900 11px/1.5 Cairo,system-ui,sans-serif;white-space:nowrap}
-.menu-install img{width:48px;height:48px;border-radius:50%;padding:3px;background:#FFF8EF;border:2px solid #FFB42D;box-shadow:0 0 0 3px #F4880233,0 0 15px #FFAB32B3}
-.menu-install button:focus-visible{outline:3px solid #FFB42D;outline-offset:3px;border-radius:12px}
+/* A dedicated install card near the top, never over menu content. */
+.menu-install{margin:2px auto 14px;width:calc(100% - 32px);max-width:528px}
+.menu-install button{width:100%;display:flex;align-items:center;gap:14px;text-align:right;padding:12px 16px;border:2px solid #F48802;border-radius:20px;background:linear-gradient(115deg,#FFF0CF,#FFF8EF);color:#74300F;box-shadow:0 5px 16px #87350D18;font:900 18px/1.5 Cairo,system-ui,sans-serif}
+.menu-install img{width:62px;height:62px;flex-shrink:0;border-radius:50%;padding:4px;background:#FFF8EF;border:2px solid #F48802;box-shadow:0 0 0 4px #F4880220}
+.menu-install-copy{display:flex;flex-direction:column;gap:2px}
+.menu-install-copy small{font-size:12px;font-weight:700;color:#8D5B3B}
+.menu-install-arrow{margin-right:auto;display:grid;place-items:center;flex-shrink:0;width:34px;height:34px;border-radius:50%;background:#D9381E;color:#fff;font-size:22px}
+.menu-install button:focus-visible{outline:3px solid #D9381E;outline-offset:4px}
 .menu-install-help{position:fixed;inset:0;z-index:100;background:#2A1A1280;display:flex;align-items:center;justify-content:center;padding:20px}
 .menu-install-panel{background:#FFF8EF;color:#87350D;border:1px solid #EDC89F;border-radius:22px;padding:22px;max-width:360px;width:100%;box-shadow:0 15px 50px #2A1A1240;text-align:right}
 .menu-install-panel h2{font:400 28px/1.2 Lalezar,Cairo,sans-serif;margin:12px 0}
 .menu-install-panel p{font:700 15px/1.9 Cairo,system-ui,sans-serif;margin:12px 0}
 .menu-install-panel button{border:1px solid #EACBAB;border-radius:12px;background:#fff;padding:9px 14px;font:800 14px Cairo,system-ui,sans-serif}
 .menu-install-panel #menuInstallDone{background:#D9381E;color:white;border-color:#D9381E}
-@media(max-width:350px){.menu-install-visible .nav{padding-left:77px}.menu-install{left:8px;width:62px}.menu-install-visible .nav button,.menu-install-visible .nav a{font-size:10px}}
+@media(max-width:350px){.menu-install button{gap:10px;padding:10px 12px;font-size:16px}.menu-install img{width:54px;height:54px}.menu-install-copy small{font-size:11px}}
 
 </style>
 </head>
@@ -510,6 +510,10 @@ body.menu-install-visible.hascart{padding-bottom:calc(170px + env(safe-area-inse
 
  </div>
 </header>
+<div class="menu-install" id="menuInstall" hidden>
+ <button type="button" id="menuInstallButton" aria-label="ثبّت المنيو على موبايلك" aria-controls="menuInstallHelp" aria-expanded="false"><img src="icon-512.webp" width="62" height="62" alt="" aria-hidden="true"><span class="menu-install-copy"><span>ثبّت المنيو على موبايلك</span><small>افتح ع الحلة بضغطة من شاشتك</small></span><span class="menu-install-arrow" aria-hidden="true">↓</span></button>
+</div>
+
 <div class="wrap">
 <div class="notice" id="notice" hidden></div>
 <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="دوّر على صنف.. ورق عنب، بانيه، ملوخية" autocomplete="off" enterkeyhint="search" aria-label="بحث"><button type="button" class="clr" id="qClr" hidden aria-label="مسح البحث">×</button></div>
@@ -1324,9 +1328,6 @@ start(ROWS);
 if(VIEW==='cat')ensureProductSprite();
 </script>
 
-<div class="menu-install" id="menuInstall" hidden>
- <button type="button" id="menuInstallButton" aria-label="ثبّت المنيو" aria-controls="menuInstallHelp" aria-expanded="false"><img src="icon-512.webp" width="48" height="48" alt="" aria-hidden="true"><span>ثبّت المنيو</span></button>
-</div>
 <div class="menu-install-help" id="menuInstallHelp" hidden>
  <section class="menu-install-panel" role="dialog" aria-modal="true" aria-labelledby="menuInstallTitle" aria-describedby="menuInstallSteps">
   <button type="button" id="menuInstallClose" aria-label="إغلاق خطوات التثبيت">إغلاق ×</button>
@@ -1336,4 +1337,4 @@ if(VIEW==='cat')ensureProductSprite();
  </section>
 </div>
 </body>
-</html>
+ </html>
