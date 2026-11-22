@@ -1,6 +1,6 @@
 // Cache only this app's static shell. Never cache Auth, RPC, invoice links or customer data.
-const RELEASE='20261122-analysis-1';
-const CACHE='alhella-invoices-v25-analysis';
+const RELEASE='20261122-analysis-2';
+const CACHE='alhella-invoices-v26-analysis';
 const BASE=new URL('./',self.location.href);
 const FILES=['index.html','app.css','app.js','app.css?v='+RELEASE,'app.js?v='+RELEASE,'offers.js','intake.js','organized-review.js','extraction-adapter.js','extraction-runtime.js','admin.js','lib.js','export.js','invoice-brand.js','local-parser.js','brand-logo.webp','manifest.webmanifest','icon.svg','icon-192.webp','icon-512.webp'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll(FILES.map(x=>new URL(x,BASE).href));await self.skipWaiting()})()));

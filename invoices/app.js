@@ -1,4 +1,4 @@
-const APP_RELEASE='20261122-analysis-1';
+const APP_RELEASE='20261122-analysis-2';
 import {loadOffers,offerWidget,mountOffers,showOffer,clearOffers} from './offers.js';
 import {parseSupportedOrder} from './local-parser.js';
 import {organizedReview} from './organized-review.js';
