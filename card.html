@@ -124,6 +124,8 @@ div.mr .pr[data-id]{background:var(--t)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--brown);color:#fff;padding:10px 20px;border-radius:30px;font-weight:800;transition:.3s;z-index:9;opacity:0}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
+<link rel="stylesheet" href="daily-offer.css?v=1">
+<script src="daily-offer.js?v=1" defer></script>
 </head>
 <body>
 
@@ -136,6 +138,8 @@ div.mr .pr[data-id]{background:var(--t)}
   <img class="logo" src="icon-512.webp" alt="لوجو ع الحلة">
   <div class="who">أكل بيتي معمول بحب ❤️</div>
   <div class="tags"><span>محاشي</span><span>خضار متنضف</span><span>فراخ متبلة</span><span>وجبات</span></div>
+
+  <div data-daily-offer hidden></div>
 
   <div class="quick">
     <a href="https://wa.me/201275165496?text=%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D8%B9%20%D8%A7%D9%84%D8%AD%D9%84%D8%A9%20%F0%9F%91%8B" target="_blank" rel="noopener"><b class="q-wa">💬</b>واتساب</a>
@@ -269,4 +273,4 @@ const SYNC_URL="index.html";
 }catch(e){}})();
 </script>
 </body>
-</html>
+ </html>
