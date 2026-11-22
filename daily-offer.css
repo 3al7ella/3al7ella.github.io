@@ -25,3 +25,6 @@
  .daily-offer__price{font-size:38px}
  .daily-offer__image{width:100%;max-width:none;max-height:220px;aspect-ratio:16/9}
 }
+
+.daily-offer__contact{display:inline-block;margin-top:14px;padding:10px 20px;border-radius:13px;background:#B5161E;color:#fff;text-decoration:none;font-size:16px;font-weight:900;line-height:1.6}
+.daily-offer__contact:focus-visible{outline:3px solid #E83904;outline-offset:3px}
