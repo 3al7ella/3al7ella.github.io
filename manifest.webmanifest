@@ -18,5 +18,11 @@
       "type": "image/webp",
       "purpose": "any maskable"
     }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://3al7ella.github.io/manifest.webmanifest"
+    }
   ]
 }
