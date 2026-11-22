@@ -499,6 +499,8 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 @media(max-width:350px){.menu-install button{gap:10px;padding:10px 12px;font-size:16px}.menu-install img{width:54px;height:54px}.menu-install-copy small{font-size:11px}}
 
 </style>
+<link rel="stylesheet" href="daily-offer.css?v=1">
+<script src="daily-offer.js?v=1" defer></script>
 </head>
 <body>
 <header class="top">
@@ -510,6 +512,8 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 
  </div>
 </header>
+<div data-daily-offer hidden></div>
+
 <div class="menu-install" id="menuInstall" hidden>
  <button type="button" id="menuInstallButton" aria-label="ثبّت المنيو على موبايلك" aria-controls="menuInstallHelp" aria-expanded="false"><img src="icon-512.webp" width="62" height="62" alt="" aria-hidden="true"><span class="menu-install-copy"><span>ثبّت المنيو على موبايلك</span><small>افتح ع الحلة بضغطة من شاشتك</small></span><span class="menu-install-arrow" aria-hidden="true">↓</span></button>
 </div>
