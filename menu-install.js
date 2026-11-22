@@ -12,7 +12,12 @@
   const mode = window.matchMedia('(display-mode: standalone)');
   const standalone = () => mode.matches || navigator.standalone === true;
   let installed = false;
-  try { installed = localStorage.getItem(key) === '1'; } catch (_) {}
+  let installedAt = 0;
+  try {
+    const raw = localStorage.getItem(key);
+    installed = raw !== null;
+    installedAt = raw === '1' ? 0 : (parseInt(raw, 10) || 0);
+  } catch (_) {}
   let promptEvent = null;
   const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const android = /Android/i.test(navigator.userAgent);
@@ -21,14 +26,33 @@
     document.body.classList.remove('menu-install-visible');
   };
   const markInstalled = () => {
-    installed = true;
-    try { localStorage.setItem(key, '1'); } catch (_) {}
+    installed = true; installedAt = Date.now();
+    try { localStorage.setItem(key, String(installedAt)); } catch (_) {}
     hide();
+  };
+  const clearInstalled = () => {
+    installed = false; installedAt = 0;
+    try { localStorage.removeItem(key); } catch (_) {}
   };
   const show = () => {
     if (installed || standalone()) return;
     widget.hidden = false;
     document.body.classList.add('menu-install-visible');
+  };
+  /* Removing the app does not clear browser storage, so a saved flag would
+     hide the circle forever. Re-check that the app is really still installed;
+     where the browser cannot check, let old flags expire instead. */
+  const revalidate = async () => {
+    if (!installed || standalone()) return;
+    if ('getInstalledRelatedApps' in navigator) {
+      let apps = null;
+      try { apps = await navigator.getInstalledRelatedApps(); } catch (_) { return; }
+      if (apps && apps.length) return;
+      clearInstalled(); show();
+      return;
+    }
+    const fresh = installedAt > 0 && Date.now() - installedAt < 30 * 24 * 60 * 60 * 1000;
+    if (!fresh) { clearInstalled(); show(); }
   };
   const showHelp = () => {
     text.textContent = ios
@@ -46,7 +70,7 @@
   });
   window.addEventListener('appinstalled', markInstalled);
   mode.addEventListener('change', event => { if (event.matches) markInstalled(); });
-  window.addEventListener('storage', event => { if (event.key === key && event.newValue === '1') { installed = true; hide(); } });
+  window.addEventListener('storage', event => { if (event.key === key && event.newValue !== null) { installed = true; hide(); } });
   close.addEventListener('click', closeHelp);
   done.addEventListener('click', markInstalled);
   help.addEventListener('click', event => { if (event.target === help) closeHelp(); });
@@ -62,7 +86,7 @@
     } catch (_) { showHelp(); }
     finally { button.disabled = false; }
   });
-  if (standalone()) markInstalled(); else show();
+  if (standalone()) markInstalled(); else { show(); revalidate(); }
   if ('serviceWorker' in navigator && window.isSecureContext) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/menu-sw.js', { scope: '/', updateViaCache: 'none' }).catch(() => {});
