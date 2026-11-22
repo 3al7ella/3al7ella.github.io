@@ -25,23 +25,101 @@ async function loadLogo(){const img=new Image();img.src=brandLogoUrl;await img.d
 export async function imageBlobs(i){
  await document.fonts.ready;const logo=await loadLogo(),r=receiptData(i),pages=[],chunks=[];let chunk=[],chars=0;
  for(const item of r.lines){const n=String(item.name).length;if(chunk.length>=12||chars+n>600){chunks.push(chunk);chunk=[];chars=0}chunk.push(item);chars+=n}if(chunk.length||!chunks.length)chunks.push(chunk);
+ // Approved design 2: white page, orange accents, cream cards, red grand-total bar, gradient footer. Presentation only; all values come from receiptData above.
+ const W=1080,M=70,L=M,CW=W-2*M,R=W-M,WHITE='#fff',RED='#b83411',ORANGE='#cf4a1b',CREAM='#fdf6ec',PILL_BG='#fceee1',INK='#33241c',MUTED='#8a7566',FAINT='#6b5546',LINE='#ead9c8',BAND_A='#d6541e',BAND_B='#b83411';
+ const fmtN=v=>Number(v).toLocaleString('ar-EG',{minimumFractionDigits:0,maximumFractionDigits:2});
+ const fmtM=v=>known(v)?fmtN(v)+' جنيه':'لم يُحدد';
+ const font=(size,bold)=>`${bold?'700':'400'} ${size}px Tahoma,'Noto Sans Arabic',Arial,sans-serif`;
  for(let idx=0;idx<chunks.length;idx++){
-  const measure=document.createElement('canvas').getContext('2d'),commands=[];let y=65;measure.textBaseline='top';
-  const draw=(text,{size=38,color='#3c2a20',bold=false,gap=16,direction='rtl',x=1000,align='right',width=920}={})=>{measure.font=`${bold?'700':'400'} ${size}px Tahoma,Arial,sans-serif`;for(const l of wrap(measure,text,width)){commands.push({type:'text',text:l,x,y,size,color,bold,direction,align});y+=size*1.65}y+=gap};
-  const rule=()=>{commands.push({type:'rule',y});y+=25};
-  commands.push({type:'logo',y:55});y=70;draw('فاتورة طلب',{size:66,bold:true,color:'#b33b15',x:80,align:'left',width:610});draw(r.cancelled?'فاتورة ملغاة':r.draft?'مسودة للمراجعة':'فاتورة معتمدة',{size:32,bold:true,color:'#a34f2b',x:80,align:'left',width:610});y=Math.max(y,310);
-  if(localMode)draw('نسخة تجربة محلية، ليست فاتورة بيع حقيقية',{size:28,color:'#a34f2b'});
-  if(!r.draft)draw('فاتورة '+r.invoice_number+' · النسخة '+r.version,{size:28});
-  if(r.source_reference)draw('مرجع الطلب: '+r.source_reference,{size:28});
-  if(chunks.length>1)draw(`صفحة ${idx+1} من ${chunks.length}`,{size:28});
-  draw('تاريخ الفاتورة: '+dateLabel(r.invoice_date),{size:30,color:'#826c5d'});rule();
-  draw(r.customer.name||'الاسم لم يحدد',{size:48,bold:true});draw('التليفون الأساسي: \u2066'+(r.customer.phone||'لم يحدد')+'\u2069',{size:34});for(const phone of r.additional)draw('تليفون إضافي: \u2066'+phone+'\u2069',{size:34});rule();
-  const headerY=y;draw('الصنف والكمية',{size:29,color:'#856747',gap:0});y=headerY;draw('القيمة (جنيه)',{size:29,color:'#856747',x:80,align:'left',gap:0,width:250});rule();
-  for(const item of chunks[idx]){const start=y;draw(item.name||'صنف غير محدد',{bold:true,size:40,width:650,gap:8});const afterName=y;y=start;draw(number(item.amount),{size:42,bold:true,x:80,align:'left',width:230,gap:8});y=Math.max(y,afterName);draw(lineDetail(item),{size:29,color:'#826c5d',gap:12});rule()}
-  if(idx===chunks.length-1){const top=y;commands.push({type:'total',y:top});y+=26;draw(known(r.total)?'الإجمالي النهائي':'إجمالي الأصناف',{size:36,bold:true,color:'#fff',x:970,width:440,gap:0});draw(known(r.total)?'شامل التوصيل وبعد الخصم':'قبل التوصيل وأي خصم',{size:25,color:'#ffead8',x:970,width:440,gap:0});const labelEnd=y;y=top+32;draw(number(known(r.total)?r.total:r.subtotal)+' جنيه',{size:49,bold:true,color:'#fff',x:110,align:'left',width:430,gap:0});y=Math.max(labelEnd,y,top+145)+27;
-   if(known(r.total))draw('إجمالي الأصناف: '+amount(r.subtotal),{size:33});draw('التوصيل: '+amount(r.fee),{size:33});draw('الخصم: '+amount(r.discount),{size:33});draw('الإجمالي النهائي: '+amount(r.total),{size:38,bold:true,color:'#a34f2b'});rule();draw('عنوان التوصيل',{size:28,color:'#826c5d'});draw(r.customer.address||'العنوان لم يحدد',{size:34});if(r.delivery_notes)draw('ملاحظات التوصيل: '+r.delivery_notes,{size:32});if(r.notes)draw('ملاحظات: '+r.notes,{size:32});rule();if(r.cancelled)draw('فاتورة ملغاة، ليست مطالبة بالسداد',{size:32,bold:true,color:'#a34f2b'});if(r.draft)draw('مسودة غير معتمدة. لا حفظ نهائي قبل موافقة حمدي.',{size:30,color:'#a34f2b'});draw('شكرًا لثقتكم في ع الحلة',{size:30,color:'#826c5d'})}
-  y+=50;if(y>24000)throw new Error('النص أطول من صورة واحدة. استخدم النسخ أو PDF.');const out=document.createElement('canvas');out.width=1080;out.height=Math.ceil(y);const ctx=out.getContext('2d');ctx.fillStyle='#fffaf3';ctx.fillRect(0,0,out.width,out.height);ctx.fillStyle='#df531e';ctx.fillRect(0,0,1080,16);ctx.textBaseline='top';
-  for(const cmd of commands){if(cmd.type==='rule'){ctx.fillStyle='#e6d7c5';ctx.fillRect(80,cmd.y,920,2)}else if(cmd.type==='total'){ctx.fillStyle='#c34b1c';ctx.fillRect(80,cmd.y,920,145)}else if(cmd.type==='logo'){ctx.save();ctx.beginPath();ctx.arc(880,165,110,0,2*Math.PI);ctx.clip();ctx.drawImage(logo,770,55,220,220);ctx.restore()}else{ctx.direction=cmd.direction;ctx.textAlign=cmd.align;ctx.fillStyle=cmd.color;ctx.font=`${cmd.bold?'700':'400'} ${cmd.size}px Tahoma,Arial,sans-serif`;ctx.fillText(cmd.text,cmd.x,cmd.y)}}
+  const measure=document.createElement('canvas').getContext('2d'),commands=[];let y=0;measure.textBaseline='top';
+  const text=(t,x,ty,o)=>commands.push({t:'text',text:String(t),x,y:ty,size:o.size||30,color:o.color||INK,bold:!!o.bold,align:o.align||'right',direction:o.direction||'rtl'});
+  const draw=(t,{size=30,color=INK,bold=false,gap=14,direction='rtl',x=R,align='right',width=CW}={})=>{measure.font=font(size,bold);for(const l of wrap(measure,t,width)){text(l,x,y,{size,color,bold,align,direction});y+=Math.round(size*1.55)}y+=gap};
+  const rect=(rx,ry,w,h,rad,fill)=>commands.push({t:'rect',x:rx,y:ry,w,h,r:rad,fill});
+  const grad=(gx,gy,w,h,c0,c1)=>commands.push({t:'grad',x:gx,y:gy,w,h,c0,c1});
+  const rule=(x0,x1,ry,color=LINE,thick=2)=>commands.push({t:'rule',x0,x1,y:ry,color,thick});
+  const dots=(x0,x1,ry)=>commands.push({t:'dots',x0,x1,y:ry});
+  const section=title=>{measure.font=font(30,true);const tw=measure.measureText(title).width;text(title,R,y,{size:30,color:RED,bold:true});rule(L,R-tw-30,y+17);y+=47+14};
+  // header
+  grad(0,0,W,10,BAND_A,BAND_B);y=52;
+  commands.push({t:'logo',cx:R-78,cy:y+78,r:78});
+  text('فاتورة طلب',W/2,y+8,{size:62,color:RED,bold:true,align:'center'});
+  text('ع الحلة · أكل بيتي حقيقي',W/2,y+96,{size:28,color:FAINT,align:'center'});
+  if(!r.draft){text(r.invoice_number,M,y+16,{size:38,color:ORANGE,bold:true,align:'left',direction:'ltr'});text('النسخة '+fmtN(r.version),M,y+70,{size:24,color:MUTED,align:'left'})}
+  y+=164;
+  const btxt=r.cancelled?'فاتورة ملغاة':r.draft?'مسودة للمراجعة':'فاتورة معتمدة';
+  measure.font=font(24,true);const bw=measure.measureText(btxt).width+56;rect((W-bw)/2,y,bw,46,23,PILL_BG);text(btxt,W/2,y+10,{size:24,color:r.cancelled?RED:ORANGE,bold:true,align:'center'});y+=46+22;
+  if(localMode)draw('نسخة تجربة محلية، ليست فاتورة بيع حقيقية',{size:24,color:ORANGE,gap:6});
+  if(chunks.length>1)draw(`صفحة ${idx+1} من ${chunks.length}`,{size:24,color:MUTED,gap:6});
+  rule(L,R,y);y+=26;
+  // date + reference cards
+  const cardH=112,infoCard=(cx,cw,label,value,dir)=>{rect(cx,y,cw,cardH,18,CREAM);text(label,cx+cw-24,y+18,{size:22,color:MUTED});text(value,cx+cw-24,y+54,{size:28,color:INK,bold:true,direction:dir||'rtl'})};
+  if(r.source_reference){infoCard(R-458,458,'التاريخ',dateLabel(r.invoice_date));infoCard(L,458,'مرجع الطلب',r.source_reference,'ltr')}else infoCard(L,CW,'التاريخ',dateLabel(r.invoice_date));
+  y+=cardH+32;
+  // customer
+  section('بيانات العميل');
+  draw(r.customer.name||'الاسم لم يحدد',{size:42,bold:true,gap:4});
+  const phoneRow=(label,num)=>{measure.font=font(28,false);const lw=measure.measureText(label).width;text(label,R,y,{size:28,color:MUTED});text('\u2066'+num+'\u2069',R-lw-8,y,{size:28,color:INK,bold:true,direction:'ltr'});y+=Math.round(28*1.55)};
+  phoneRow('التليفون الأساسي: ',r.customer.phone||'لم يحدد');for(const p of r.additional)phoneRow('تليفون إضافي: ',p);
+  y+=22;
+  // items
+  section('الأصناف');
+  for(const item of chunks[idx]){
+   const q=known(item.quantity)?fmtN(item.quantity)+' '+(item.unit||'وحدة غير محددة'):'كمية غير محددة';
+   const det=known(item.unit_price)?fmtM(item.unit_price)+(item.unit?' لل'+item.unit:' للوحدة')+(item.quoted&&Number(item.source_price?.calculated_unit_price)===Number(item.unit_price)?'، محسوب من إجمالي الصنف':''):'سعر الوحدة لم يُحدد';
+   const detail=item.quoted?det+' · قيمة السطر كما وردت':det;
+   measure.font=font(22,true);const qw=measure.measureText(q).width+40;
+   const amountW=210,nameW=CW-48-qw-14-amountW;
+   measure.font=font(36,true);const nameLines=wrap(measure,item.name||'صنف غير محدد',nameW);
+   measure.font=font(24,false);const detLines=wrap(measure,detail,nameW);
+   const ch=22+nameLines.length*Math.round(36*1.5)+6+detLines.length*Math.round(24*1.5)+22,cy=y;
+   rect(L,cy,CW,ch,18,CREAM);
+   let ty=cy+22;for(const l of nameLines){text(l,R-24,ty,{size:36,color:INK,bold:true});ty+=Math.round(36*1.5)}
+   measure.font=font(36,true);const fw=nameLines.length?measure.measureText(nameLines[0]).width:0,bx=Math.max(L+24+amountW,R-24-fw-12-qw);
+   rect(bx,cy+28,qw,40,20,ORANGE);text(q,bx+qw/2,cy+37,{size:22,color:WHITE,bold:true,align:'center'});
+   text(fmtM(item.amount),L+24,cy+Math.round(ch/2)-17,{size:32,color:ORANGE,bold:true,align:'left'});
+   ty+=4;for(const l of detLines){text(l,R-24,ty,{size:24,color:MUTED});ty+=Math.round(24*1.5)}
+   y+=ch+18;
+  }
+  if(idx===chunks.length-1){
+   y+=10;
+   const rows=[];if(known(r.total))rows.push(['إجمالي الأصناف',fmtM(r.subtotal)]);rows.push(['التوصيل',fmtM(r.fee)]);rows.push(['الخصم',fmtM(r.discount)]);
+   rows.forEach((row,k)=>{text(row[0],R,y,{size:28,color:MUTED});text(row[1],L,y,{size:28,color:INK,bold:true,align:'left'});y+=Math.round(28*1.55);if(k<rows.length-1){dots(L,R,y+4);y+=16}});
+   y+=20;
+   rect(L,y,CW,122,20,RED);
+   text(known(r.total)?'الإجمالي النهائي':'إجمالي الأصناف',R-30,y+22,{size:34,color:WHITE,bold:true});
+   text(known(r.total)?'شامل التوصيل وبعد الخصم':'قبل التوصيل وأي خصم',R-30,y+74,{size:22,color:'#f6d9c8'});
+   text(fmtM(known(r.total)?r.total:r.subtotal),L+30,y+36,{size:44,color:WHITE,bold:true,align:'left'});
+   y+=122;
+   if(!known(r.total)){y+=18;draw('الإجمالي النهائي: '+amount(r.total),{size:28,bold:true,color:RED})}
+   y+=28;
+   section('عنوان التوصيل');
+   measure.font=font(28,false);const addrLines=wrap(measure,r.customer.address||'العنوان لم يحدد',CW-48);
+   measure.font=font(24,false);const dnLines=r.delivery_notes?wrap(measure,'ملاحظات التوصيل: '+r.delivery_notes,CW-48):[];
+   const ah=20+addrLines.length*Math.round(28*1.55)+(dnLines.length?8+dnLines.length*Math.round(24*1.55):0)+20;
+   rect(L,y,CW,ah,18,CREAM);let ay=y+20;for(const l of addrLines){text(l,W/2,ay,{size:28,color:INK,align:'center'});ay+=Math.round(28*1.55)}
+   if(dnLines.length){ay+=8;for(const l of dnLines){text(l,W/2,ay,{size:24,color:MUTED,align:'center'});ay+=Math.round(24*1.55)}}
+   y+=ah+22;
+   if(r.notes)draw('ملاحظات: '+r.notes,{size:26,color:FAINT});
+   if(r.cancelled)draw('فاتورة ملغاة، ليست مطالبة بالسداد',{size:28,bold:true,color:RED});
+   if(r.draft)draw('مسودة غير معتمدة. لا حفظ نهائي قبل موافقة حمدي.',{size:26,color:ORANGE});
+   y+=30;
+   grad(0,y,W,140,BAND_A,BAND_B);
+   text('شكرًا لثقتكم في ع الحلة',W/2,y+32,{size:32,color:WHITE,bold:true,align:'center'});
+   text('المنيو والطلب: 3al7ella.github.io/card.html',W/2,y+88,{size:24,color:'#ffd9bd',align:'center'});
+   y+=140;
+  }else y+=30;
+  if(y>24000)throw new Error('النص أطول من صورة واحدة. استخدم النسخ أو PDF.');
+  const out=document.createElement('canvas');out.width=W;out.height=Math.ceil(y);const ctx=out.getContext('2d');
+  ctx.fillStyle=WHITE;ctx.fillRect(0,0,W,out.height);ctx.textBaseline='top';
+  const rr=(rx,ry,w,h,rad)=>{ctx.beginPath();ctx.moveTo(rx+rad,ry);ctx.arcTo(rx+w,ry,rx+w,ry+h,rad);ctx.arcTo(rx+w,ry+h,rx,ry+h,rad);ctx.arcTo(rx,ry+h,rx,ry,rad);ctx.arcTo(rx,ry,rx+w,ry,rad);ctx.closePath()};
+  for(const c of commands){
+   if(c.t==='text'){ctx.direction=c.direction;ctx.textAlign=c.align;ctx.fillStyle=c.color;ctx.font=font(c.size,c.bold);ctx.fillText(c.text,c.x,c.y)}
+   else if(c.t==='rect'){ctx.fillStyle=c.fill;rr(c.x,c.y,c.w,c.h,c.r);ctx.fill()}
+   else if(c.t==='grad'){const g=ctx.createLinearGradient(c.x,0,c.x+c.w,0);g.addColorStop(0,c.c0);g.addColorStop(1,c.c1);ctx.fillStyle=g;ctx.fillRect(c.x,c.y,c.w,c.h)}
+   else if(c.t==='rule'){ctx.fillStyle=c.color;ctx.fillRect(c.x0,c.y,c.x1-c.x0,c.thick)}
+   else if(c.t==='dots'){ctx.fillStyle=LINE;for(let dx=c.x0;dx<c.x1;dx+=16){ctx.beginPath();ctx.arc(dx,c.y,2.6,0,7);ctx.fill()}}
+   else if(c.t==='logo'){ctx.save();ctx.beginPath();ctx.arc(c.cx,c.cy,c.r,0,7);ctx.clip();ctx.drawImage(logo,c.cx-c.r,c.cy-c.r,c.r*2,c.r*2);ctx.restore();ctx.lineWidth=5;ctx.strokeStyle='#f0e2cf';ctx.beginPath();ctx.arc(c.cx,c.cy,c.r,0,7);ctx.stroke()}
+  }
   const blob=await new Promise(resolve=>out.toBlob(resolve,'image/jpeg',0.90));if(!blob)throw Error('تعذر تجهيز صورة الفاتورة');pages.push(blob)
  }return pages;
 }
