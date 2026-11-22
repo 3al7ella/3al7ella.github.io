@@ -1,0 +1,27 @@
+/* Isolated banner styles. Existing brand colors and logo stay unchanged. */
+[data-daily-offer][hidden]{display:none!important}
+[data-daily-offer]{display:block;width:calc(100% - 32px);max-width:1000px;margin:12px auto 20px;direction:rtl;box-sizing:border-box}
+.daily-offer{display:flex;align-items:stretch;gap:24px;overflow:hidden;border:2px solid #E83904;border-radius:24px;background:#FFF5E7;color:#2A1A12;box-shadow:0 8px 24px #8E0F1614;font-family:Cairo,system-ui,sans-serif;text-align:right}
+.daily-offer__copy{flex:1;min-width:0;padding:24px 28px}
+.daily-offer__badge{display:inline-block;border-radius:30px;background:#B5161E;color:#fff;font-size:14px;font-weight:900;padding:4px 16px;line-height:1.8}
+.daily-offer__title{font-size:clamp(23px,3.5vw,36px);line-height:1.5;font-weight:900;color:#8E0F16;margin:10px 0 6px}
+.daily-offer__items{padding:0 20px 0 0;margin:0;font-size:16px;line-height:1.9;font-weight:700}
+.daily-offer__price{font-size:44px;line-height:1.35;color:#B5161E;font-weight:900;margin:12px 0 8px;font-variant-numeric:tabular-nums}
+.daily-offer__price span{font-size:19px}
+.daily-offer__terms{font-size:13px;line-height:1.8;font-weight:700;margin:4px 0 10px}
+.daily-offer__period{display:flex;flex-wrap:wrap;gap:2px 18px;border-top:1px solid #EAD6BE;padding-top:10px;margin:8px 0 0;font-size:13px;line-height:1.9;font-weight:800;color:#744B31}
+.daily-offer__period small{flex-basis:100%;font:inherit;font-size:12px}
+.daily-offer__image{display:block;width:38%;max-width:360px;object-fit:cover;align-self:stretch}
+.card [data-daily-offer]{width:100%;margin:0 0 18px}
+.card .daily-offer{display:block}
+.card .daily-offer__copy{padding:18px 20px}
+.card .daily-offer__title{font-size:26px}
+.card .daily-offer__image{width:100%;max-width:none;max-height:220px;aspect-ratio:16/9}
+@media(max-width:600px){
+ .daily-offer{display:block;border-radius:20px}
+ .daily-offer__copy{padding:18px 20px}
+ .daily-offer__title{font-size:26px}
+ .daily-offer__items{font-size:15px}
+ .daily-offer__price{font-size:38px}
+ .daily-offer__image{width:100%;max-width:none;max-height:220px;aspect-ratio:16/9}
+}
