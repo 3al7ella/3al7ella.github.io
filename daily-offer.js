@@ -19,8 +19,8 @@
     const start = timestamp(offer.start), end = timestamp(offer.end);
     if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start ||
         end - start > 25 * 3600000) return null;
-    // Local raster images only, no external tracking URLs or SVG markup.
-    const image = typeof offer.image === 'string' && /^(?:assets\/menu\/)?[a-zA-Z0-9_-]+\.(?:webp|jpg|jpeg|png)$/.test(offer.image) ? offer.image : '';
+    // Local raster paths, plus the one reviewed self-contained offer-card asset.
+    const image = typeof offer.image === 'string' && (/^(?:assets\/menu\/)?[a-zA-Z0-9_-]+\.(?:webp|jpg|jpeg|png)$/.test(offer.image) || offer.image === 'daily-offer-approved.svg') ? offer.image : '';
     // The canonical link is generated when the daily data entry is prepared.
     // Reject an old link if the title, items, price or destination changed.
     const orderMessage = 'عايز أطلب ' + offer.title + '\n' + offer.items.join(' + ') + '\nسعر العرض: ' + offer.price + ' جنيه';
