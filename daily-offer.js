@@ -1,0 +1,94 @@
+/* Daily offer display only. Menu, basket and checkout prices are unchanged. */
+(() => {
+  'use strict';
+  const mounts = [...document.querySelectorAll('[data-daily-offer]')];
+  if (!mounts.length) return;
+  const cairo = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Africa/Cairo', hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+  const dates = new Intl.DateTimeFormat('ar-EG', {
+    timeZone: 'Africa/Cairo', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'
+  });
+  const money = new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 2 });
+  let offers = [], timer, loading = false;
+  const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
+  const timestamp = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/.test(value) ? Date.parse(value) : NaN;
+  function validate(offer) {
+    if (!offer || offer.approved !== true || !text(offer.title, 100) ||
+        !Array.isArray(offer.items) || offer.items.length < 1 || offer.items.length > 8 ||
+        !offer.items.every(item => text(item, 160)) ||
+        typeof offer.price !== 'number' || !Number.isFinite(offer.price) || offer.price <= 0 ||
+        offer.price > 100000 || (offer.terms && !text(offer.terms, 300))) return null;
+    const start = timestamp(offer.start), end = timestamp(offer.end);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start ||
+        end - start < 23 * 3600000 || end - start > 25 * 3600000 ||
+        cairo.format(start) !== '12:00:00' || cairo.format(end) !== '12:00:00') return null;
+    // Local raster images only, no external tracking URLs or SVG markup.
+    const image = typeof offer.image === 'string' && /^(?:assets\/menu\/)?[a-zA-Z0-9_-]+\.(?:webp|jpg|jpeg|png)$/.test(offer.image) ? offer.image : '';
+    return { ...offer, startTime: start, endTime: end, image };
+  }
+  function el(tag, className, content) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (content !== undefined) node.textContent = content;
+    return node;
+  }
+  function render() {
+    clearTimeout(timer);
+    const now = Date.now();
+    const active = offers.filter(offer => offer.startTime <= now && now < offer.endTime);
+    // Ambiguous overlapping entries fail closed instead of picking an offer.
+    const offer = active.length === 1 ? active[0] : null;
+    mounts.forEach(mount => {
+      mount.replaceChildren();
+      mount.hidden = !offer;
+      if (!offer) return;
+      const article = el('article', 'daily-offer');
+      article.setAttribute('aria-label', 'عرض اليوم');
+      const copy = el('div', 'daily-offer__copy');
+      copy.append(el('span', 'daily-offer__badge', 'عرض اليوم'));
+      copy.append(el('h2', 'daily-offer__title', offer.title));
+      const list = el('ul', 'daily-offer__items');
+      offer.items.forEach(item => list.append(el('li', '', item)));
+      copy.append(list);
+      const price = el('p', 'daily-offer__price', money.format(offer.price));
+      price.append(el('span', '', ' جنيه'));
+      copy.append(price);
+      if (offer.terms) copy.append(el('p', 'daily-offer__terms', offer.terms));
+      const period = el('p', 'daily-offer__period');
+      period.append(el('span', '', 'من ' + dates.format(offer.startTime)), el('span', '', 'لحد ' + dates.format(offer.endTime)), el('small', '', 'من ١٢ الظهر لـ١٢ الظهر • بتوقيت مصر'));
+      copy.append(period);
+      article.append(copy);
+      if (offer.image) {
+        const image = el('img', 'daily-offer__image');
+        image.alt = offer.title;
+        image.width = 360; image.height = 280;
+        image.decoding = 'async';
+        image.addEventListener('error', () => image.remove(), { once: true });
+        image.src = offer.image;
+        article.append(image);
+      }
+      mount.append(article);
+    });
+    const next = offers.flatMap(offer => [offer.startTime, offer.endTime]).filter(time => time > now);
+    if (next.length) timer = setTimeout(render, Math.min(Math.min(...next) - now + 25, 2147483647));
+  }
+  async function refresh() {
+    if (loading) return;
+    loading = true;
+    try {
+      const response = await fetch('daily-offer.json', { cache: 'no-store', credentials: 'omit' });
+      if (!response.ok) throw new Error('Daily offer unavailable');
+      const data = await response.json();
+      offers = data && data.version === 1 && Array.isArray(data.offers) && data.offers.length <= 31
+        ? data.offers.map(validate).filter(Boolean) : [];
+    } catch (_) { offers = []; }
+    finally { loading = false; render(); }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { render(); refresh(); }
+  });
+  // Public static data only. Preloaded entries switch at noon without a page reload.
+  setInterval(refresh, 3600000);
+  refresh();
+})();
