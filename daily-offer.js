@@ -3,9 +3,6 @@
   'use strict';
   const mounts = [...document.querySelectorAll('[data-daily-offer]')];
   if (!mounts.length) return;
-  const dates = new Intl.DateTimeFormat('ar-EG', {
-    timeZone: 'Africa/Cairo', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'
-  });
   const money = new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 2 });
   let offers = [], timer, loading = false;
   const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
@@ -61,9 +58,6 @@
       price.append(el('span', '', ' جنيه'));
       copy.append(price);
       if (offer.terms) copy.append(el('p', 'daily-offer__terms', offer.terms));
-      const period = el('p', 'daily-offer__period');
-      period.append(el('span', '', 'من ' + dates.format(offer.startTime)), el('span', '', 'لحد ' + dates.format(offer.endTime)), el('small', '', 'بتوقيت مصر'));
-      copy.append(period);
       const contact = el('a', 'daily-offer__contact', 'اطلب العرض');
       contact.href = offer.orderLink;
       contact.target = '_blank'; contact.rel = 'noopener';
