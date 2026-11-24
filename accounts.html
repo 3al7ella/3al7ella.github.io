@@ -427,7 +427,7 @@ function renderHistoryAndAudit(){ const orders=fromStartRows("orders").filter(x=
  $("auditDuplicates").innerHTML=rows(duplicates,a=>'<div class="item audit-warning"><div><b>'+esc(a[0].item||"بند")+' · '+esc(a[0].date||"")+'</b><div class="muted">سجلات: '+a.map(x=>esc(x._id)).join("، ")+' — تشابه في التاريخ والبند والمبلغ والمورد، مش تأكيد إنها مكررة.</div></div><b>'+money(a[0].amount)+'</b></div>');
 }
 
-function bagAmortizationForMonth(month){if(!/^\\d{4}-\\d{2}$/.test(String(month||""))||month<"2026-10")return 0;const offset=(Number(month.slice(0,4))-2026)*12+Number(month.slice(5,7))-10;return Math.max(0,Math.min(2000,9600-offset*2000));}
+function bagAmortizationForMonth(month){if(!/^\d{4}-\d{2}$/.test(String(month||""))||month<"2026-10")return 0;const offset=(Number(month.slice(0,4))-2026)*12+Number(month.slice(5,7))-10;return Math.max(0,Math.min(2000,9600-offset*2000));}
 function render(){
  setupMonthFilter();
  const orders=scopedCollection("orders").sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
