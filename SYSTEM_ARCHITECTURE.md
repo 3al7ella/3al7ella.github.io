@@ -127,8 +127,8 @@ Do not auto-generate historical attendance or payroll entries until the current 
 ## 9. Customer CRM and invoices — added 21 November 2026
 
 ### Current verified setup
-- CRM / invoice app: `https://3al7ella.github.io/invoices/`; Google sign-in page: `/invoices/enter.html`.
-- Separate Supabase project: `3al7ella-crm` (`nxdghlshuumicvsottoy`), not the accounting ledger project.
+- CRM / invoice app: REMOVED Nov 24, 2026 (owner decision) — was `https://3al7ella.github.io/invoices/`.
+- Separate Supabase project: `3al7ella-crm` (`nxdghlshuumicvsottoy`) still exists with its CRM data; only the site files were removed.
 - Core tables: `profiles`, `customers`, `customer_addresses`, `orders`, `order_items`, `invoices`, `product_catalog`, import review tables, and audit log.
 - Active catalog seeded from the current storefront menu: 220 active products/offers across 25 categories. The invoice UI can select current catalog items and validate their current price at save time. Owner/admin can refresh the catalog from the live menu; inactive menu entries are deactivated in the CRM catalog.
 - Customer matching uses normalized Egyptian mobile number, protected by a unique partial index.
