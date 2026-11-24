@@ -70,7 +70,7 @@
 <div class="field"><label>نوع الحركة</label><select id="lkind"><option value="day">يومية</option><option value="salary">راتب</option><option value="advance">سلفة</option><option value="deduction">خصم</option><option value="other">أخرى</option></select></div>
 <div class="field"><label>المبلغ (جنيه)</label><input id="lamount" type="number" step="0.01"></div><div class="field"><label>حالة الدفع</label><select id="lpaid"><option value="true">مدفوع</option><option value="false">غير مدفوع</option></select></div>
 </div><div class="field"><label>ملاحظات</label><textarea id="lnote"></textarea></div><button id="addLabor">حفظ حركة العمالة</button></div>
-<div class="panel" style="margin-top:12px"><h3>تحليل العمالة وملخص الشهر</h3><div class="formgrid"><div class="field"><label>الشهر</label><input id="laborMonth" type="month"></div><div class="field" style="align-content:end"><button id="closeLaborMonth">مراجعة وحفظ ملخص العمالة</button></div></div><div class="grid"><div class="metric"><small>إجمالي العمالة</small><strong id="lmTotal">0 ج</strong></div><div class="metric"><small>عدد الحركات</small><strong id="lmCount">0</strong></div><div class="metric"><small>المدفوع</small><strong id="lmPaid">0 ج</strong></div><div class="metric"><small>غير المدفوع</small><strong id="lmDue">0 ج</strong></div></div><div id="laborMonthCompare" class="list"></div><div id="laborCloseStatus" class="notice">ملخص للحركات المسجلة للمقارنة، لا يقفل الشهر ماليًا ولا يثبت صرفًا. أي حركة جديدة تستلزم مراجعة الملخص مجددًا.</div></div><details class="panel" style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">سجل حركات العمالة السابقة <span class="muted" id="laborCount"></span></summary><div id="laborList" class="list"></div></details>
+<div class="panel" style="margin-top:12px"><h3>تحليل العمالة وملخص الشهر</h3><div class="formgrid"><div class="field"><label>الشهر</label><input id="laborMonth" type="month"></div><div class="field" style="align-content:end"><button id="closeLaborMonth">مراجعة وحفظ ملخص العمالة</button></div></div><div class="grid"><div class="metric"><small>إجمالي العمالة</small><strong id="lmTotal">0 ج</strong></div><div class="metric"><small>عدد الحركات</small><strong id="lmCount">0</strong></div><div class="metric"><small>المدفوع</small><strong id="lmPaid">0 ج</strong></div><div class="metric"><small>غير المدفوع</small><strong id="lmDue">0 ج</strong></div></div><div id="laborEmployeeBreakdown" class="list"></div><div id="laborMonthCompare" class="list"></div><div id="laborCloseStatus" class="notice">ملخص للحركات المسجلة للمقارنة، لا يقفل الشهر ماليًا ولا يثبت صرفًا. أي حركة جديدة تستلزم مراجعة الملخص مجددًا.</div></div><details class="panel" style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">سجل حركات العمالة السابقة <span class="muted" id="laborCount"></span></summary><div id="laborList" class="list"></div></details>
 <div class="panel" style="margin-top:12px"><h3>حركة العهدة</h3><div class="formgrid">
 <div class="field"><label>التاريخ</label><input id="cdate" type="date"></div><div class="field"><label>نوع الحركة</label><select id="ctype"><option value="in">تسليم عهدة</option><option value="out">استرداد / تسوية</option></select></div>
 <div class="field"><label>المبلغ (جنيه)</label><input id="camount" type="number" step="0.01"></div><div class="field"><label>البيان</label><input id="cnote"></div>
@@ -199,7 +199,8 @@ function renderStaffAttendance(){
 function renderLaborInsights(){
  const all=currentLabor(), m=$("laborMonth").value||today().slice(0,7), rows=all.filter(x=>monthOf(x)===m), auto=autoPayrollForMonth(m);
  const total=rows.reduce((s,x)=>s+(Number(x.amount)||0),0)+auto.total, paid=rows.filter(x=>x.paid!==false).reduce((s,x)=>s+(Number(x.amount)||0),0), due=rows.filter(x=>x.paid===false).reduce((s,x)=>s+(Number(x.amount)||0),0)+auto.total;
- $("lmTotal").textContent=money(total);$("lmCount").textContent=rows.length+" + استحقاق تلقائي";$("lmPaid").textContent=money(paid);$("lmDue").textContent=money(due);
+ $("lmTotal").textContent=money(total);$("lmCount").textContent=rows.length+" حركة مسجلة + استحقاق تلقائي";$("lmPaid").textContent=money(paid);$("lmDue").textContent=money(due);
+ $("laborEmployeeBreakdown").innerHTML='<div class="notice">استحقاق المرتب محسوب من تاريخ بداية العمل حتى نهاية الشهر المختار/اليوم، ناقص الغياب المُبلّغ عنه فقط. الحركات المسجلة تخصم من الاستحقاق التلقائي لمنع التكرار؛ المصنعية والسلف والخامات لا تخصم من الراتب.</div>'+auto.details.map(d=>'<div class="item"><div><b>'+esc(d.name)+'</b><div class="muted">'+d.days+' يوم مستحق · '+d.absenceDays+' غياب بخصم · مسجل '+money(d.already)+' (مدفوع '+money(d.recordedPaid)+' / غير مدفوع '+money(d.recordedUnpaid)+')</div></div><div style="text-align:left"><b>استحقاق '+money(d.earned)+'</b><div class="muted">متبقي غير مسجل '+money(d.remaining)+' · إجمالي المستحق '+money(d.due+d.recordedPaid)+'</div></div></div>').join('')||'<p class="muted">لا يوجد استحقاق تلقائي لهذا الشهر.</p>';
  const months=collection("months"), saved=months.find(x=>x._id===m), closed=saved?.laborClose;
  $("laborCloseStatus").textContent=(closed?"ملخص العمالة محفوظ بتاريخ "+(closed.closedAt||"") +" · إجمالي "+money(closed.total)+" · "+closed.count+" حركة. ":"لا يوجد ملخص عمالة محفوظ. ")+ "الاستحقاق التلقائي المتبقي غير المكرر: "+money(auto.total)+". يتم خصم الغياب الذي تم الإبلاغ عنه فقط. الملخص المحفوظ للحركات المسجلة فقط، ولا يشمل الاستحقاق التلقائي غير المرحل أو إقفالًا ماليًا للشهر.";
  const keys=[...new Set([...all.map(monthOf),...months.map(x=>x._id)].filter(Boolean))].sort().reverse();
@@ -370,7 +371,7 @@ function autoPayrollForMonth(month){
  let total=0,details=[];
  for(const w of workers){
   const defaultStart=w.id==="w-hamza"?"2026-10-23":monthStart;
-  const start=[monthStart,"2026-11-01",w.from||defaultStart].sort().reverse()[0];
+  const start=[monthStart,w.from||defaultStart].sort().reverse()[0];
   if(start>end||(w.until&&w.until<start))continue;
   const daily=Number(w.rate)||0;
   if(!(daily>0))continue;
@@ -381,16 +382,20 @@ function autoPayrollForMonth(month){
    if(absences.some(a=>a.worker===w.id&&a.date===key&&a.status==="absent"&&(a.reported===true||a.deductDailyPay===true)))absenceDays++;
   }
   const days=Math.max(0,eligibleDays-absenceDays),earned=Math.round(days*daily*100)/100;
-  const already=recorded.filter(x=>(String(x.workerId||"")===w.id)||(!x.workerId&&String(x.name||x.worker||"")===w.name)).reduce((sum,x)=>sum+Math.max(0,Number(x.amount)||0),0);
+  const workerRecorded=recorded.filter(x=>(String(x.workerId||"")===w.id)||(!x.workerId&&String(x.name||x.worker||"")===w.name));
+  const already=workerRecorded.reduce((sum,x)=>sum+Math.max(0,Number(x.amount)||0),0);
+  const recordedPaid=workerRecorded.filter(x=>x.paid!==false).reduce((sum,x)=>sum+Math.max(0,Number(x.amount)||0),0);
+  const recordedUnpaid=workerRecorded.filter(x=>x.paid===false).reduce((sum,x)=>sum+Math.max(0,Number(x.amount)||0),0);
   const remaining=Math.max(0,Math.round((earned-already)*100)/100);
+  const due=Math.round((recordedUnpaid+remaining)*100)/100;
   total+=remaining;
-  details.push({name:w.name,days,absenceDays,earned,already,remaining});
+  details.push({name:w.name,days,absenceDays,earned,already,recordedPaid,recordedUnpaid,remaining,due});
  }
  return {total:Math.round(total*100)/100,details};
 }
 function autoPayrollForSelection(){
  if(selectedMonth!=="all")return autoPayrollForMonth(selectedMonth);
- const keys=[...new Set(records.map(r=>String(r.data?.date||r.data?.month||"").slice(0,7)).filter(m=>/^2026-\d{2}$/.test(m)&&m>="2026-11"))];
+ const keys=[...new Set(records.map(r=>String(r.data?.date||r.data?.month||"").slice(0,7)).filter(m=>/^2026-\d{2}$/.test(m)&&m>="2026-10"))];
  return keys.reduce((a,m)=>{const x=autoPayrollForMonth(m);a.total+=x.total;a.details.push(...x.details.map(d=>({...d,month:m})));return a;},{total:0,details:[]});
 }
 
