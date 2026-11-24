@@ -433,7 +433,7 @@ function renderHistoryAndAudit(){ const orders=fromStartRows("orders").filter(x=
  const moves=fromStartRows("stockMoves");
  const sales=orders.reduce((s,x)=>s+(Number(x.total)||0),0), spend=expenses.reduce((s,x)=>s+(Number(x.amount)||0),0);
  $("histSales").textContent=money(sales);$("histExpenses").textContent=money(spend);$("histOrders").textContent=orders.length;$("histMoves").textContent=moves.length;
- const months=[...new Set([...orders,...expenses,...labor].map(monthOf).filter(m=>/^\\d{4}-\\d{2}$/.test(m)))].sort().reverse();
+ const months=[...new Set([...orders,...expenses,...labor].map(monthOf).filter(m=>/^\d{4}-\d{2}$/.test(m)))].sort().reverse();
  $("historyMonths").innerHTML=months.map(m=>{const o=orders.filter(x=>monthOf(x)===m),e=expenses.filter(x=>monthOf(x)===m),l=labor.filter(x=>monthOf(x)===m);return '<div class="history-month"><b>'+esc(m)+'</b><div class="muted">الأوردرات: '+o.length+' · العمالة المسجلة: '+l.length+' حركة</div><div class="row"><span>الإيرادات</span><b>'+money(o.reduce((s,x)=>s+(Number(x.total)||0),0))+'</b></div><div class="row"><span>المصروفات المسجلة</span><b>'+money(e.reduce((s,x)=>s+(Number(x.amount)||0),0))+'</b></div></div>'}).join("")||'<p class="muted">لا توجد سجلات من تاريخ بداية التشغيل.</p>';
  const detailMonth=$("purchaseMonthDetail")?.value||today().slice(0,7),purchases=expenses.filter(x=>isPurchase(x)&&monthOf(x)===detailMonth),itemMap={};
  purchases.forEach(x=>{
