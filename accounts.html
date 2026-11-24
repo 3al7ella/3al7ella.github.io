@@ -407,7 +407,7 @@ function accruedSalaryForProfit(){
  else {for(let d=new Date(2026,9,1);d<=new Date(now.slice(0,7)+"-01T12:00:00");d.setMonth(d.getMonth()+1))months.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"));}
  let total=0;
  for(const month of months){
-  if(!/^\\d{4}-\\d{2}$/.test(month))continue;
+  if(!/^\d{4}-\d{2}$/.test(month))continue;
   const [yy,mm]=month.split("-").map(Number),monthStart=month+"-01",lastDay=new Date(yy,mm,0).getDate(),monthEnd=month===now.slice(0,7)?now:month+"-"+String(lastDay).padStart(2,"0");
   for(const w of workers){
    const defaultStart=w.id==="w-hamza"?"2026-10-23":monthStart,start=[monthStart,w.from||defaultStart].sort().reverse()[0],end=w.until&&w.until<monthEnd?w.until:monthEnd;
