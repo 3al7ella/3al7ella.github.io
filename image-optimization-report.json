@@ -1,12 +1,12 @@
 {
-  "converted": 159,
-  "total_bytes": 8865824,
-  "largest_bytes": 78920,
+  "converted": 160,
+  "total_bytes": 8935302,
+  "largest_bytes": 78742,
   "assets": [
     {
       "from": "rv-5.webp",
       "to": "rv-5.webp",
-      "bytes": 23342,
+      "bytes": 23346,
       "width": 465,
       "height": 508,
       "quality": 84
@@ -14,7 +14,7 @@
     {
       "from": "rv-16.webp",
       "to": "rv-16.webp",
-      "bytes": 6718,
+      "bytes": 6716,
       "width": 509,
       "height": 146,
       "quality": 84
@@ -30,7 +30,7 @@
     {
       "from": "f-zucchinicore.webp",
       "to": "f-zucchinicore.webp",
-      "bytes": 69042,
+      "bytes": 69040,
       "width": 720,
       "height": 540,
       "quality": 84
@@ -46,7 +46,7 @@
     {
       "from": "bride-2.webp",
       "to": "bride-2.webp",
-      "bytes": 76534,
+      "bytes": 76512,
       "width": 634,
       "height": 634,
       "quality": 79
@@ -78,7 +78,7 @@
     {
       "from": "f-taro.webp",
       "to": "f-taro.webp",
-      "bytes": 42632,
+      "bytes": 42634,
       "width": 718,
       "height": 462,
       "quality": 84
@@ -86,7 +86,7 @@
     {
       "from": "f-grape.webp",
       "to": "f-grape.webp",
-      "bytes": 77736,
+      "bytes": 77730,
       "width": 649,
       "height": 720,
       "quality": 79
@@ -94,7 +94,7 @@
     {
       "from": "f-lesan.webp",
       "to": "f-lesan.webp",
-      "bytes": 70750,
+      "bytes": 70758,
       "width": 532,
       "height": 640,
       "quality": 84
@@ -102,7 +102,7 @@
     {
       "from": "c-prep.webp",
       "to": "c-prep.webp",
-      "bytes": 28840,
+      "bytes": 28842,
       "width": 600,
       "height": 238,
       "quality": 84
@@ -110,7 +110,7 @@
     {
       "from": "c-veg.webp",
       "to": "c-veg.webp",
-      "bytes": 27866,
+      "bytes": 27864,
       "width": 600,
       "height": 237,
       "quality": 84
@@ -118,7 +118,7 @@
     {
       "from": "f-lentil.webp",
       "to": "f-lentil.webp",
-      "bytes": 46492,
+      "bytes": 46496,
       "width": 498,
       "height": 640,
       "quality": 84
@@ -142,7 +142,7 @@
     {
       "from": "meal.webp",
       "to": "meal.webp",
-      "bytes": 71154,
+      "bytes": 71146,
       "width": 720,
       "height": 640,
       "quality": 84
@@ -166,7 +166,7 @@
     {
       "from": "rv-13.webp",
       "to": "rv-13.webp",
-      "bytes": 9862,
+      "bytes": 9866,
       "width": 482,
       "height": 380,
       "quality": 84
@@ -174,7 +174,7 @@
     {
       "from": "f-potraw.webp",
       "to": "f-potraw.webp",
-      "bytes": 75778,
+      "bytes": 75774,
       "width": 720,
       "height": 720,
       "quality": 79
@@ -182,7 +182,7 @@
     {
       "from": "f-bessara.webp",
       "to": "f-bessara.webp",
-      "bytes": 53960,
+      "bytes": 53958,
       "width": 498,
       "height": 640,
       "quality": 84
@@ -206,7 +206,7 @@
     {
       "from": "f-onion.webp",
       "to": "f-onion.webp",
-      "bytes": 52748,
+      "bytes": 52746,
       "width": 540,
       "height": 720,
       "quality": 84
@@ -222,7 +222,7 @@
     {
       "from": "rv-11.webp",
       "to": "rv-11.webp",
-      "bytes": 9446,
+      "bytes": 9448,
       "width": 600,
       "height": 185,
       "quality": 84
@@ -230,7 +230,7 @@
     {
       "from": "rv-17.webp",
       "to": "rv-17.webp",
-      "bytes": 17942,
+      "bytes": 17940,
       "width": 600,
       "height": 331,
       "quality": 84
@@ -238,7 +238,7 @@
     {
       "from": "rv-1.webp",
       "to": "rv-1.webp",
-      "bytes": 31760,
+      "bytes": 31758,
       "width": 600,
       "height": 532,
       "quality": 84
@@ -246,7 +246,7 @@
     {
       "from": "f-galash.webp",
       "to": "f-galash.webp",
-      "bytes": 59834,
+      "bytes": 59826,
       "width": 582,
       "height": 720,
       "quality": 84
@@ -254,7 +254,7 @@
     {
       "from": "f-mahshi2.webp",
       "to": "f-mahshi2.webp",
-      "bytes": 77582,
+      "bytes": 77576,
       "width": 675,
       "height": 720,
       "quality": 74
@@ -262,7 +262,7 @@
     {
       "from": "f-shish.webp",
       "to": "f-shish.webp",
-      "bytes": 75162,
+      "bytes": 75166,
       "width": 720,
       "height": 720,
       "quality": 79
@@ -278,7 +278,7 @@
     {
       "from": "f-cauli-boiled.webp",
       "to": "f-cauli-boiled.webp",
-      "bytes": 23712,
+      "bytes": 23716,
       "width": 480,
       "height": 640,
       "quality": 84
@@ -286,7 +286,7 @@
     {
       "from": "bag-mahshi.webp",
       "to": "bag-mahshi.webp",
-      "bytes": 41854,
+      "bytes": 41852,
       "width": 400,
       "height": 400,
       "quality": 84
@@ -294,7 +294,7 @@
     {
       "from": "rv-14.webp",
       "to": "rv-14.webp",
-      "bytes": 10410,
+      "bytes": 10414,
       "width": 600,
       "height": 228,
       "quality": 84
@@ -310,7 +310,7 @@
     {
       "from": "f-potstuffed.webp",
       "to": "f-potstuffed.webp",
-      "bytes": 75090,
+      "bytes": 75088,
       "width": 480,
       "height": 640,
       "quality": 84
@@ -318,7 +318,7 @@
     {
       "from": "bride-3.webp",
       "to": "bride-3.webp",
-      "bytes": 77866,
+      "bytes": 77864,
       "width": 634,
       "height": 634,
       "quality": 74
@@ -326,7 +326,7 @@
     {
       "from": "rv-10.webp",
       "to": "rv-10.webp",
-      "bytes": 13648,
+      "bytes": 13646,
       "width": 600,
       "height": 250,
       "quality": 84
@@ -334,7 +334,7 @@
     {
       "from": "thumbs2.webp",
       "to": "thumbs2.webp",
-      "bytes": 76890,
+      "bytes": 76896,
       "width": 480,
       "height": 720,
       "quality": 74
@@ -342,7 +342,7 @@
     {
       "from": "f-grapepack.webp",
       "to": "f-grapepack.webp",
-      "bytes": 75004,
+      "bytes": 74996,
       "width": 595,
       "height": 720,
       "quality": 84
@@ -350,7 +350,7 @@
     {
       "from": "f-rice.webp",
       "to": "f-rice.webp",
-      "bytes": 76500,
+      "bytes": 76504,
       "width": 706,
       "height": 720,
       "quality": 84
@@ -358,7 +358,7 @@
     {
       "from": "bag-veg.webp",
       "to": "bag-veg.webp",
-      "bytes": 43432,
+      "bytes": 43436,
       "width": 400,
       "height": 400,
       "quality": 84
@@ -374,7 +374,7 @@
     {
       "from": "f-beans.webp",
       "to": "f-beans.webp",
-      "bytes": 65002,
+      "bytes": 65010,
       "width": 720,
       "height": 701,
       "quality": 84
@@ -390,7 +390,7 @@
     {
       "from": "f-sausage.webp",
       "to": "f-sausage.webp",
-      "bytes": 75394,
+      "bytes": 75396,
       "width": 720,
       "height": 717,
       "quality": 84
@@ -430,7 +430,7 @@
     {
       "from": "f-molokhia.webp",
       "to": "f-molokhia.webp",
-      "bytes": 76486,
+      "bytes": 76488,
       "width": 640,
       "height": 615,
       "quality": 84
@@ -438,7 +438,7 @@
     {
       "from": "f-chburger.webp",
       "to": "f-chburger.webp",
-      "bytes": 64874,
+      "bytes": 64876,
       "width": 540,
       "height": 720,
       "quality": 84
@@ -446,7 +446,7 @@
     {
       "from": "f-cabbage.webp",
       "to": "f-cabbage.webp",
-      "bytes": 27362,
+      "bytes": 27348,
       "width": 576,
       "height": 720,
       "quality": 84
@@ -454,7 +454,7 @@
     {
       "from": "f-shawarma.webp",
       "to": "f-shawarma.webp",
-      "bytes": 71106,
+      "bytes": 71108,
       "width": 430,
       "height": 640,
       "quality": 84
@@ -462,7 +462,7 @@
     {
       "from": "rv-15.webp",
       "to": "rv-15.webp",
-      "bytes": 9844,
+      "bytes": 9846,
       "width": 600,
       "height": 215,
       "quality": 84
@@ -486,7 +486,7 @@
     {
       "from": "hamam-kadab.webp",
       "to": "hamam-kadab.webp",
-      "bytes": 10036,
+      "bytes": 10044,
       "width": 320,
       "height": 434,
       "quality": 84
@@ -494,7 +494,7 @@
     {
       "from": "r-broast.webp",
       "to": "r-broast.webp",
-      "bytes": 35260,
+      "bytes": 35262,
       "width": 600,
       "height": 600,
       "quality": 84
@@ -502,7 +502,7 @@
     {
       "from": "f-zinger.webp",
       "to": "f-zinger.webp",
-      "bytes": 72506,
+      "bytes": 72510,
       "width": 540,
       "height": 720,
       "quality": 84
@@ -518,7 +518,7 @@
     {
       "from": "assets/menu/5984480-7704dac3.webp",
       "to": "assets/menu/5984480-7704dac3.webp",
-      "bytes": 43626,
+      "bytes": 43622,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -526,7 +526,7 @@
     {
       "from": "assets/menu/hamdy-cabbage.webp",
       "to": "assets/menu/hamdy-cabbage.webp",
-      "bytes": 76346,
+      "bytes": 76308,
       "width": 768,
       "height": 960,
       "quality": 79
@@ -534,7 +534,7 @@
     {
       "from": "assets/menu/hamdy-stuffing.webp",
       "to": "assets/menu/hamdy-stuffing.webp",
-      "bytes": 69052,
+      "bytes": 69032,
       "width": 800,
       "height": 937,
       "quality": 84
@@ -542,7 +542,7 @@
     {
       "from": "assets/menu/hamdy-1122-molokhia-bowl.webp",
       "to": "assets/menu/hamdy-1122-molokhia-bowl.webp",
-      "bytes": 77752,
+      "bytes": 77728,
       "width": 450,
       "height": 800,
       "quality": 79
@@ -550,7 +550,7 @@
     {
       "from": "assets/menu/3693280-13cf2fa2.webp",
       "to": "assets/menu/3693280-13cf2fa2.webp",
-      "bytes": 28930,
+      "bytes": 28904,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -558,7 +558,7 @@
     {
       "from": "assets/menu/36958915-f2b51d8d.webp",
       "to": "assets/menu/36958915-f2b51d8d.webp",
-      "bytes": 75736,
+      "bytes": 75578,
       "width": 700,
       "height": 933,
       "quality": 79
@@ -574,7 +574,7 @@
     {
       "from": "assets/menu/hamdy-1123-mombar-stuffed.webp",
       "to": "assets/menu/hamdy-1123-mombar-stuffed.webp",
-      "bytes": 46416,
+      "bytes": 46400,
       "width": 720,
       "height": 869,
       "quality": 84
@@ -582,7 +582,7 @@
     {
       "from": "assets/menu/8426698-b021dcab.webp",
       "to": "assets/menu/8426698-b021dcab.webp",
-      "bytes": 45884,
+      "bytes": 45854,
       "width": 750,
       "height": 1125,
       "quality": 84
@@ -590,7 +590,7 @@
     {
       "from": "assets/menu/hamdy-1122-zucchini-cored.webp",
       "to": "assets/menu/hamdy-1122-zucchini-cored.webp",
-      "bytes": 67690,
+      "bytes": 67632,
       "width": 800,
       "height": 600,
       "quality": 84
@@ -598,7 +598,7 @@
     {
       "from": "assets/menu/hamdy-1123-pickled-carrot.webp",
       "to": "assets/menu/hamdy-1123-pickled-carrot.webp",
-      "bytes": 52322,
+      "bytes": 52180,
       "width": 800,
       "height": 1067,
       "quality": 84
@@ -606,7 +606,7 @@
     {
       "from": "assets/menu/8668726-2e820f22.webp",
       "to": "assets/menu/8668726-2e820f22.webp",
-      "bytes": 44916,
+      "bytes": 44912,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -614,7 +614,7 @@
     {
       "from": "assets/menu/3119603-5964bd38.webp",
       "to": "assets/menu/3119603-5964bd38.webp",
-      "bytes": 38796,
+      "bytes": 38738,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -622,7 +622,7 @@
     {
       "from": "assets/menu/hamdy-taro.webp",
       "to": "assets/menu/hamdy-taro.webp",
-      "bytes": 40820,
+      "bytes": 40804,
       "width": 718,
       "height": 462,
       "quality": 84
@@ -630,7 +630,7 @@
     {
       "from": "assets/menu/hamdy-1123-chicken-marinated.webp",
       "to": "assets/menu/hamdy-1123-chicken-marinated.webp",
-      "bytes": 75810,
+      "bytes": 75708,
       "width": 720,
       "height": 885,
       "quality": 79
@@ -638,7 +638,7 @@
     {
       "from": "assets/menu/hamdy-pane.webp",
       "to": "assets/menu/hamdy-pane.webp",
-      "bytes": 76866,
+      "bytes": 76840,
       "width": 768,
       "height": 960,
       "quality": 74
@@ -646,7 +646,7 @@
     {
       "from": "assets/menu/hamdy-chicken.webp",
       "to": "assets/menu/hamdy-chicken.webp",
-      "bytes": 77768,
+      "bytes": 77580,
       "width": 720,
       "height": 960,
       "quality": 74
@@ -654,7 +654,7 @@
     {
       "from": "assets/menu/canva-01-15.webp",
       "to": "assets/menu/canva-01-15.webp",
-      "bytes": 78158,
+      "bytes": 78064,
       "width": 720,
       "height": 960,
       "quality": 79
@@ -662,7 +662,7 @@
     {
       "from": "assets/menu/hamdy-1122-potato-cored.webp",
       "to": "assets/menu/hamdy-1122-potato-cored.webp",
-      "bytes": 72504,
+      "bytes": 72486,
       "width": 600,
       "height": 800,
       "quality": 84
@@ -670,7 +670,7 @@
     {
       "from": "assets/menu/hamdy-mixfresh.webp",
       "to": "assets/menu/hamdy-mixfresh.webp",
-      "bytes": 76656,
+      "bytes": 76644,
       "width": 768,
       "height": 960,
       "quality": 79
@@ -678,7 +678,7 @@
     {
       "from": "assets/menu/canva-01-12.webp",
       "to": "assets/menu/canva-01-12.webp",
-      "bytes": 77492,
+      "bytes": 77434,
       "width": 720,
       "height": 960,
       "quality": 74
@@ -686,7 +686,7 @@
     {
       "from": "assets/menu/hamdy-1123-beefsteak.webp",
       "to": "assets/menu/hamdy-1123-beefsteak.webp",
-      "bytes": 78584,
+      "bytes": 78148,
       "width": 720,
       "height": 1199,
       "quality": 79
@@ -694,7 +694,7 @@
     {
       "from": "assets/menu/hamdy-mombar-raw.webp",
       "to": "assets/menu/hamdy-mombar-raw.webp",
-      "bytes": 76116,
+      "bytes": 76036,
       "width": 768,
       "height": 960,
       "quality": 84
@@ -702,7 +702,7 @@
     {
       "from": "assets/menu/hamdy-1122-chili.webp",
       "to": "assets/menu/hamdy-1122-chili.webp",
-      "bytes": 46718,
+      "bytes": 46616,
       "width": 800,
       "height": 600,
       "quality": 84
@@ -710,7 +710,7 @@
     {
       "from": "assets/menu/canva-02-16.webp",
       "to": "assets/menu/canva-02-16.webp",
-      "bytes": 75300,
+      "bytes": 75166,
       "width": 720,
       "height": 960,
       "quality": 79
@@ -718,7 +718,7 @@
     {
       "from": "assets/menu/canva-01-10.webp",
       "to": "assets/menu/canva-01-10.webp",
-      "bytes": 76354,
+      "bytes": 76346,
       "width": 720,
       "height": 901,
       "quality": 79
@@ -726,7 +726,7 @@
     {
       "from": "assets/menu/hamdy-meat.webp",
       "to": "assets/menu/hamdy-meat.webp",
-      "bytes": 63238,
+      "bytes": 63204,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -734,15 +734,23 @@
     {
       "from": "assets/menu/hamdy-1123-strips.webp",
       "to": "assets/menu/hamdy-1123-strips.webp",
-      "bytes": 77038,
+      "bytes": 76908,
       "width": 800,
       "height": 1067,
       "quality": 74
     },
     {
+      "from": "assets/menu/iftar-meal-card.webp",
+      "to": "assets/menu/iftar-meal-card.webp",
+      "bytes": 74342,
+      "width": 800,
+      "height": 1000,
+      "quality": 74
+    },
+    {
       "from": "assets/menu/hamdy-1123-grape-rolls.webp",
       "to": "assets/menu/hamdy-1123-grape-rolls.webp",
-      "bytes": 77902,
+      "bytes": 77450,
       "width": 720,
       "height": 965,
       "quality": 79
@@ -750,7 +758,7 @@
     {
       "from": "assets/menu/hamdy-1122-pickled-eggplant.webp",
       "to": "assets/menu/hamdy-1122-pickled-eggplant.webp",
-      "bytes": 60972,
+      "bytes": 60924,
       "width": 720,
       "height": 404,
       "quality": 84
@@ -758,7 +766,7 @@
     {
       "from": "assets/menu/canva-01-30.webp",
       "to": "assets/menu/canva-01-30.webp",
-      "bytes": 76474,
+      "bytes": 76460,
       "width": 800,
       "height": 656,
       "quality": 79
@@ -766,7 +774,7 @@
     {
       "from": "assets/menu/5724557-b6269e87.webp",
       "to": "assets/menu/5724557-b6269e87.webp",
-      "bytes": 39530,
+      "bytes": 39528,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -774,7 +782,7 @@
     {
       "from": "assets/menu/5792484-afda316f.webp",
       "to": "assets/menu/5792484-afda316f.webp",
-      "bytes": 73326,
+      "bytes": 73220,
       "width": 700,
       "height": 1050,
       "quality": 79
@@ -782,7 +790,7 @@
     {
       "from": "assets/menu/hamdy-1123-mahshi-mix.webp",
       "to": "assets/menu/hamdy-1123-mahshi-mix.webp",
-      "bytes": 78146,
+      "bytes": 77978,
       "width": 720,
       "height": 998,
       "quality": 74
@@ -790,7 +798,7 @@
     {
       "from": "assets/menu/hamdy-1122-beet.webp",
       "to": "assets/menu/hamdy-1122-beet.webp",
-      "bytes": 53476,
+      "bytes": 53458,
       "width": 450,
       "height": 800,
       "quality": 84
@@ -798,7 +806,7 @@
     {
       "from": "assets/menu/hamdy-1123-mombar-clean.webp",
       "to": "assets/menu/hamdy-1123-mombar-clean.webp",
-      "bytes": 73770,
+      "bytes": 73690,
       "width": 720,
       "height": 1280,
       "quality": 84
@@ -806,7 +814,7 @@
     {
       "from": "assets/menu/hamdy-mombar-cooked.webp",
       "to": "assets/menu/hamdy-mombar-cooked.webp",
-      "bytes": 78920,
+      "bytes": 78742,
       "width": 768,
       "height": 960,
       "quality": 79
@@ -814,7 +822,7 @@
     {
       "from": "assets/menu/hamdy-potcab.webp",
       "to": "assets/menu/hamdy-potcab.webp",
-      "bytes": 67866,
+      "bytes": 67846,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -822,7 +830,7 @@
     {
       "from": "assets/menu/hamdy-1123-nuggets.webp",
       "to": "assets/menu/hamdy-1123-nuggets.webp",
-      "bytes": 37232,
+      "bytes": 37126,
       "width": 718,
       "height": 717,
       "quality": 84
@@ -830,7 +838,7 @@
     {
       "from": "assets/menu/hamdy-1122-onion-stuffed.webp",
       "to": "assets/menu/hamdy-1122-onion-stuffed.webp",
-      "bytes": 46852,
+      "bytes": 46822,
       "width": 450,
       "height": 800,
       "quality": 84
@@ -838,7 +846,7 @@
     {
       "from": "assets/menu/hamdy-mombar-boiled.webp",
       "to": "assets/menu/hamdy-mombar-boiled.webp",
-      "bytes": 66368,
+      "bytes": 66238,
       "width": 630,
       "height": 960,
       "quality": 84
@@ -846,7 +854,7 @@
     {
       "from": "assets/menu/hamdy-kofta-parsley.webp",
       "to": "assets/menu/hamdy-kofta-parsley.webp",
-      "bytes": 74418,
+      "bytes": 74410,
       "width": 598,
       "height": 960,
       "quality": 79
@@ -854,7 +862,7 @@
     {
       "from": "assets/menu/hamdy-1124-nuggets.webp",
       "to": "assets/menu/hamdy-1124-nuggets.webp",
-      "bytes": 35744,
+      "bytes": 35446,
       "width": 718,
       "height": 717,
       "quality": 84
@@ -862,7 +870,7 @@
     {
       "from": "assets/menu/hamdy-1122-ghee.webp",
       "to": "assets/menu/hamdy-1122-ghee.webp",
-      "bytes": 37284,
+      "bytes": 37260,
       "width": 640,
       "height": 640,
       "quality": 84
@@ -870,7 +878,7 @@
     {
       "from": "assets/menu/canva-01-60.webp",
       "to": "assets/menu/canva-01-60.webp",
-      "bytes": 76944,
+      "bytes": 76930,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -878,7 +886,7 @@
     {
       "from": "assets/menu/canva-05-02.webp",
       "to": "assets/menu/canva-05-02.webp",
-      "bytes": 73802,
+      "bytes": 73704,
       "width": 722,
       "height": 960,
       "quality": 79
@@ -886,7 +894,7 @@
     {
       "from": "assets/menu/hamdy-1122-grape-ready.webp",
       "to": "assets/menu/hamdy-1122-grape-ready.webp",
-      "bytes": 72028,
+      "bytes": 72110,
       "width": 661,
       "height": 800,
       "quality": 84
@@ -894,7 +902,7 @@
     {
       "from": "assets/menu/canva-04-00.webp",
       "to": "assets/menu/canva-04-00.webp",
-      "bytes": 74818,
+      "bytes": 74810,
       "width": 800,
       "height": 426,
       "quality": 84
@@ -902,7 +910,7 @@
     {
       "from": "assets/menu/hamdy-shish.webp",
       "to": "assets/menu/hamdy-shish.webp",
-      "bytes": 75106,
+      "bytes": 75072,
       "width": 623,
       "height": 960,
       "quality": 79
@@ -910,7 +918,7 @@
     {
       "from": "assets/menu/canva-02-02.webp",
       "to": "assets/menu/canva-02-02.webp",
-      "bytes": 66026,
+      "bytes": 66016,
       "width": 719,
       "height": 860,
       "quality": 84
@@ -918,7 +926,7 @@
     {
       "from": "assets/menu/hamdy-1123-pickled-turnip-jar.webp",
       "to": "assets/menu/hamdy-1123-pickled-turnip-jar.webp",
-      "bytes": 61714,
+      "bytes": 61650,
       "width": 800,
       "height": 1067,
       "quality": 84
@@ -926,7 +934,7 @@
     {
       "from": "assets/menu/hamdy-1122-herbs.webp",
       "to": "assets/menu/hamdy-1122-herbs.webp",
-      "bytes": 74080,
+      "bytes": 74052,
       "width": 600,
       "height": 800,
       "quality": 84
@@ -934,7 +942,7 @@
     {
       "from": "assets/menu/hamdy-1122-pepper-cored.webp",
       "to": "assets/menu/hamdy-1122-pepper-cored.webp",
-      "bytes": 58976,
+      "bytes": 58952,
       "width": 600,
       "height": 800,
       "quality": 84
@@ -942,7 +950,7 @@
     {
       "from": "assets/menu/canva-01-46.webp",
       "to": "assets/menu/canva-01-46.webp",
-      "bytes": 23782,
+      "bytes": 23664,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -950,7 +958,7 @@
     {
       "from": "assets/menu/hamdy-1123-pickled-beet.webp",
       "to": "assets/menu/hamdy-1123-pickled-beet.webp",
-      "bytes": 77102,
+      "bytes": 76984,
       "width": 800,
       "height": 1067,
       "quality": 84
@@ -958,15 +966,15 @@
     {
       "from": "assets/menu/hamdy-1125-mahshi-banner.webp",
       "to": "assets/menu/hamdy-1125-mahshi-banner.webp",
-      "bytes": 76940,
+      "bytes": 78064,
       "width": 720,
       "height": 499,
-      "quality": 54
+      "quality": 64
     },
     {
       "from": "assets/menu/hamdy-breaded-balls.webp",
       "to": "assets/menu/hamdy-breaded-balls.webp",
-      "bytes": 78496,
+      "bytes": 78382,
       "width": 676,
       "height": 960,
       "quality": 84
@@ -974,7 +982,7 @@
     {
       "from": "assets/menu/canva-01-59.webp",
       "to": "assets/menu/canva-01-59.webp",
-      "bytes": 76404,
+      "bytes": 76362,
       "width": 720,
       "height": 960,
       "quality": 79
@@ -982,7 +990,7 @@
     {
       "from": "assets/menu/hamdy-chkofta.webp",
       "to": "assets/menu/hamdy-chkofta.webp",
-      "bytes": 75822,
+      "bytes": 75860,
       "width": 770,
       "height": 960,
       "quality": 84
@@ -990,7 +998,7 @@
     {
       "from": "assets/menu/canva-04-02.webp",
       "to": "assets/menu/canva-04-02.webp",
-      "bytes": 73432,
+      "bytes": 73296,
       "width": 326,
       "height": 960,
       "quality": 84
@@ -998,7 +1006,7 @@
     {
       "from": "assets/menu/hamdy-1123-mahshi-trays.webp",
       "to": "assets/menu/hamdy-1123-mahshi-trays.webp",
-      "bytes": 51796,
+      "bytes": 51760,
       "width": 492,
       "height": 960,
       "quality": 84
@@ -1006,7 +1014,7 @@
     {
       "from": "assets/menu/hamdy-pigeon.webp",
       "to": "assets/menu/hamdy-pigeon.webp",
-      "bytes": 76350,
+      "bytes": 76344,
       "width": 768,
       "height": 960,
       "quality": 74
@@ -1014,7 +1022,7 @@
     {
       "from": "assets/menu/hamdy-1123-cabbage-rolls.webp",
       "to": "assets/menu/hamdy-1123-cabbage-rolls.webp",
-      "bytes": 76598,
+      "bytes": 76476,
       "width": 720,
       "height": 1280,
       "quality": 79
@@ -1022,7 +1030,7 @@
     {
       "from": "assets/menu/37182338-114ffbab.webp",
       "to": "assets/menu/37182338-114ffbab.webp",
-      "bytes": 70430,
+      "bytes": 70324,
       "width": 700,
       "height": 933,
       "quality": 84
@@ -1030,7 +1038,7 @@
     {
       "from": "assets/menu/hamdy-mixprep.webp",
       "to": "assets/menu/hamdy-mixprep.webp",
-      "bytes": 76228,
+      "bytes": 76194,
       "width": 768,
       "height": 960,
       "quality": 74
@@ -1038,7 +1046,7 @@
     {
       "from": "assets/menu/hamdy-kofta.webp",
       "to": "assets/menu/hamdy-kofta.webp",
-      "bytes": 77958,
+      "bytes": 77904,
       "width": 767,
       "height": 960,
       "quality": 74
@@ -1046,7 +1054,7 @@
     {
       "from": "assets/menu/canva-02-11.webp",
       "to": "assets/menu/canva-02-11.webp",
-      "bytes": 77736,
+      "bytes": 77634,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -1054,7 +1062,7 @@
     {
       "from": "assets/menu/39019921-9b2e346a.webp",
       "to": "assets/menu/39019921-9b2e346a.webp",
-      "bytes": 41832,
+      "bytes": 41820,
       "width": 700,
       "height": 502,
       "quality": 84
@@ -1062,7 +1070,7 @@
     {
       "from": "assets/menu/hamdy-samosa.webp",
       "to": "assets/menu/hamdy-samosa.webp",
-      "bytes": 76596,
+      "bytes": 76520,
       "width": 768,
       "height": 960,
       "quality": 79
@@ -1070,7 +1078,7 @@
     {
       "from": "assets/menu/9475288-e8936dd8.webp",
       "to": "assets/menu/9475288-e8936dd8.webp",
-      "bytes": 28380,
+      "bytes": 28110,
       "width": 700,
       "height": 1050,
       "quality": 84
@@ -1078,7 +1086,7 @@
     {
       "from": "assets/menu/hamdy-grape.webp",
       "to": "assets/menu/hamdy-grape.webp",
-      "bytes": 77330,
+      "bytes": 77316,
       "width": 768,
       "height": 960,
       "quality": 79
@@ -1086,7 +1094,7 @@
     {
       "from": "assets/menu/hamdy-1123-cauli-half-fried.webp",
       "to": "assets/menu/hamdy-1123-cauli-half-fried.webp",
-      "bytes": 45770,
+      "bytes": 45744,
       "width": 800,
       "height": 526,
       "quality": 84
@@ -1094,7 +1102,7 @@
     {
       "from": "assets/menu/hamdy-bechamel.webp",
       "to": "assets/menu/hamdy-bechamel.webp",
-      "bytes": 75016,
+      "bytes": 75024,
       "width": 720,
       "height": 712,
       "quality": 84
@@ -1102,7 +1110,7 @@
     {
       "from": "assets/menu/hamdy-clay-rice.webp",
       "to": "assets/menu/hamdy-clay-rice.webp",
-      "bytes": 75036,
+      "bytes": 75020,
       "width": 800,
       "height": 815,
       "quality": 79
@@ -1118,7 +1126,7 @@
     {
       "from": "assets/menu/canva-02-06.webp",
       "to": "assets/menu/canva-02-06.webp",
-      "bytes": 74330,
+      "bytes": 74320,
       "width": 720,
       "height": 960,
       "quality": 84
@@ -1126,7 +1134,7 @@
     {
       "from": "assets/menu/6065915-51408a32.webp",
       "to": "assets/menu/6065915-51408a32.webp",
-      "bytes": 44468,
+      "bytes": 44412,
       "width": 700,
       "height": 1049,
       "quality": 84
@@ -1134,7 +1142,7 @@
     {
       "from": "assets/menu/2351813-dfd00b3b.webp",
       "to": "assets/menu/2351813-dfd00b3b.webp",
-      "bytes": 71328,
+      "bytes": 71302,
       "width": 700,
       "height": 933,
       "quality": 84
@@ -1142,7 +1150,7 @@
     {
       "from": "assets/menu/7937023-e5add113.webp",
       "to": "assets/menu/7937023-e5add113.webp",
-      "bytes": 28248,
+      "bytes": 28328,
       "width": 700,
       "height": 467,
       "quality": 84
@@ -1150,7 +1158,7 @@
     {
       "from": "assets/menu/hamdy-cordon.webp",
       "to": "assets/menu/hamdy-cordon.webp",
-      "bytes": 77768,
+      "bytes": 77746,
       "width": 639,
       "height": 960,
       "quality": 79
@@ -1158,7 +1166,7 @@
     {
       "from": "assets/menu/canva-01-43.webp",
       "to": "assets/menu/canva-01-43.webp",
-      "bytes": 57306,
+      "bytes": 57304,
       "width": 540,
       "height": 960,
       "quality": 84
@@ -1174,7 +1182,7 @@
     {
       "from": "assets/menu/hamdy-rice-kofta-owner-20261122.webp",
       "to": "assets/menu/hamdy-rice-kofta-owner-20261122.webp",
-      "bytes": 54262,
+      "bytes": 54268,
       "width": 640,
       "height": 853,
       "quality": 84
@@ -1182,7 +1190,7 @@
     {
       "from": "assets/menu/hamdy-1122-eggplant-cored.webp",
       "to": "assets/menu/hamdy-1122-eggplant-cored.webp",
-      "bytes": 70104,
+      "bytes": 69916,
       "width": 600,
       "height": 800,
       "quality": 84
@@ -1190,7 +1198,7 @@
     {
       "from": "assets/menu/hamdy-liver-reda.webp",
       "to": "assets/menu/hamdy-liver-reda.webp",
-      "bytes": 77642,
+      "bytes": 77624,
       "width": 800,
       "height": 800,
       "quality": 79
@@ -1198,7 +1206,7 @@
     {
       "from": "assets/menu/canva-01-00.webp",
       "to": "assets/menu/canva-01-00.webp",
-      "bytes": 76676,
+      "bytes": 76684,
       "width": 800,
       "height": 837,
       "quality": 79
@@ -1206,7 +1214,7 @@
     {
       "from": "assets/menu/hamdy-1122-rice-stuffing.webp",
       "to": "assets/menu/hamdy-1122-rice-stuffing.webp",
-      "bytes": 54762,
+      "bytes": 54728,
       "width": 600,
       "height": 800,
       "quality": 84
@@ -1214,7 +1222,7 @@
     {
       "from": "assets/menu/5618067-6b50754c.webp",
       "to": "assets/menu/5618067-6b50754c.webp",
-      "bytes": 27638,
+      "bytes": 27570,
       "width": 700,
       "height": 1049,
       "quality": 84
@@ -1222,7 +1230,7 @@
     {
       "from": "assets/menu/hamdy-1123-pickled-cabbage.webp",
       "to": "assets/menu/hamdy-1123-pickled-cabbage.webp",
-      "bytes": 53592,
+      "bytes": 53340,
       "width": 800,
       "height": 1067,
       "quality": 84
@@ -1230,7 +1238,7 @@
     {
       "from": "assets/menu/hamdy-mombar-pops.webp",
       "to": "assets/menu/hamdy-mombar-pops.webp",
-      "bytes": 74526,
+      "bytes": 74504,
       "width": 665,
       "height": 960,
       "quality": 84
@@ -1238,7 +1246,7 @@
     {
       "from": "assets/menu/hamdy-galash.webp",
       "to": "assets/menu/hamdy-galash.webp",
-      "bytes": 74178,
+      "bytes": 74160,
       "width": 720,
       "height": 891,
       "quality": 84
@@ -1246,7 +1254,7 @@
     {
       "from": "assets/menu/canva-01-14.webp",
       "to": "assets/menu/canva-01-14.webp",
-      "bytes": 77712,
+      "bytes": 77700,
       "width": 486,
       "height": 960,
       "quality": 79
@@ -1254,7 +1262,7 @@
     {
       "from": "assets/menu/canva-01-31.webp",
       "to": "assets/menu/canva-01-31.webp",
-      "bytes": 76428,
+      "bytes": 76398,
       "width": 561,
       "height": 960,
       "quality": 84
@@ -1262,7 +1270,7 @@
     {
       "from": "assets/menu/canva-01-63.webp",
       "to": "assets/menu/canva-01-63.webp",
-      "bytes": 43230,
+      "bytes": 43218,
       "width": 718,
       "height": 462,
       "quality": 84
@@ -1270,7 +1278,7 @@
     {
       "from": "assets/menu/hamdy-1123-termis.webp",
       "to": "assets/menu/hamdy-1123-termis.webp",
-      "bytes": 73248,
+      "bytes": 73202,
       "width": 800,
       "height": 562,
       "quality": 84
