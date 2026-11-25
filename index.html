@@ -842,8 +842,8 @@ function build(rows){byId={};items=[];OFFERS=[];FREE_DEL=new Set();
  const rs=rows.filter(r=>!['عرض','بوكس'].includes(String(r[1]||'').trim())&&!['فواكه جاهزة','فواكه سليمة فريش'].includes(String(r[2]||'').trim()));
  const newIds=new Set(NEW_OFFERS.map(r=>r[0]));
  const extra=rows.filter(r=>newIds.has(r[0]));/* admin overrides on new offers */
- const ACTIVE_OFFER_IDS=new Set(['p330','p331','p332','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p316','p317','p318','p319']);
- const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>{const src=extra.find(x=>x[0]===r[0])||r;const c=src.slice();c[6]='نعم';return c});
+ const ACTIVE_OFFER_IDS=new Set(['p330','p331','p301','p302','p303','p304','p305','p306','p307','p308','p309','p310','p311','p312','p316','p317','p318','p319']);
+ const offers=NEW_OFFERS.filter(r=>ACTIVE_OFFER_IDS.has(r[0])).map(r=>{const src=extra.find(x=>x[0]===r[0])||r;const c=src.slice();c[6]='نعم';if(['p301','p302','p303','p304'].includes(r[0]))c[11]='نعم';return c});
  rs.concat(offers).forEach(r=>{const id=String(r[0]||'').trim(),type=String(r[1]||'').trim(),name=String(r[3]||'').trim(),price=num(r[5]);
   if(!id||!name||!(price>0)||!yes(r[6]))return;
   let sec=String(r[2]||'أخرى').trim()||'أخرى';if(sec==='المحاشي'){const nm=String(r[3]||'');sec=/ممبار/.test(nm)?'ممبار':/لحم[ةه] مفروم/.test(nm)?'محاشي باللحمة المفرومة':/مستوي/.test(nm)?'محاشي مستوية':'محاشي ع التسوية'}
@@ -874,8 +874,9 @@ const save=()=>{try{localStorage.setItem('alhella-cart',JSON.stringify(cart))}ca
 const pidOf=k=>k.split('::')[0],optOf=k=>k.split('::')[1]||'';
 const clean=()=>Object.keys(cart).forEach(k=>{if(!byId[pidOf(k)]||!(cart[k]>0))delete cart[k]});
 const qtyOf=id=>Object.entries(cart).filter(([k])=>pidOf(k)===id).reduce((a,[,q])=>a+q,0);
-const lineTotal=(p,q)=>p&&p.isOffer?p.price*q:up5((p?p.price:0)*q);
-const sub=()=>Object.entries(cart).reduce((a,[k,q])=>a+lineTotal(byId[pidOf(k)],q),0);
+const lineTotal=(p,q)=>p&&p.isOffer?p.price*q:(p?p.price:0)*q;
+const rawSub=()=>Object.entries(cart).reduce((a,[k,q])=>a+lineTotal(byId[pidOf(k)],q),0);
+const sub=()=>up5(rawSub());
 const freeDel=()=>Object.keys(cart).some(k=>FREE_DEL.has(pidOf(k)));
 const isFree=()=>!!Object.keys(cart).length&&(freeDel()||sub()>=FREE_OVER);
 const delFee=()=>isFree()?0:DEF_DEL;
@@ -1086,7 +1087,7 @@ function validate(){const bad=[];const mark=(id,msg)=>{let el=$(id);if(!el){EDIT
 function refCode(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return 'AH-'+pad(d.getDate())+pad(d.getMonth()+1)+'-'+String(Math.floor(100+Math.random()*900))}
 let REF='',LAST={},ORDER_SENDING=false;
 function invoice(){
- const ent=Object.entries(cart),s=sub(),d=delFee(),total=s+d;
+ const ent=Object.entries(cart),raw=rawSub(),s=up5(raw),adjust=s-raw,d=delFee(),total=s+d;
  if(!REF)REF=refCode();
  const L='━━━━━━━━━━━━━━━━━━';
  const date=new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'});
@@ -1106,6 +1107,7 @@ function invoice(){
   ...lines,
   L,
   'الأصناف: '+fmt(s)+' ج',
+  ...(Math.abs(adjust)>0.001?['تقريب الحساب: '+(adjust>0?'+':'')+fmt(adjust)+' ج']:[]),
   'التوصيل: '+deliveryLabel,
   '💰 الإجمالي: '+fmt(total)+' جنيه',
   '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':''),
@@ -1252,7 +1254,6 @@ let STORY_IDS=[];
 const STORY_GROUPS=[
  {key:'mahshi',title:'شنطة المحاشي',desc:'كل اللي محتاجاه للمحشي في شنطة واحدة',icon:'🍃',img:'bag-mahshi.webp',ids:['p330']},
  {key:'veg',title:'شنطة الخضار',desc:'10 أكياس خضار متنضف × 400 جرام',icon:'🥬',img:'bag-veg.webp',ids:['p331']},
- {key:'fruit',title:'شنطة الفاكهة',desc:'شنطة فاكهة الموسم · 4 كيلو فاكهة',icon:'🍎',img:'assets/menu/8426698-b021dcab.webp',ids:['p332']}
 ];
 function renderStoryRail(){
  const el=document.getElementById('bagStrip'),area=document.querySelector('.story-area');
