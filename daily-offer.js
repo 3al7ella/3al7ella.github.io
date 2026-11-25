@@ -12,7 +12,8 @@
         !Array.isArray(offer.items) || offer.items.length < 1 || offer.items.length > 8 ||
         !offer.items.every(item => text(item, 160)) ||
         typeof offer.price !== 'number' || !Number.isFinite(offer.price) || offer.price <= 0 ||
-        offer.price > 100000 || (offer.terms && !text(offer.terms, 300))) return null;
+        offer.price > 100000 || (offer.terms && !text(offer.terms, 300)) ||
+        (offer.compact !== undefined && typeof offer.compact !== 'boolean')) return null;
     const start = timestamp(offer.start), end = timestamp(offer.end);
     if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start ||
         end - start > 25 * 3600000) return null;
@@ -46,7 +47,7 @@
       mount.replaceChildren();
       mount.hidden = !offer;
       if (!offer) return;
-      const article = el('article', 'daily-offer');
+      const article = el('article', offer.compact === true ? 'daily-offer daily-offer--compact' : 'daily-offer');
       article.setAttribute('aria-label', 'عرض اليوم');
       const copy = el('div', 'daily-offer__copy');
       copy.append(el('span', 'daily-offer__badge', 'عرض اليوم'));
