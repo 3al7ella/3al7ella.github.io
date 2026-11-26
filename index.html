@@ -438,6 +438,9 @@ body.hascart .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .ln .rm{padding:3px 0;color:#a33b26}
 .ln .step{grid-area:qty;justify-self:start}
 .ln .lp{grid-area:total;align-self:center;background:#fff2e7;color:#a92e1c;border-radius:10px;padding:8px 10px;font-size:15px}
+.promo-fld .promo-row{display:flex;gap:8px}.promo-fld input{flex:1;min-width:0}.promo-fld .btn{width:auto;padding:10px 16px}
+.promo-ok{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#eaf6ee;border:1px solid #bfe3c9;color:#1d6b35;border-radius:12px;padding:10px 12px;font-size:14px;margin-top:10px}.promo-ok button{border:0;background:none;color:#a92e1c;font-weight:700;cursor:pointer;text-decoration:underline}
+.tot.promo span:first-child{color:#1d6b35}
 .tot{padding:5px 2px;margin:0;color:#6f5b4d}
 .tot.big{margin-top:6px;padding:12px 13px;background:#fff0e2;border:1px solid #efd5bc;border-radius:13px;color:#7b2b12;font-size:17px;font-weight:900}
 @media(max-width:520px){.bx-cover{height:148px}.bx-main{padding:11px}.bxh h3{font-size:21px}.bx .bxr{gap:8px}.bx .ptag{min-width:88px;font-size:23px}.ln{gap:7px 8px}.ln .lp{font-size:14px;padding:7px 8px}}
@@ -1032,7 +1035,7 @@ let STEP=1,EDIT=false,NOTE=false;const CK='alhella-customer-v1';
 function cust(){try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch(_){return {}}}
 let F=Object.assign({name:'',phone:'',area:'',addr:'',when:'',pay:'كاش',note:''},cust());
 function persist(){try{localStorage.setItem(CK,JSON.stringify({name:F.name,phone:F.phone,area:F.area,addr:F.addr,pay:F.pay}))}catch(_){}}
-function openSheet(){STEP=1;drawSheet();$('sheet').hidden=false;document.body.style.overflow='hidden';history.pushState({...(history.state||{}),s:1},'');T('view_cart',{currency:'EGP',value:sub()})}
+function openSheet(){STEP=1;tryLinkCode();drawSheet();$('sheet').hidden=false;document.body.style.overflow='hidden';history.pushState({...(history.state||{}),s:1},'');T('view_cart',{currency:'EGP',value:sub()})}
 function closeSheet(fromPop){$('sheet').hidden=true;document.body.style.overflow='';if(!fromPop&&history.state&&history.state.s)history.back()}
 $('shClose').addEventListener('click',()=>closeSheet());$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
 $('shBack').addEventListener('click',()=>{if(STEP>1&&STEP<4){STEP--;drawSheet()}});
@@ -1053,7 +1056,7 @@ function hintHTML(){
  const remain=Math.max(0,FREE_OVER-s),pct=Math.max(0,Math.min(100,s/FREE_OVER*100));
  return '<div class="delivery-progress"><div class="dp-copy"><b>🚚 فاضلك '+fmt(remain)+' جنيه</b><small>وزوّد طلبك عشان التوصيل يبقى مجاني</small></div><div class="dp-track" role="progressbar" aria-label="التقدم نحو التوصيل المجاني" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(pct)+'"><span style="width:'+pct.toFixed(1)+'%"></span></div><small class="dp-foot">وصلت لـ '+Math.round(pct)+'٪ من حد التوصيل المجاني ('+fmt(FREE_OVER)+' جنيه)</small></div>';
 }
-function totals(big){const s=sub(),d=delFee();return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(s+d)} ج</span></div>`:''}`}
+function totals(big){const s=sub(),d=delFee(),pd=promoDisc(),t=Math.max(0,s+d-pd);return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${pd?`<div class="tot promo"><span>🎁 خصم (كود ${esc(F.promo.code)})</span><span class="num">−${fmt(pd)} ج</span></div>`:''}${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(t)} ج</span></div>`:''}`}
 function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي باستخدام رقم ع الحلة أو عنوان الدفع، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>رقم ع الحلة: 01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button><strong>عنوان InstaPay: hamdymohamed12@instapay</strong><button type="button" class="pay-copy" data-copy-payment="hamdymohamed12@instapay">نسخ عنوان InstaPay</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button></div>';return ''}
 function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
  const B=$('shBody'),Fo=$('shFoot');
@@ -1071,6 +1074,9 @@ function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
   +`<div class="fld"><span>ميعاد التوصيل المفضل</span><div class="pays">${['بكره','بعد بكره','أقرب موعد متاح'].map(w=>`<label><input type="radio" name="when" value="${w}"${(F.when||'بكره')===w?' checked':''}><span>${w}</span></label>`).join('')}</div><small class="fld-help">الأصناف العادية قبلها بيوم، وأصناف نفس اليوم قبل 2 ظهرًا. اختيارك تفضيل مبدئي وهنأكد معاك الموعد على واتساب.</small></div>
   <div class="fld"><span>طريقة الدفع</span><div class="pays">${['كاش','إنستاباي','محفظة'].map(x=>`<label><input type="radio" name="pay" value="${x}"${F.pay===x?' checked':''}><span>${x}</span></label>`).join('')}</div>${paymentHelpHTML(F.pay)}</div>`
   +(F.note||NOTE?`<label class="fld"><span>ملاحظة</span><textarea id="fNote" rows="2" style="min-height:52px" placeholder="أي طلب خاص">${esc(F.note)}</textarea></label>`:'<button type="button" class="notebtn" id="addNote">+ عندك ملاحظة؟</button>')
+  +(F.promo
+    ?`<div class="promo-ok">✅ اتطبق كود <b>${esc(F.promo.code)}</b>${F.promo.owner?' من '+esc(F.promo.owner):''} — خصم ${fmt(promoDisc())} ج من الإجمالي <button type="button" id="rmPromo">إلغاء الكود</button></div>`
+    :`<div class="fld promo-fld"><span>عندك كود خصم؟</span><div class="promo-row"><input id="fPromo" placeholder="اكتب الكود هنا"><button type="button" class="btn ghost" id="applyPromo">تطبيق</button></div><small class="fld-help">الكود بيوصلك من اللي بعتلك لينك الموقع</small></div>`)
   +(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
   Fo.innerHTML=totals(true)+`<button type="button" class="btn full wa" id="reviewOrder" ${window.__CLOSED?'disabled':''}>راجع الفاتورة قبل الإرسال</button>`}
  else if(STEP===3){$('shTitle').textContent='راجع الفاتورة';B.innerHTML=`<div class="inv" id="inv">${esc(invoice())}</div>`+'<button type="button" class="btn full ghost" id="editDetails" style="margin-top:10px">تعديل الأصناف أو البيانات</button>'+(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
@@ -1087,7 +1093,7 @@ function validate(){const bad=[];const mark=(id,msg)=>{let el=$(id);if(!el){EDIT
 function refCode(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return 'AH-'+pad(d.getDate())+pad(d.getMonth()+1)+'-'+String(Math.floor(100+Math.random()*900))}
 let REF='',LAST={},ORDER_SENDING=false;
 function invoice(){
- const ent=Object.entries(cart),raw=rawSub(),s=up5(raw),adjust=s-raw,d=delFee(),total=s+d;
+ const ent=Object.entries(cart),raw=rawSub(),s=up5(raw),adjust=s-raw,d=delFee(),pd=promoDisc(),total=Math.max(0,s+d-pd);
  if(!REF)REF=refCode();
  const L='━━━━━━━━━━━━━━━━━━';
  const date=new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'});
@@ -1109,6 +1115,7 @@ function invoice(){
   'الأصناف: '+fmt(s)+' ج',
   ...(Math.abs(adjust)>0.001?['تقريب الحساب: '+(adjust>0?'+':'')+fmt(adjust)+' ج']:[]),
   'التوصيل: '+deliveryLabel,
+  ...(pd?['🎁 خصم (كود '+F.promo.code+(F.promo.owner?' من '+F.promo.owner:'')+'): −'+fmt(pd)+' ج']:[]),
   '💰 الإجمالي: '+fmt(total)+' جنيه',
   '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':''),
   F.when?'🕒 موعد التسليم: '+F.when:'',
@@ -1121,18 +1128,21 @@ function invoice(){
  if(e.target.id==='copyInv'){copy(LAST.text)}
  if(e.target.id==='editDetails'){STEP=1;drawSheet();return}
  if(e.target.id==='editAd'){EDIT=true;drawSheet();const n=$('fName');if(n)n.focus()}
- if(e.target.id==='addNote'){readF();NOTE=true;drawSheet();const n=$('fNote');if(n)n.focus()}});
+ if(e.target.id==='addNote'){readF();NOTE=true;drawSheet();const n=$('fNote');if(n)n.focus()}
+ if(e.target.id==='applyPromo'){const v=($('fPromo')?$('fPromo').value:'').trim();readF();drawSheet();promoTry(v,false).then(c=>{if(c){F.promo=c;toast('اتطبق الكود ✓')}else F.promo=null;drawSheet()});return}
+ if(e.target.id==='rmPromo'){readF();F.promo=null;drawSheet();return}});
 $('shFoot').addEventListener('click',e=>{const id=e.target.id;
  if(id==='goShop'){closeSheet();return}
  if(id==='next1'){STEP=2;drawSheet();T('begin_checkout',{currency:'EGP',value:sub()});return}
  if(id==='next2'){readF();if(!validate())return;persist();REF='';STEP=3;drawSheet();return}
  if(id==='reviewOrder'){readF();if(!validate())return;persist();REF='';STEP=3;drawSheet();return}
  if(id==='send'){if(ORDER_SENDING||window.__CLOSED)return;readF();if(!validate())return;persist();ORDER_SENDING=true;const sb=$('send');if(sb)sb.disabled=true;T('begin_checkout',{currency:'EGP',value:sub()});sendOrder();return}
- if(id==='newOrder'){ORDER_SENDING=false;REF='';LAST={};cart={};save();refresh();closeSheet();goHome()}});
+ if(id==='newOrder'){ORDER_SENDING=false;REF='';LAST={};cart={};F.promo=null;save();refresh();closeSheet();goHome()}});
 $('shBody').addEventListener('input',e=>{if(e.target.matches('input,textarea,select')){const el=e.target;el.classList.remove('bad');const n=el.nextElementSibling;if(n&&n.tagName==='EM'&&!n.style.color)n.remove()}});
 $('shBody').addEventListener('change',e=>{if(e.target.matches('input[name="pay"]')){F.pay=e.target.value;persist();const h=$('payHelp');if(h)h.outerHTML=paymentHelpHTML(F.pay);else{const box=e.target.closest('.fld');if(box)box.insertAdjacentHTML('beforeend',paymentHelpHTML(F.pay))}}});
 async function sendOrder(){if(window.__CLOSED)return;
- const text=invoice(),ent=Object.entries(cart),s=sub(),d=delFee();
+ if(F.promo){try{await FB.promoUse(F.promo.code)}catch(e){F.promo=null;ORDER_SENDING=false;const rsb=$('send');if(rsb)rsb.disabled=false;STEP=3;drawSheet();toast('الكود ده خلص — الفاتورة اتعدلت من غير خصم، راجعها وابعت تاني');return}}
+ const text=invoice(),ent=Object.entries(cart),s=sub(),d=delFee(),pd=promoDisc();
  try{localStorage.setItem('alhella-last',JSON.stringify({cart,at:Date.now()}))}catch(_){}
  const url='https://wa.me/'+PHONE+'?text='+encodeURIComponent(text);
  LAST={ref:REF,url,text};
@@ -1142,8 +1152,9 @@ async function sendOrder(){if(window.__CLOSED)return;
  try{
   if(!window.FB||typeof FB.newId!=='function'||typeof FB.save!=='function')throw new Error('Firebase is not ready');
   const oid=FB.newId();
-  const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),total:s+d,src:'site'+(SRC?'-'+SRC:'')};
+  const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),promoCode:pd?F.promo.code:'',promoDiscount:pd,promoOwner:pd?F.promo.owner||'':'',total:Math.max(0,s+d-pd),src:'site'+(SRC?'-'+SRC:'')};
   await FB.save(oid,payload);
+  if(pd)markPromoUsed(F.promo.code);
   if(waWin&&!waWin.closed){waWin.location.href=url}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
   T('purchase',{transaction_id:oid,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
   if(F.area)T('order_area',{area:F.area});
@@ -1162,7 +1173,7 @@ function toast(t){const x=$('toast');x.textContent=t;x.hidden=false;clearTimeout
 function undo(t,fn){const x=$('toast');x.innerHTML=esc(t)+' <button type="button">رجّعه</button>';x.hidden=false;x.querySelector('button').onclick=()=>{fn();x.hidden=true};clearTimeout(toast.t);toast.t=setTimeout(()=>x.hidden=true,3500)}
 let lastN=0;
 function bar(){const n=count();const b=$('cbar');b.hidden=!n;document.body.classList.toggle('hascart',!!n);const s=sub();
- $('cbCnt').textContent='🛒 راجع الطلب · '+n+(n===1?' صنف':n<11?' أصناف':' صنف');$('cbTot').textContent=fmt(s+delFee())+' ج';
+ $('cbCnt').textContent='🛒 راجع الطلب · '+n+(n===1?' صنف':n<11?' أصناف':' صنف');$('cbTot').textContent=fmt(Math.max(0,s+delFee()-promoDisc()))+' ج';
  $('cbHint').textContent=!n?'':isFree()?'🎉 توصيلك مجاني':'فاضلك '+fmt(FREE_OVER-s)+' ج والتوصيل يبقى مجاني';
  const nb=$('nBadge');nb.hidden=!n;nb.textContent=n;if(n>lastN){b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}lastN=n}
 $('cbar').addEventListener('click',openSheet);
@@ -1214,14 +1225,28 @@ function doReorder(){if(!/[?&]reorder=1/.test(location.search))return;let R=[];t
  if(n){setTimeout(()=>{openSheet();toast('اتحط أوردرك القديم في السلة ✅'+(miss.length?' — مش متاح: '+miss.join('، '):''))},300)}else toast('الأصناف دي مش متاحة دلوقتي')}
 window.reMenu=()=>{if(STARTED)start(window.__BASE)};
 window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;if(st.delivery>=0&&st.delivery!==undefined)DEF_DEL=+st.delivery;$('freeTxt').textContent=fmt(FREE_OVER);
+/* Referral invites: per-person codes live in Firestore promos/{code} (20ج, 10 invites each, hard-capped by a transaction at order time). */
+const promoDisc=()=>F.promo?F.promo.discount:0;
+const promoUsedHere=()=>{try{return JSON.parse(localStorage.getItem('alhella-promo-used')||'[]')}catch(_){return[]}};
+const markPromoUsed=c=>{try{const a=promoUsedHere();if(!a.includes(c)){a.push(c);localStorage.setItem('alhella-promo-used',JSON.stringify(a))}}catch(_){}};
+const promoKey=v=>String(v||'').trim().toUpperCase().replace(/[^A-Z0-9-]/g,'');
+async function promoTry(v,silent){const code=promoKey(v);if(!code||!window.FB||typeof FB.promoGet!=='function')return null;let d=null;try{d=await FB.promoGet(code)}catch(_){return null}
+ if(!d||d.active!==true){if(!silent)toast('الكود مش صحيح — اتأكد منه واكتبه تاني');return null}
+ if((d.used||0)>=(d.max||10)){if(!silent)toast('الكود ده خلص — كل دعواته اتستخدمت');return null}
+ if(promoUsedHere().includes(code)){if(!silent)toast('الكود ده اتستخدم من الجهاز ده قبل كده');return null}
+ const discount=Math.round(Math.min(Math.max(Number(d.discount)||0,1),500)*100)/100;return {code,discount,owner:String(d.person||'')}}
+try{const qc=new URLSearchParams(location.search).get('code');if(qc)sessionStorage.setItem('alhella-promo',qc)}catch(_){}
+function tryLinkCode(){try{const pc=sessionStorage.getItem('alhella-promo');if(!pc||F.promo)return;sessionStorage.removeItem('alhella-promo');promoTry(pc,true).then(c=>{if(c){F.promo=c;toast('اتطبق كود الخصم ✓');drawSheet()}})}catch(_){}}
  window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
  if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
 // Start after the story controls and their data are initialized below.
 </script>
 <script>window.addEventListener('load',()=>setTimeout(()=>{const s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-EPB6MMGYDX';s.async=true;document.head.appendChild(s)},1200));window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-EPB6MMGYDX');</script>
 <script type="module">
-import {db,doc,collection,setDoc,onSnapshot,serverTimestamp} from './fb.js';
-window.FB={newId:()=>doc(collection(db,'orders')).id,save:(id,d)=>setDoc(doc(db,'orders',id),{...d,status:'new',createdAt:serverTimestamp()})};
+import {db,doc,collection,setDoc,onSnapshot,serverTimestamp,getDoc,runTransaction} from './fb.js';
+window.FB={newId:()=>doc(collection(db,'orders')).id,save:(id,d)=>setDoc(doc(db,'orders',id),{...d,status:'new',createdAt:serverTimestamp()}),
+ promoGet:async code=>{const s=await getDoc(doc(db,'promos',code));return s.exists()?s.data():null},
+ promoUse:code=>runTransaction(db,async tx=>{const r=doc(db,'promos',code);const s=await tx.get(r);if(!s.exists())throw Error('missing');const d=s.data();if(d.active!==true||(d.used||0)>=(d.max||10))throw Error('exhausted');tx.update(r,{used:(d.used||0)+1});return d})};
 onSnapshot(doc(db,'menu','main'),s=>{window.__OV=s.exists()?s.data():null;window.reMenu()},()=>{});
 onSnapshot(doc(db,'settings','main'),s=>{window.applySettings(s.exists()?s.data():{})},()=>{});
 </script>
