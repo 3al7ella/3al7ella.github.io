@@ -37,6 +37,83 @@
     if (content !== undefined) node.textContent = content;
     return node;
   }
+  // Offer popup: same validated entry as the banner, once per visit per offer.
+  const POP_KEY = 'alhella-offer-pop';
+  function closePop() {
+    const pop = document.getElementById('dailyOfferPop');
+    if (pop) pop.remove();
+  }
+  function renderPop(offer) {
+    closePop();
+    if (!offer) return;
+    const seenKey = offer.title + '|' + offer.startTime;
+    let seen = '';
+    try { seen = sessionStorage.getItem(POP_KEY) || ''; } catch (_) { return; }
+    if (seen === seenKey) return;
+    setTimeout(() => {
+      if (document.getElementById('dailyOfferPop')) return;
+      const now = Date.now();
+      const still = offers.some(o => o.startTime <= now && now < o.endTime && (o.title + '|' + o.startTime) === seenKey);
+      if (!still) return;
+      const pop = el('div', 'story-modal');
+      pop.id = 'dailyOfferPop';
+      pop.setAttribute('role', 'dialog');
+      pop.setAttribute('aria-modal', 'true');
+      pop.setAttribute('aria-label', 'عرض اليوم');
+      const backdrop = el('div', 'story-backdrop');
+      backdrop.addEventListener('click', closePop);
+      const panel = el('div', 'story-panel');
+      panel.style.maxWidth = '380px';
+      const x = el('button', 'story-close', '×');
+      x.type = 'button';
+      x.setAttribute('aria-label', 'إغلاق');
+      x.addEventListener('click', closePop);
+      panel.append(x);
+      if (offer.image) {
+        const img = el('img', 'story-photo');
+        img.alt = offer.title;
+        img.style.height = '170px';
+        img.decoding = 'async';
+        img.addEventListener('error', () => img.remove(), { once: true });
+        img.src = offer.image;
+        panel.append(img);
+      }
+      const content = el('div', 'story-content');
+      content.append(el('div', 'story-brand', 'عرض اليوم · ع الحلة'));
+      const h = el('h2', '', offer.title);
+      h.style.cssText = 'font-size:24px;margin:3px 0 8px';
+      content.append(h);
+      const ing = el('div', 'story-ingredients');
+      ing.style.fontSize = '13.5px';
+      offer.items.forEach((item, i) => {
+        if (i) ing.append(document.createElement('br'));
+        ing.append(document.createTextNode('• ' + item));
+      });
+      content.append(ing);
+      const line = el('p', '', offer.terms || ('العرض بـ ' + money.format(offer.price) + ' جنيه'));
+      line.style.cssText = 'margin:10px 0 12px;font-weight:900;color:#8E0F16;font-size:16.5px';
+      content.append(line);
+      const row = el('div');
+      row.style.cssText = 'display:flex;gap:8px';
+      const order = el('a', '', 'اطلب العرض واتساب');
+      order.href = offer.orderLink;
+      order.target = '_blank';
+      order.rel = 'noopener';
+      order.style.cssText = 'flex:1.2;background:#B5161E;color:#fff;border-radius:12px;padding:11px 8px;font-weight:900;text-align:center;text-decoration:none;font-size:14.5px';
+      order.addEventListener('click', closePop);
+      const cont = el('button', '', 'كمّل المنيو');
+      cont.type = 'button';
+      cont.style.cssText = 'flex:1;background:#FFE7D6;color:#8E0F16;border:0;border-radius:12px;padding:11px 8px;font-weight:900;font-family:inherit;font-size:14.5px';
+      cont.addEventListener('click', closePop);
+      row.append(order, cont);
+      content.append(row);
+      panel.append(content);
+      pop.append(backdrop, panel);
+      document.body.append(pop);
+      try { sessionStorage.setItem(POP_KEY, seenKey); } catch (_) {}
+    }, 1200);
+  }
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') closePop(); });
   function render() {
     clearTimeout(timer);
     const now = Date.now();
@@ -78,6 +155,7 @@
       }
       mount.append(article);
     });
+    renderPop(offer);
     const next = offers.flatMap(offer => [offer.startTime, offer.endTime]).filter(time => time > now);
     if (next.length) timer = setTimeout(render, Math.min(Math.min(...next) - now + 25, 2147483647));
   }
