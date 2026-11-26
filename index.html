@@ -1225,6 +1225,8 @@ function doReorder(){if(!/[?&]reorder=1/.test(location.search))return;let R=[];t
  if(n){setTimeout(()=>{openSheet();toast('اتحط أوردرك القديم في السلة ✅'+(miss.length?' — مش متاح: '+miss.join('، '):''))},300)}else toast('الأصناف دي مش متاحة دلوقتي')}
 window.reMenu=()=>{if(STARTED)start(window.__BASE)};
 window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;if(st.delivery>=0&&st.delivery!==undefined)DEF_DEL=+st.delivery;$('freeTxt').textContent=fmt(FREE_OVER);
+ window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
+ if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
 /* Referral invites: per-person codes live in Firestore promos/{code} (20ج, 10 invites each, hard-capped by a transaction at order time). */
 const promoDisc=()=>F.promo?F.promo.discount:0;
 const promoUsedHere=()=>{try{return JSON.parse(localStorage.getItem('alhella-promo-used')||'[]')}catch(_){return[]}};
@@ -1237,8 +1239,6 @@ async function promoTry(v,silent){const code=promoKey(v);if(!code||!window.FB||t
  const discount=Math.round(Math.min(Math.max(Number(d.discount)||0,1),500)*100)/100;return {code,discount,owner:String(d.person||'')}}
 try{const qc=new URLSearchParams(location.search).get('code');if(qc)sessionStorage.setItem('alhella-promo',qc)}catch(_){}
 function tryLinkCode(){try{const pc=sessionStorage.getItem('alhella-promo');if(!pc||F.promo)return;sessionStorage.removeItem('alhella-promo');promoTry(pc,true).then(c=>{if(c){F.promo=c;toast('اتطبق كود الخصم ✓');drawSheet()}})}catch(_){}}
- window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
- if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
 // Start after the story controls and their data are initialized below.
 </script>
 <script>window.addEventListener('load',()=>setTimeout(()=>{const s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-EPB6MMGYDX';s.async=true;document.head.appendChild(s)},1200));window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-EPB6MMGYDX');</script>
