@@ -63,7 +63,7 @@ label.f{display:block;font-weight:800;margin:10px 0 4px}
   </div>
 
   <div id="app" hidden>
-    <div class="tabs"><button data-t="orders" aria-pressed="true">📦 أوردرات</button><button data-t="prep" aria-pressed="false">🍳 تجهيز</button><button data-t="menu" aria-pressed="false">💰 أسعار</button><button data-t="set" aria-pressed="false">⚙️ إعدادات</button></div>
+    <div class="tabs"><button data-t="orders" aria-pressed="true">📦 أوردرات</button><button data-t="prep" aria-pressed="false">🍳 تجهيز</button><button data-t="menu" aria-pressed="false">💰 أسعار</button><button data-t="set" aria-pressed="false">⚙️ إعدادات</button><button data-t="promo" aria-pressed="false">🎁 دعوات</button></div>
 
     <section id="t-orders">
       <div class="stats"><div class="stat"><b id="sNew">0</b><small>جديد</small></div><div class="stat"><b id="sAct">0</b><small>شغالين</small></div><div class="stat"><b id="sDay">0</b><small>إجمالي المعروض</small></div></div>
@@ -124,6 +124,20 @@ label.f{display:block;font-weight:800;margin:10px 0 4px}
         <div id="rList" style="margin-top:12px"></div>
       </div>
     </section>
+
+    <section id="t-promo" hidden>
+      <div class="card">
+        <h3 style="margin:0 0 6px">🎁 كود دعوة جديد</h3>
+        <p class="muted">كل شخص ليه كود خاص يبعته لصحابه، وكل صاحب يطلب بـ 10 دعوات كحد أقصى، كل دعوة خصم 20 ج من إجمالي الأوردر. الموقع بيعدّ الاستخدامات لوحده وبيقفل الكود أوتوماتيك لما يخلص.</p>
+        <label class="f">اسم صاحب الكود (يظهر في فاتورة صاحبه: "كود ... من فلان")<input id="pName" placeholder="مثلًا: عمر"></label>
+        <button class="b main" id="pCreate" style="margin-top:8px">اعمل الكود واللينك</button>
+        <div id="pNew" style="margin-top:12px"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3 style="margin:0 0 6px">الأكواد الشغالة</h3>
+        <div id="pList" style="margin-top:8px"></div>
+      </div>
+    </section>
   </div>
 </div>
 <div class="save" id="mSaveBar" hidden><span class="muted" id="mChg" style="align-self:center"></span><button class="b" id="mUndo">تراجع</button><button class="b main" id="mSave">احفظ التغييرات</button></div>
@@ -145,7 +159,7 @@ function waLink(phone,text){const n='2'+String(phone||'').split(/[\/,،]/)[0].re
   if(/Android/i.test(navigator.userAgent))return 'intent://send?phone='+n+'&text='+encodeURIComponent(text||'')+'#Intent;scheme=whatsapp;package=com.whatsapp.w4b;S.browser_fallback_url='+encodeURIComponent(web)+';end';
   return web}
 
-import {app,db,ADMINS,STATUS,STATUS_X,doc,collection,setDoc,getDoc,onSnapshot,query,orderBy,limit,updateDoc,deleteDoc} from './fb.js';
+import {app,db,ADMINS,STATUS,STATUS_X,doc,collection,setDoc,getDoc,getDocs,onSnapshot,query,where,orderBy,limit,updateDoc,deleteDoc,serverTimestamp} from './fb.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -171,7 +185,27 @@ onAuthStateChanged(auth,u=>{
 
 /* tabs */
 document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));
-  ['orders','prep','menu','set'].forEach(t=>$('t-'+t).hidden=t!==b.dataset.t);$('mSaveBar').hidden=b.dataset.t!=='menu'||!dirty();if(b.dataset.t==='prep')drawPrep()};
+  ['orders','prep','menu','set','promo'].forEach(t=>$('t-'+t).hidden=t!==b.dataset.t);$('mSaveBar').hidden=b.dataset.t!=='menu'||!dirty();if(b.dataset.t==='prep')drawPrep();if(b.dataset.t==='promo')drawPromos()};
+
+/* ---------- referral invites (promos) ---------- */
+const PROMO_LINK=c=>'https://3al7ella.github.io/?code='+c;
+function newPromoCode(){const A='ABCDEFGHJKMNPQRSTUVWXYZ23456789';let s='';const r=crypto.getRandomValues(new Uint8Array(4));for(let i=0;i<4;i++)s+=A[r[i]%A.length];return 'AHLA-'+s}
+async function drawPromos(){const el=$('pList');el.innerHTML='<p class="muted">بتحمّل…</p>';
+ try{const snap=await getDocs(query(collection(db,'promos'),orderBy('createdAt','desc'),limit(50)));
+  if(snap.empty){el.innerHTML='<p class="muted">مفيش أكواد لسه — اعمل أول كود من فوق.</p>';return}
+  el.innerHTML='';snap.forEach(d=>{const p=d.data(),used=p.used||0,mx=p.max||10,left=Math.max(0,mx-used),off=p.active!==true||used>=mx;
+   const row=document.createElement('div');row.className='it';
+   row.innerHTML='<div><b>'+esc(p.person||'')+' · <span class="num">'+esc(d.id)+'</span></b><small class="muted">خصم '+fmt(p.discount||20)+' ج · اتستخدم '+used+' من '+mx+(off?' · <b style="color:#a33">مقفول</b>':' · فاضل '+left)+'</small></div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="b" data-pc="'+esc(d.id)+'">انسخ اللينك</button><button class="b" data-pt="'+esc(d.id)+'" data-on="'+(p.active===true?'1':'')+'">'+(p.active===true?'اقفل الكود':'شغّل الكود')+'</button></div>';
+   el.appendChild(row)});
+ }catch(e){el.innerHTML='<p class="muted">مشكلة في التحميل: '+esc(e.message||e)+'</p>'}}
+$('pCreate').onclick=async()=>{const person=$('pName').value.trim();if(!person){toast('اكتب اسم صاحب الكود');return}
+ const code=newPromoCode();
+ try{await setDoc(doc(db,'promos',code),{person,discount:20,max:10,used:0,active:true,createdAt:serverTimestamp()});
+  $('pName').value='';$('pNew').innerHTML='<p>✅ الكود اتعمل: <b class="num">'+esc(code)+'</b> — ابعته لـ '+esc(person)+' مع اللينك ده:</p><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><code style="background:#f6f1ea;padding:8px 10px;border-radius:8px;direction:ltr">'+PROMO_LINK(code)+'</code><button class="b" data-pc="'+esc(code)+'">انسخ اللينك</button></div>';
+  drawPromos();toast('الكود اتعمل ✅')}catch(e){toast('مشكلة: '+(e.message||e))}};
+$('t-promo').addEventListener('click',e=>{const c=e.target.closest('[data-pc]');if(c){copy(PROMO_LINK(c.dataset.pc));return}
+ const t=e.target.closest('[data-pt]');if(t){const on=t.dataset.on==='1';updateDoc(doc(db,'promos',t.dataset.pt),{active:!on}).then(()=>{toast(on?'الكود اتقفل':'الكود اتشغّل');drawPromos()}).catch(err=>toast('مشكلة: '+(err.message||err)))}});
 
 /* ---------- orders ---------- */
 const DEF_ZONES='الورديان = 30\nالقباري = 35\nالمنشية = 50';

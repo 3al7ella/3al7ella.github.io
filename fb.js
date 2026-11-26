@@ -1,6 +1,6 @@
 // ع الحلة — Firebase (shared by index / track / admin)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore, doc, collection, setDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, limit, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, doc, collection, setDoc, getDoc, getDocs, onSnapshot, serverTimestamp, query, where, orderBy, limit, updateDoc, deleteDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCtSigtOrUVd8j8yXOocaPCobv8LhBUWtA",
@@ -22,4 +22,4 @@ export const STATUS = [
   ["delivered", "وصل", "🎉"]
 ];
 export const STATUS_X = ["cancelled", "اتلغى", "✖️"];
-export { doc, collection, setDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, limit, updateDoc, deleteDoc };
+export { doc, collection, setDoc, getDoc, getDocs, onSnapshot, serverTimestamp, query, where, orderBy, limit, updateDoc, deleteDoc, runTransaction };
