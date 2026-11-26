@@ -1035,7 +1035,7 @@ let STEP=1,EDIT=false,NOTE=false;const CK='alhella-customer-v1';
 function cust(){try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch(_){return {}}}
 let F=Object.assign({name:'',phone:'',area:'',addr:'',when:'',pay:'كاش',note:''},cust());
 function persist(){try{localStorage.setItem(CK,JSON.stringify({name:F.name,phone:F.phone,area:F.area,addr:F.addr,pay:F.pay}))}catch(_){}}
-function openSheet(){STEP=1;drawSheet();$('sheet').hidden=false;document.body.style.overflow='hidden';history.pushState({...(history.state||{}),s:1},'');T('view_cart',{currency:'EGP',value:sub()})}
+function openSheet(){STEP=1;tryLinkCode();drawSheet();$('sheet').hidden=false;document.body.style.overflow='hidden';history.pushState({...(history.state||{}),s:1},'');T('view_cart',{currency:'EGP',value:sub()})}
 function closeSheet(fromPop){$('sheet').hidden=true;document.body.style.overflow='';if(!fromPop&&history.state&&history.state.s)history.back()}
 $('shClose').addEventListener('click',()=>closeSheet());$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
 $('shBack').addEventListener('click',()=>{if(STEP>1&&STEP<4){STEP--;drawSheet()}});
@@ -1074,11 +1074,9 @@ function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
   +`<div class="fld"><span>ميعاد التوصيل المفضل</span><div class="pays">${['بكره','بعد بكره','أقرب موعد متاح'].map(w=>`<label><input type="radio" name="when" value="${w}"${(F.when||'بكره')===w?' checked':''}><span>${w}</span></label>`).join('')}</div><small class="fld-help">الأصناف العادية قبلها بيوم، وأصناف نفس اليوم قبل 2 ظهرًا. اختيارك تفضيل مبدئي وهنأكد معاك الموعد على واتساب.</small></div>
   <div class="fld"><span>طريقة الدفع</span><div class="pays">${['كاش','إنستاباي','محفظة'].map(x=>`<label><input type="radio" name="pay" value="${x}"${F.pay===x?' checked':''}><span>${x}</span></label>`).join('')}</div>${paymentHelpHTML(F.pay)}</div>`
   +(F.note||NOTE?`<label class="fld"><span>ملاحظة</span><textarea id="fNote" rows="2" style="min-height:52px" placeholder="أي طلب خاص">${esc(F.note)}</textarea></label>`:'<button type="button" class="notebtn" id="addNote">+ عندك ملاحظة؟</button>')
-  +(PROMO?(
-   F.promo&&F.promo.code===PROMO.code
-    ?`<div class="promo-ok">✅ اتطبق كود <b>${esc(F.promo.code)}</b> — خصم ${fmt(PROMO.discount)} ج من الإجمالي <button type="button" id="rmPromo">إلغاء الكود</button></div>`
+  +(F.promo&&promoOf(F.promo.code)
+    ?`<div class="promo-ok">✅ اتطبق كود <b>${esc(F.promo.code)}</b> — خصم ${fmt(promoDisc())} ج من الإجمالي <button type="button" id="rmPromo">إلغاء الكود</button></div>`
     :`<div class="fld promo-fld"><span>عندك كود خصم؟</span><div class="promo-row"><input id="fPromo" placeholder="اكتب الكود هنا"><button type="button" class="btn ghost" id="applyPromo">تطبيق</button></div><small class="fld-help">الكود بيوصلك من اللي بعتلك لينك الموقع</small></div>`)
-  :'')
   +(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
   Fo.innerHTML=totals(true)+`<button type="button" class="btn full wa" id="reviewOrder" ${window.__CLOSED?'disabled':''}>راجع الفاتورة قبل الإرسال</button>`}
  else if(STEP===3){$('shTitle').textContent='راجع الفاتورة';B.innerHTML=`<div class="inv" id="inv">${esc(invoice())}</div>`+'<button type="button" class="btn full ghost" id="editDetails" style="margin-top:10px">تعديل الأصناف أو البيانات</button>'+(window.__CLOSED?'<p class="hint">معلش، مش بنستقبل أوردرات من الموقع دلوقتي — كلمنا واتساب</p>':'');
@@ -1131,7 +1129,7 @@ function invoice(){
  if(e.target.id==='editDetails'){STEP=1;drawSheet();return}
  if(e.target.id==='editAd'){EDIT=true;drawSheet();const n=$('fName');if(n)n.focus()}
  if(e.target.id==='addNote'){readF();NOTE=true;drawSheet();const n=$('fNote');if(n)n.focus()}
- if(e.target.id==='applyPromo'){const v=($('fPromo')?$('fPromo').value:'').trim();readF();if(PROMO&&v&&NORM(v)===NORM(PROMO.code)){F.promo={code:PROMO.code};toast('اتطبق الكود ✓')}else{F.promo=null;toast('الكود مش صحيح — اتأكد منه واكتبه تاني')}drawSheet();return}
+ if(e.target.id==='applyPromo'){const v=($('fPromo')?$('fPromo').value:'').trim();readF();const c=v&&promoOf(v);if(c){if(promoUsedHere().includes(c.code)){F.promo=null;toast('الكود ده اتستخدم من الجهاز ده قبل كده')}else{F.promo={code:c.code};toast('اتطبق الكود ✓')}}else{F.promo=null;toast('الكود مش صحيح — اتأكد منه واكتبه تاني')}drawSheet();return}
  if(e.target.id==='rmPromo'){readF();F.promo=null;drawSheet();return}});
 $('shFoot').addEventListener('click',e=>{const id=e.target.id;
  if(id==='goShop'){closeSheet();return}
@@ -1155,6 +1153,7 @@ async function sendOrder(){if(window.__CLOSED)return;
   const oid=FB.newId();
   const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),promoCode:pd?F.promo.code:'',promoDiscount:pd,total:Math.max(0,s+d-pd),src:'site'+(SRC?'-'+SRC:'')};
   await FB.save(oid,payload);
+  if(pd)markPromoUsed(F.promo.code);
   if(waWin&&!waWin.closed){waWin.location.href=url}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
   T('purchase',{transaction_id:oid,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
   if(F.area)T('order_area',{area:F.area});
@@ -1225,10 +1224,15 @@ function doReorder(){if(!/[?&]reorder=1/.test(location.search))return;let R=[];t
  if(n){setTimeout(()=>{openSheet();toast('اتحط أوردرك القديم في السلة ✅'+(miss.length?' — مش متاح: '+miss.join('، '):''))},300)}else toast('الأصناف دي مش متاحة دلوقتي')}
 window.reMenu=()=>{if(STARTED)start(window.__BASE)};
 window.applySettings=st=>{st=st||{};if(st.freeOver>0)FREE_OVER=+st.freeOver;if(st.delivery>=0&&st.delivery!==undefined)DEF_DEL=+st.delivery;$('freeTxt').textContent=fmt(FREE_OVER);
-/* Referral discount code: config-driven; applies only while referral-code.json validates. */
-let PROMO=null;
-fetch('referral-code.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.active===true&&typeof j.code==='string'&&j.code.trim()&&j.code.length<=40&&typeof j.discount==='number'&&Number.isFinite(j.discount)&&j.discount>0&&j.discount<=500&&(!j.expires||Date.parse(j.expires)>Date.now()))PROMO={code:j.code.trim(),discount:Math.round(j.discount*100)/100}}).catch(()=>{});
-const promoDisc=()=>PROMO&&F.promo&&F.promo.code===PROMO.code?PROMO.discount:0;
+/* Referral invites: per-person codes from referral-codes.json (fixed 20ج each, uses tracked owner-side, once per device). */
+let PROMOS=[];
+fetch('referral-codes.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.codes))PROMOS=j.codes.filter(c=>c&&c.active===true&&typeof c.code==='string'&&c.code.trim()&&c.code.length<=40&&typeof c.discount==='number'&&Number.isFinite(c.discount)&&c.discount>0&&c.discount<=500)}).catch(()=>{});
+const promoOf=v=>PROMOS.find(c=>NORM(c.code)===NORM(v));
+const promoDisc=()=>F.promo&&promoOf(F.promo.code)?promoOf(F.promo.code).discount:0;
+const promoUsedHere=()=>{try{return JSON.parse(localStorage.getItem('alhella-promo-used')||'[]')}catch(_){return[]}};
+const markPromoUsed=c=>{try{const a=promoUsedHere();if(!a.includes(c)){a.push(c);localStorage.setItem('alhella-promo-used',JSON.stringify(a))}}catch(_){}};
+try{const qc=new URLSearchParams(location.search).get('code');if(qc)sessionStorage.setItem('alhella-promo',qc)}catch(_){}
+function tryLinkCode(){try{const pc=sessionStorage.getItem('alhella-promo');if(!pc||F.promo)return;sessionStorage.removeItem('alhella-promo');const c=promoOf(pc);if(!c)return;if(promoUsedHere().includes(c.code)){setTimeout(()=>toast('الكود ده اتستخدم من الجهاز ده قبل كده'),400);return}F.promo={code:c.code};setTimeout(()=>toast('اتطبق كود الخصم ✓'),400)}catch(_){}}
  window.__CLOSED=!!st.closed;const n=$('notice');const msg=(st.closed?(st.closedMsg||'معلش، المطبخ مش بيستقبل أوردرات من الموقع دلوقتي. كلمنا واتساب 01275165496'):'')||st.notice||'';n.textContent=msg;n.hidden=!msg;n.classList.toggle('closed',!!st.closed);
  if(STARTED){bar();if(!$('sheet').hidden)drawSheet()}};
 // Start after the story controls and their data are initialized below.
