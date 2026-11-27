@@ -55,6 +55,9 @@
       const now = Date.now();
       const still = offers.some(o => o.startTime <= now && now < o.endTime && (o.title + '|' + o.startTime) === seenKey);
       if (!still) return;
+      // A visitor who landed deep-linked inside a category, offers or reviews
+      // view came for that content; don't cover it with the popup.
+      if (/^#(?:c-|offers|reviews)/.test(location.hash)) return;
       const pop = el('div', 'story-modal');
       pop.id = 'dailyOfferPop';
       pop.setAttribute('role', 'dialog');
