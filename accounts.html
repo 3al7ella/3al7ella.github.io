@@ -149,7 +149,7 @@ function setupMonthFilter(){
  sel.innerHTML=keys.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
  sel.value=selectedMonth;sel.dataset.ready="1";
  $("monthScopeLabel").textContent="بيانات شهر "+selectedMonth+" فقط";
- sel.onchange=()=>{selectedMonth=sel.value;$("laborMonth").value=selectedMonth;$("purchaseMonth").value=selectedMonth;$("purchaseMonthDetail").value=selectedMonth$("monthScopeLabel").textContent=selectedMonth==="all"?"عرض كل الشهور مجمعة":"بيانات شهر "+selectedMonth+" فقط";render()};
+ sel.onchange=()=>{selectedMonth=sel.value;$("laborMonth").value=selectedMonth;$("purchaseMonth").value=selectedMonth;$("purchaseMonthDetail").value=selectedMonth;$("monthScopeLabel").textContent="بيانات شهر "+selectedMonth+" فقط";render()};
 }
 const LOCKED_MONTHS=new Set(["2026-10"]);
 function isLockedMonth(m){const key=String(m||"").slice(0,7),saved=collection("months").find(x=>x._id===key);return !!archiveState||frozenViewer||LOCKED_MONTHS.has(key)||!!saved?.closedAt||!!saved?.closeSummary}
