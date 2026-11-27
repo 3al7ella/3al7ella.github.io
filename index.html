@@ -915,7 +915,7 @@ const clean=()=>Object.keys(cart).forEach(k=>{if(!byId[pidOf(k)]||!(cart[k]>0))d
 const qtyOf=id=>Object.entries(cart).filter(([k])=>pidOf(k)===id).reduce((a,[,q])=>a+q,0);
 const lineTotal=(p,q)=>p&&p.isOffer?p.price*q:(p?p.price:0)*q;
 const rawSub=()=>Object.entries(cart).reduce((a,[k,q])=>a+lineTotal(byId[pidOf(k)],q),0);
-const sub=()=>up5(rawSub());
+const sub=()=>rawSub();
 const freeDel=()=>Object.keys(cart).some(k=>FREE_DEL.has(pidOf(k)));
 const isFree=()=>!!Object.keys(cart).length&&(freeDel()||sub()>=FREE_OVER);
 const delFee=()=>isFree()?0:DEF_DEL;
@@ -1092,7 +1092,7 @@ function hintHTML(){
  const remain=Math.max(0,FREE_OVER-s),pct=Math.max(0,Math.min(100,s/FREE_OVER*100));
  return '<div class="delivery-progress"><div class="dp-copy"><b>🚚 فاضلك '+fmt(remain)+' جنيه</b><small>وزوّد طلبك عشان التوصيل يبقى مجاني</small></div><div class="dp-track" role="progressbar" aria-label="التقدم نحو التوصيل المجاني" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(pct)+'"><span style="width:'+pct.toFixed(1)+'%"></span></div><small class="dp-foot">وصلت لـ '+Math.round(pct)+'٪ من حد التوصيل المجاني ('+fmt(FREE_OVER)+' جنيه)</small></div>';
 }
-function totals(big){const s=sub(),d=delFee(),pd=promoDisc(),t=Math.max(0,s+d-pd);return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${pd?`<div class="tot promo"><span>🎁 خصم (كود ${esc(F.promo.code)})</span><span class="num">−${fmt(pd)} ج</span></div>`:''}${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(t)} ج</span></div>`:''}`}
+function totals(big){const s=sub(),d=delFee(),pd=promoDisc(),base=Math.max(0,s+d-pd),adjust=up5(base)-base,t=up5(base);return `<div class="tot"><span>الأصناف</span><span class="num">${fmt(s)} ج</span></div><div class="tot"><span>التوصيل</span><span class="num">${d?fmt(d)+' ج':'مجاني'}</span></div>${pd?`<div class="tot promo"><span>🎁 خصم (كود ${esc(F.promo.code)})</span><span class="num">−${fmt(pd)} ج</span></div>`:''}${Math.abs(adjust)>0.001?`<div class="tot"><span>تقريب الحساب</span><span class="num">${adjust>0?'+':''}${fmt(adjust)} ج</span></div>`:''}${big?`<div class="tot big"><span>الإجمالي</span><span class="num">${fmt(t)} ج</span></div>`:''}`}
 function paymentHelpHTML(pay){if(pay==='كاش')return '<div class="pay-help" id="payHelp">💵 الدفع كاش عند استلام الأوردر من المندوب.</div>';if(pay==='إنستاباي')return '<div class="pay-help" id="payHelp">📲 حوّل من تطبيق إنستاباي باستخدام رقم ع الحلة أو عنوان الدفع، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>رقم ع الحلة: 01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button><strong>عنوان InstaPay: hamdymohamed12@instapay</strong><button type="button" class="pay-copy" data-copy-payment="hamdymohamed12@instapay">نسخ عنوان InstaPay</button></div>';if(pay==='محفظة')return '<div class="pay-help" id="payHelp">📱 حوّل من محفظتك الإلكترونية على رقم ع الحلة، وبعد التحويل ابعت صورة التحويل مع رسالة الأوردر على واتساب.<strong>01275165496</strong><button type="button" class="pay-copy" data-copy-payment="01275165496">نسخ الرقم</button></div>';return ''}
 function drawSheet(){$('prog').hidden=true;$('shBack').hidden=true;
  const B=$('shBody'),Fo=$('shFoot');
@@ -1129,7 +1129,7 @@ function validate(){const bad=[];const mark=(id,msg)=>{let el=$(id);if(!el){EDIT
 function refCode(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return 'AH-'+pad(d.getDate())+pad(d.getMonth()+1)+'-'+String(Math.floor(100+Math.random()*900))}
 let REF='',LAST={},ORDER_SENDING=false;
 function invoice(){
- const ent=Object.entries(cart),raw=rawSub(),s=up5(raw),adjust=s-raw,d=delFee(),pd=promoDisc(),total=Math.max(0,s+d-pd);
+ const ent=Object.entries(cart),s=rawSub(),d=delFee(),pd=promoDisc(),base=Math.max(0,s+d-pd),adjust=up5(base)-base,total=up5(base);
  if(!REF)REF=refCode();
  const L='━━━━━━━━━━━━━━━━━━';
  const date=new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'});
@@ -1149,9 +1149,9 @@ function invoice(){
   ...lines,
   L,
   'الأصناف: '+fmt(s)+' ج',
-  ...(Math.abs(adjust)>0.001?['تقريب الحساب: '+(adjust>0?'+':'')+fmt(adjust)+' ج']:[]),
   'التوصيل: '+deliveryLabel,
   ...(pd?['🎁 خصم (كود '+F.promo.code+(F.promo.owner?' من '+F.promo.owner:'')+'): −'+fmt(pd)+' ج']:[]),
+  ...(Math.abs(adjust)>0.001?['تقريب الحساب: '+(adjust>0?'+':'')+fmt(adjust)+' ج']:[]),
   '💰 الإجمالي: '+fmt(total)+' جنيه',
   '💳 الدفع: '+F.pay+(F.pay==='كاش'?' عند الاستلام':''),
   F.when?'🕒 موعد التسليم: '+F.when:'',
@@ -1188,11 +1188,11 @@ async function sendOrder(){if(window.__CLOSED)return;
  try{
   if(!window.FB||typeof FB.newId!=='function'||typeof FB.save!=='function')throw new Error('Firebase is not ready');
   const oid=FB.newId();
-  const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),promoCode:pd?F.promo.code:'',promoDiscount:pd,promoOwner:pd?F.promo.owner||'':'',total:Math.max(0,s+d-pd),src:'site'+(SRC?'-'+SRC:'')};
+  const payload={ref:REF,name:F.name,phone:F.phone,area:F.area,addr:F.addr,when:F.when,pay:F.pay,note:F.note,weekly:false,deliveryEst:d,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {k,name:lineName(k),qty:q,unit:p.isOffer?'':p.unit,price:p.price,total:lineTotal(p,q)}}),sub:s,delivery:d,deliveryFree:isFree(),promoCode:pd?F.promo.code:'',promoDiscount:pd,promoOwner:pd?F.promo.owner||'':'',total:up5(Math.max(0,s+d-pd)),src:'site'+(SRC?'-'+SRC:'')};
   await FB.save(oid,payload);
   if(pd)markPromoUsed(F.promo.code);
   if(waWin&&!waWin.closed){waWin.location.href=url}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
-  T('purchase',{transaction_id:oid,currency:'EGP',value:s,items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
+  T('purchase',{transaction_id:oid,currency:'EGP',value:up5(Math.max(0,s+d-pd)),items:ent.map(([k,q])=>{const p=byId[pidOf(k)];return {item_id:p.id,item_name:p.name,item_category:p.section,price:p.price,quantity:q}})});
   if(F.area)T('order_area',{area:F.area});
   STEP=4;
  }catch(err){
@@ -1209,7 +1209,7 @@ function toast(t){const x=$('toast');x.textContent=t;x.hidden=false;clearTimeout
 function undo(t,fn){const x=$('toast');x.innerHTML=esc(t)+' <button type="button">رجّعه</button>';x.hidden=false;x.querySelector('button').onclick=()=>{fn();x.hidden=true};clearTimeout(toast.t);toast.t=setTimeout(()=>x.hidden=true,3500)}
 let lastN=0;
 function bar(){const n=count();const b=$('cbar');b.hidden=!n;document.body.classList.toggle('hascart',!!n);const s=sub();
- $('cbCnt').textContent='🛒 راجع الطلب · '+n+(n===1?' صنف':n<11?' أصناف':' صنف');$('cbTot').textContent=fmt(Math.max(0,s+delFee()-promoDisc()))+' ج';
+ $('cbCnt').textContent='🛒 راجع الطلب · '+n+(n===1?' صنف':n<11?' أصناف':' صنف');$('cbTot').textContent=fmt(up5(Math.max(0,s+delFee()-promoDisc())))+' ج';
  $('cbHint').textContent=!n?'':isFree()?'🎉 توصيلك مجاني':'فاضلك '+fmt(FREE_OVER-s)+' ج والتوصيل يبقى مجاني';
  const nb=$('nBadge');nb.hidden=!n;nb.textContent=n;if(n>lastN){b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}lastN=n}
 $('cbar').addEventListener('click',openSheet);
