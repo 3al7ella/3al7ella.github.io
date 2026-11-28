@@ -691,7 +691,7 @@ const yes=v=>/^(نعم|ايوه|أيوه|yes|y|1|true)$/i.test(String(v||'').tri
 const NORM=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
 const up5=v=>Math.round(v/5)*5;
 const HALF=u=>/كيلو/.test(u)&&!/نص|ربع|عبوة/.test(u);
-const isFile=k=>/^https?:\/\/|\.(webp|jpe?g|png)$/i.test(k||'');
+const isFile=k=>/^https?:\/\/|\.(webp|jpe?g|png|svg)$/i.test(k||'');
 const EXTRA_IMG={
  p164:"assets/menu/hamdy-1122-pickled-eggplant.webp",
  p061:"assets/menu/hamdy-1123-cabbage-cut.webp",
