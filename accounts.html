@@ -366,18 +366,19 @@ function renderBusinessIntel(){
 }
 function isDeductibleAbsence(a){return a?.status==="absent"&&a?.reported===true&&(a?.deductDailyPay===true||a?.leaveType==="deductible_leave")}
 function autoPayrollForMonth(month){
- const staff=collection("staff").find(x=>x._id==="main"),workers=(staff?.workers||[]).filter(w=>w.active&&w.pay!=="order");
+ const staff=collection("staff").find(x=>x._id==="main"),workers=(staff?.workers||[]).filter(w=>w.pay!=="order"&&(w.active||(w.until&&w.until>=month+"-01"&&month>"2026-10")));
  const absences=collection("attendance"),recorded=currentLabor().filter(x=>monthOf(x)===month&&x.inProfit!==false&&(x.kind==="day"||x.source==="attendance-daily"));
  const [yy,mm]=month.split("-").map(Number),monthStart=month+"-01",monthEnd=new Date(yy,mm,0).getDate(),todayStr=today(),end=month===todayStr.slice(0,7)?todayStr:(month<todayStr.slice(0,7)?month+"-"+String(monthEnd).padStart(2,"0"):todayStr);
  let total=0,details=[];
  for(const w of workers){
   const defaultStart=w.id==="w-hamza"?"2026-10-23":monthStart;
   const start=[monthStart,w.from||defaultStart].sort().reverse()[0];
-  if(start>end||(w.until&&w.until<start))continue;
+  const wEnd=w.until&&w.until<end?w.until:end;
+  if(start>wEnd)continue;
   const daily=approvedDailyRate(w);
   if(!(daily>0))continue;
   let eligibleDays=0,absenceDays=0;
-  for(let d=new Date(start+"T12:00:00");d<=new Date(end+"T12:00:00");d.setDate(d.getDate()+1)){
+  for(let d=new Date(start+"T12:00:00");d<=new Date(wEnd+"T12:00:00");d.setDate(d.getDate()+1)){
    const key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
    eligibleDays++;
    if(absences.some(a=>a.worker===w.id&&a.date===key&&isDeductibleAbsence(a)))absenceDays++;
@@ -401,7 +402,7 @@ function autoPayrollForSelection(){
  return keys.reduce((a,m)=>{const x=autoPayrollForMonth(m);a.total+=x.total;a.details.push(...x.details.map(d=>({...d,month:m})));return a;},{total:0,details:[]});
 }
 function accruedSalaryForProfit(){
- const staffRecord=records.find(r=>r.collection==="staff"&&r.record_id==="main"),workers=(staffRecord?.data?.workers||[]).filter(w=>w.active&&w.pay!=="order");
+ const staffRecord=records.find(r=>r.collection==="staff"&&r.record_id==="main"),workers=(staffRecord?.data?.workers||[]).filter(w=>w.pay!=="order");
  if(!workers.length)return null;
  const attendance=records.filter(r=>r.collection==="attendance").map(r=>r.data||{}),now=today(),months=[];
  if(selectedMonth!=="all")months.push(selectedMonth);
@@ -410,7 +411,8 @@ function accruedSalaryForProfit(){
  for(const month of months){
   if(!/^\d{4}-\d{2}$/.test(month))continue;
   const [yy,mm]=month.split("-").map(Number),monthStart=month+"-01",lastDay=new Date(yy,mm,0).getDate(),monthEnd=month===now.slice(0,7)?now:month+"-"+String(lastDay).padStart(2,"0");
-  for(const w of workers){
+  const monthWorkers=workers.filter(w=>w.active||(w.until&&w.until>=monthStart&&month>"2026-10"));
+  for(const w of monthWorkers){
    const defaultStart=w.id==="w-hamza"?"2026-10-23":monthStart,start=[monthStart,w.from||defaultStart].sort().reverse()[0],end=w.until&&w.until<monthEnd?w.until:monthEnd;
    if(start>end)continue;
    const rate=approvedDailyRate(w);if(rate<=0)continue;
@@ -556,7 +558,7 @@ $("closeLaborMonth").onclick=async()=>{const button=$("closeLaborMonth");try{con
 
 $("exportBackup").onclick=()=>{const obj={meta:{system:"حسابات ع الحلة",exported_at:new Date().toISOString(),record_counts:records.reduce((a,x)=>(a[x.collection]=(a[x.collection]||0)+1,a),{})},collections:{}};for(const x of records)(obj.collections[x.collection]??=[]).push({id:x.record_id,data:x.data});const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="alhella-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
 (async()=>{const {data:{session:s}}=await sb.auth.getSession();if(s)showApp(s)})();
-const ACCOUNTS_VERSION="2026-11-28-3";
+const ACCOUNTS_VERSION="2026-11-28-4";
 async function checkAccountsVersion(){try{const r=await fetch("accounts.html?v="+Date.now(),{cache:"no-store"});const t=await r.text();const m=t.match(/ACCOUNTS_VERSION="([^"]+)"/);const ae=document.activeElement||{};if(m&&m[1]!==ACCOUNTS_VERSION&&document.visibilityState==="visible"&&!/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName||""))location.reload()}catch(e){}}
 setInterval(checkAccountsVersion,5*60*1000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checkAccountsVersion()});
