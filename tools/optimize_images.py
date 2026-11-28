@@ -6,7 +6,7 @@ import io, re, json, subprocess
 ROOT=Path(".")
 MAX_BYTES=79000
 MAX_WIDTH=800
-EXTS={".jpg",".jpeg",".png",".webp"}
+EXTS={".jpg",".jpeg",".png"}  # Keep existing approved WebP images byte-for-byte unchanged.
 SKIP={".git","node_modules",".github"}
 assets=[]
 for p in ROOT.rglob("*"):
