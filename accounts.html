@@ -556,5 +556,9 @@ $("closeLaborMonth").onclick=async()=>{const button=$("closeLaborMonth");try{con
 
 $("exportBackup").onclick=()=>{const obj={meta:{system:"حسابات ع الحلة",exported_at:new Date().toISOString(),record_counts:records.reduce((a,x)=>(a[x.collection]=(a[x.collection]||0)+1,a),{})},collections:{}};for(const x of records)(obj.collections[x.collection]??=[]).push({id:x.record_id,data:x.data});const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="alhella-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
 (async()=>{const {data:{session:s}}=await sb.auth.getSession();if(s)showApp(s)})();
+const ACCOUNTS_VERSION="2026-11-28-1";
+async function checkAccountsVersion(){try{const r=await fetch("accounts.html?v="+Date.now(),{cache:"no-store"});const t=await r.text();const m=t.match(/ACCOUNTS_VERSION="([^"]+)"/);const ae=document.activeElement||{};if(m&&m[1]!==ACCOUNTS_VERSION&&document.visibilityState==="visible"&&!/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName||""))location.reload()}catch(e){}}
+setInterval(checkAccountsVersion,5*60*1000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checkAccountsVersion()});
 </script></body></html>
 <!-- publish-retry-2026-11-11 -->
