@@ -1,14 +1,7 @@
 name: Optimize storefront images
+# Run manually only after the owner approves image optimization.
+# Automatic push runs are disabled to preserve approved product photos.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'tools/optimize_images.py'
-      - '.github/workflows/optimize-images.yml'
-      - '*.jpg'
-      - '*.jpeg'
-      - '*.png'
   workflow_dispatch:
 permissions:
   contents: write
@@ -26,7 +19,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install Pillow
-      - name: Convert all raster images to optimized WebP
+      - name: Convert source raster images to optimized WebP
         run: python tools/optimize_images.py
       - name: Commit optimized images and updated references
         run: |
